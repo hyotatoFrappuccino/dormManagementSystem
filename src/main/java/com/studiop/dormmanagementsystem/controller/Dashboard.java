@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +32,19 @@ public class Dashboard {
         response.put("totalPayers", totalPayers);
         response.put("totalUsers", totalUsers);
         response.put("buildings", buildings);
+
+        return response;
+    }
+
+    @GetMapping("/buildings")
+    @ResponseBody
+    public Map<String, Object> buildings() {
+        List<BuildingDto> buildings = buildingService.getAllBuildings();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("buildings", buildings.stream()
+                .map(BuildingDto::getName)
+                .collect(Collectors.toList()));
 
         return response;
     }
