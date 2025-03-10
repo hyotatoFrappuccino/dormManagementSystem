@@ -1,4 +1,4 @@
-package com.studiop.dormmanagementsystem.dto;
+package com.studiop.dormmanagementsystem.entity.dto;
 
 import com.studiop.dormmanagementsystem.entity.Building;
 import lombok.Data;
