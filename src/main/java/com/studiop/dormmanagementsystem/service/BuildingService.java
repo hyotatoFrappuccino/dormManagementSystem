@@ -1,6 +1,6 @@
 package com.studiop.dormmanagementsystem.service;
 
-import com.studiop.dormmanagementsystem.dto.BuildingDto;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
 import jakarta.transaction.Transactional;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,8 +19,8 @@ public class BuildingService {
 
     private final BuildingRepository buildingRepository;
 
-    public void addBuilding(String name, int totalSlots) {
-        buildingRepository.save(new Building(name, totalSlots));
+    public Building addBuilding(String name, int totalSlots) {
+        return buildingRepository.save(new Building(name, totalSlots));
     }
 
     public Optional<Building> getBuildingById(Long id) {
