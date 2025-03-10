@@ -1,14 +1,19 @@
 package com.studiop.dormmanagementsystem.controller;
 
-import com.studiop.dormmanagementsystem.dto.BuildingDto;
+import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.PaymentType;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
+import com.studiop.dormmanagementsystem.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +24,18 @@ import java.util.stream.Collectors;
 public class Dashboard {
 
     private final BuildingService buildingService;
+    private final PaymentService paymentService;
 
+    /**
+     * 대시보드
+     * @return 건물별 이용자 수
+     */
     @GetMapping("/dashboard")
     @ResponseBody
     public Map<String, Object> dashboard() {
 
         List<BuildingDto> buildings = buildingService.getAllBuildings();
-        int totalPayers = 300; //todo mock data -> 납부자 명단에서 추출
+        long totalPayers = paymentService.getTotalPayers();
         int totalUsers = buildings.stream().mapToInt(BuildingDto::getTotalUsers).sum();
 
         Map<String, Object> response = new HashMap<>();
@@ -36,6 +46,9 @@ public class Dashboard {
         return response;
     }
 
+    /**
+     * @return 건물 목록
+     */
     @GetMapping("/buildings")
     @ResponseBody
     public Map<String, Object> buildings() {
@@ -46,6 +59,32 @@ public class Dashboard {
                 .map(BuildingDto::getName)
                 .collect(Collectors.toList()));
 
+        return response;
+    }
+
+    /**
+     * 납부자 추가
+     * @param depositName 입금자명
+     * @param amount 금액
+     * @param depositDate 입금일
+     * @param paymentType 납부유형(BANK_TRANSFER, ON_SITE)
+     * @return HTTP 200 OK
+     */
+    @PostMapping("/addPayer")
+    public ResponseEntity<String> addPayer(@RequestParam String depositName,
+                                           @RequestParam int amount,
+                                           @RequestParam LocalDate depositDate,
+                                           @RequestParam PaymentType paymentType) {
+        paymentService.addPayment(depositName, amount, depositDate, paymentType);
+        return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/getAllPayers")
+    @ResponseBody
+    public Map<String, Object> getAllPayers() {
+        List<Payment> allPayers = paymentService.getAllPayers();
+        Map<String, Object> response = new HashMap<>();
+        response.put("allPayers", allPayers);
         return response;
     }
 }
