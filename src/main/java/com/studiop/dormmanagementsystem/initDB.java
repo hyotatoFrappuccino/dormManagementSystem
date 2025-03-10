@@ -1,10 +1,13 @@
 package com.studiop.dormmanagementsystem;
 
+import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -25,38 +28,25 @@ public class initDB {
 
         @Transactional
         public void init1() {
-            buildingService.addBuilding("새롬관(여)", 100);
-            buildingService.addBuilding("새롬관(남)", 100);
-            buildingService.addBuilding("이룸관(여)", 100);
-            buildingService.addBuilding("이룸관(남)", 100);
-            buildingService.addBuilding("예지원", 100);
-            buildingService.addBuilding("난지원", 100);
-            buildingService.addBuilding("국지원", 100);
-            buildingService.addBuilding("퇴계관", 100);
+            Building building1 = buildingService.addBuilding("새롬관(여)", 100);
+            Building building2 = buildingService.addBuilding("새롬관(남)", 100);
+            Building building3 = buildingService.addBuilding("이룸관(여)", 100);
+            Building building4 = buildingService.addBuilding("이룸관(남)", 100);
+            Building building5 = buildingService.addBuilding("예지원", 100);
+            Building building6 = buildingService.addBuilding("난지원", 100);
+            Building building7 = buildingService.addBuilding("국지원", 100);
+            Building building8 = buildingService.addBuilding("퇴계관", 100);
 
-            buildingService.setUserSlots(buildingService.getBuildingById(1L).get(), 105);
+            Random r = new Random();
 
-            for (int i = 0; i < 10; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(2L).get());
-            }
-            for (int i = 0; i < 100; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(3L).get());
-            }
-            for (int i = 0; i < 10; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(4L).get());
-            }
-            for (int i = 0; i < 30; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(5L).get());
-            }
-            for (int i = 0; i < 40; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(6L).get());
-            }
-            for (int i = 0; i < 70; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(7L).get());
-            }
-            for (int i = 0; i < 100; i++) {
-                buildingService.increaseUser(buildingService.getBuildingById(8L).get());
-            }
+            buildingService.setUserSlots(building1, r.nextInt(100));
+            buildingService.setUserSlots(building2, r.nextInt(100));
+            buildingService.setUserSlots(building3, r.nextInt(100));
+            buildingService.setUserSlots(building4, r.nextInt(100));
+            buildingService.setUserSlots(building5, r.nextInt(100));
+            buildingService.setUserSlots(building6, r.nextInt(100));
+            buildingService.setUserSlots(building7, r.nextInt(100));
+            buildingService.setUserSlots(building8, r.nextInt(100));
         }
     }
 
