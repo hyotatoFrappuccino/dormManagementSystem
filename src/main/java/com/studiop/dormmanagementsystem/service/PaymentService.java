@@ -5,11 +5,11 @@ import com.studiop.dormmanagementsystem.entity.Payment;
 import com.studiop.dormmanagementsystem.entity.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.PaymentType;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,6 +56,24 @@ public class PaymentService {
         return paymentRepository.count();
     }
 
-//    @Transactional
-//    public void editPayment(Long id, )
+    @Transactional
+    public void editPayment(Long id, String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
+        Optional<Payment> paymentOptional = paymentRepository.findById(id);
+
+        if (paymentOptional.isPresent()) {
+            Payment payment = paymentOptional.get();
+            payment.editPayment(depositName, amount, paymentDate, paymentStatus, paymentType);
+        } else {
+            throw new EntityNotFoundException("해당 ID의 Payment를 찾을 수 없습니다.");
+        }
+    }
+
+    @Transactional
+    public void deletePayment(Long paymentId) {
+        if (!paymentRepository.existsById(paymentId)) {
+            throw new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + paymentId);
+        }
+        paymentRepository.deleteById(paymentId);
+    }
+
 }

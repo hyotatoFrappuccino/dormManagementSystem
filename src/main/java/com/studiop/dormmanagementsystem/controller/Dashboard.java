@@ -62,29 +62,4 @@ public class Dashboard {
         return response;
     }
 
-    /**
-     * 납부자 추가
-     * @param depositName 입금자명
-     * @param amount 금액
-     * @param depositDate 입금일
-     * @param paymentType 납부유형(BANK_TRANSFER, ON_SITE)
-     * @return HTTP 200 OK
-     */
-    @PostMapping("/addPayer")
-    public ResponseEntity<String> addPayer(@RequestParam String depositName,
-                                           @RequestParam int amount,
-                                           @RequestParam LocalDate depositDate,
-                                           @RequestParam PaymentType paymentType) {
-        paymentService.addPayment(depositName, amount, depositDate, paymentType);
-        return ResponseEntity.ok("");
-    }
-
-    @GetMapping("/getAllPayers")
-    @ResponseBody
-    public Map<String, Object> getAllPayers() {
-        List<Payment> allPayers = paymentService.getAllPayers();
-        Map<String, Object> response = new HashMap<>();
-        response.put("allPayers", allPayers);
-        return response;
-    }
 }
