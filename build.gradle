@@ -37,6 +37,13 @@ dependencies {
     // test 롬복
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // P6Spy
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+    // Google API
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev20240917-2.0.0'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:0.20.0'
 }
 
 tasks.named('test') {
