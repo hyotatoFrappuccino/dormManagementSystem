@@ -28,7 +28,7 @@ public class Dashboard {
     @GetMapping("/dashboard")
     public Map<String, Object> dashboard() {
 
-        List<BuildingDto> buildings = buildingService.getAllBuildings();
+        List<BuildingDto> buildings = buildingService.getAllBuildingsDto();
         long totalPayers = paymentService.getTotalPayers();
         int totalUsers = buildings.stream().mapToInt(BuildingDto::getTotalUsers).sum();
 
@@ -45,7 +45,7 @@ public class Dashboard {
      */
     @GetMapping("/buildings")
     public Map<String, Object> buildings() {
-        List<BuildingDto> buildings = buildingService.getAllBuildings();
+        List<BuildingDto> buildings = buildingService.getAllBuildingsDto();
 
         Map<String, Object> response = new HashMap<>();
         response.put("buildings", buildings.stream()

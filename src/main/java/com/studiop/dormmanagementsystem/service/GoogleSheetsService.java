@@ -24,6 +24,8 @@ public class GoogleSheetsService {
     private static final String RANGE = "A:Z"; // 가져올 데이터 범위
 //    knu-dorm-management-system@knu-dorm-management-system.iam.gserviceaccount.com
 //    1분당 읽기요청 : 300
+//    https://developers.google.com/sheets/api/guides/values?hl=ko
+//    https://console.cloud.google.com/apis/api/sheets.googleapis.com/metrics?inv=1&invt=AbrzRA&project=knu-dorm-management-system&supportedpurview=project,organizationId,folder
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();

@@ -27,10 +27,14 @@ public class BuildingService {
         return buildingRepository.findById(id);
     }
 
-    public List<BuildingDto> getAllBuildings() {
+    public List<BuildingDto> getAllBuildingsDto() {
         return buildingRepository.findAll().stream()
                 .map(BuildingDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public List<Building> getAllBuildings() {
+        return buildingRepository.findAll();
     }
 
     public int getTotalSlots(Building building) {
