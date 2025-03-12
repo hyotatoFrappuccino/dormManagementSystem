@@ -64,16 +64,16 @@ public class PaymentService {
             Payment payment = paymentOptional.get();
             payment.editPayment(depositName, amount, paymentDate, paymentStatus, paymentType);
         } else {
-            throw new EntityNotFoundException("해당 ID의 Payment를 찾을 수 없습니다.");
+            throw new EntityNotFoundException("해당 ID의 Payment 를 찾을 수 없습니다." + id);
         }
     }
 
     @Transactional
-    public void deletePayment(Long paymentId) {
-        if (!paymentRepository.existsById(paymentId)) {
-            throw new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + paymentId);
+    public void deletePayment(Long id) {
+        if (!paymentRepository.existsById(id)) {
+            throw new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id);
         }
-        paymentRepository.deleteById(paymentId);
+        paymentRepository.deleteById(id);
     }
 
 }

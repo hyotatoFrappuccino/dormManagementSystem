@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -32,28 +31,28 @@ public class Payment {
     @Range(min = 0)
     private Integer amount;
 
-    private LocalDate paymentDate;
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
+    private PaymentStatus status;
 
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    private PaymentType type;
 
-    public Payment(Member member, String name, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
+    public Payment(Member member, String name, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
         this.member = member;
         this.name = name;
         this.amount = amount;
-        this.paymentDate = paymentDate;
-        this.paymentStatus = paymentStatus;
-        this.paymentType = paymentType;
+        this.date = date;
+        this.status = status;
+        this.type = type;
     }
 
     public void editPayment(String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
         this.name = depositName;
         this.amount = amount;
-        this.paymentDate = paymentDate;
-        this.paymentStatus = paymentStatus;
-        this.paymentType = paymentType;
+        this.date = paymentDate;
+        this.status = paymentStatus;
+        this.type = paymentType;
     }
 }
