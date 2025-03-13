@@ -32,6 +32,7 @@ public class initDB {
 
         @Transactional
         public void init1() {
+
             Building building1 = buildingService.addBuilding("새롬관(여)", 100);
             Building building2 = buildingService.addBuilding("새롬관(남)", 100);
             Building building3 = buildingService.addBuilding("이룸관(여)", 100);

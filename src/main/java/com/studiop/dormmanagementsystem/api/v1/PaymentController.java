@@ -72,4 +72,9 @@ public class PaymentController {
         }
     }
 
+    @DeleteMapping
+    public void deleteAllPayments() {
+        paymentService.deleteAllPayments();
+    }
+
 }

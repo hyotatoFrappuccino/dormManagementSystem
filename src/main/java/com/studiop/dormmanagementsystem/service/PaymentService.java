@@ -76,4 +76,8 @@ public class PaymentService {
         paymentRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteAllPayments() {
+        paymentRepository.deleteAll();
+    }
 }
