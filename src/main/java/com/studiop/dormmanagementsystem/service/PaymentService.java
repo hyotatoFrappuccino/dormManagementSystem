@@ -2,8 +2,8 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Member;
 import com.studiop.dormmanagementsystem.entity.Payment;
-import com.studiop.dormmanagementsystem.entity.PaymentStatus;
-import com.studiop.dormmanagementsystem.entity.PaymentType;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class PaymentService {
     /**
      * @return 전체 납부자 수
      */
-    public Long getTotalPayers() {
+    public Long getNumOfTotalPayers() {
         return paymentRepository.count();
     }
 

@@ -1,7 +1,7 @@
 package com.studiop.dormmanagementsystem;
 
 import com.studiop.dormmanagementsystem.entity.Building;
-import com.studiop.dormmanagementsystem.entity.PaymentType;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import jakarta.annotation.PostConstruct;

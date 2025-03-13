@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AppConfigService {
+
     private final AppConfigRepository appConfigRepository;
 
     public String getConfigValue(String key, String defaultValue) {
@@ -20,7 +21,6 @@ public class AppConfigService {
         AppConfig config = appConfigRepository.findByConfigKey(key)
                 .orElse(new AppConfig(null, key, value, null));
 
-        config.setConfigValue(value);
         appConfigRepository.save(config);
     }
 

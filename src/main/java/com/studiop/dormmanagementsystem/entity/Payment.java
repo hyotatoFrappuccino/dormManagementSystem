@@ -1,5 +1,7 @@
 package com.studiop.dormmanagementsystem.entity;
 
+import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

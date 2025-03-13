@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.entity;
 
+import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

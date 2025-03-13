@@ -33,38 +33,26 @@ public class BuildingService {
     public Building getByName(String name) {
         Optional<Building> byName = buildingRepository.findByName(name);
         return byName.orElseThrow(() -> new EntityNotFoundException("\"" + name + "\"이름의 건물명을 찾을 수 없습니다. 서약서 새로고침 중 이 문제가 발생했다면, 서약서 양식에 따라 설문지를 제작해주세요."));
-
-    }
-
-    public int getTotalSlots(Building building) {
-        return buildingRepository.findById(building.getId())
-                .map(Building::getTotalSlots)
-                .orElseThrow(() -> new IllegalArgumentException("해당 건물을 찾을 수 없습니다. ID : " + building.getId()));
-    }
-
-    public int getTotalUsers(Building building) {
-        return buildingRepository.findById(building.getId())
-                .map(Building::getTotalUsers)
-                .orElseThrow(() -> new IllegalArgumentException("해당 건물을 찾을 수 없습니다. ID : " + building.getId()));
     }
 
     @Transactional
-    public int increaseUser(Building building) {
-        return building.increaseUser();
+    public void increaseUser(Building building) {
+        building.increaseUser();
     }
 
     @Transactional
-    public int decreaseUser(Building building) {
-        return building.decreaseUser();
+    public void decreaseUser(Building building) {
+        building.decreaseUser();
     }
 
     @Transactional
-    public int setUserSlots(Building building, int userSlots) {
-        return building.setUserSlots(userSlots);
+    public void setUserSlots(Building building, int userSlots) {
+        building.setUserSlots(userSlots);
     }
 
     @Transactional
     public void changeName(Building building, String newName) {
         building.changeName(newName);
     }
+
 }

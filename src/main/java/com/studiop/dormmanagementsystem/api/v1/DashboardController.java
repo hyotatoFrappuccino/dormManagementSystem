@@ -1,7 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Building;
-import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +16,21 @@ import java.util.stream.Collectors;
 @RestController()
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class Dashboard {
+public class DashboardController {
 
     private final BuildingService buildingService;
     private final PaymentService paymentService;
 
     /**
      * 대시보드
-     * @return 건물별 이용자 수
+     * @return 전체 납부자 수, 전체 이용자 수, 건물별 이용자 수
      */
     @GetMapping("/dashboard")
     public Map<String, Object> dashboard() {
 
         List<Building> buildings = buildingService.getAllBuildings();
-        long totalPayers = paymentService.getTotalPayers();
-        int totalUsers = buildings.stream().mapToInt(Building::getTotalUsers).sum();
+        long totalPayers = paymentService.getNumOfTotalPayers();
+        long totalUsers = buildings.stream().mapToLong(Building::getTotalUsers).sum();
 
         Map<String, Object> response = new HashMap<>();
         response.put("totalPayers", totalPayers);

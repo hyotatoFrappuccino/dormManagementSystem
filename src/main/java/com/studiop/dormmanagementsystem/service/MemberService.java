@@ -1,7 +1,7 @@
 package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Member;
-import com.studiop.dormmanagementsystem.entity.PaymentStatus;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
