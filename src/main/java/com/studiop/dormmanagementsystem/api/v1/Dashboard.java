@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
@@ -28,9 +29,9 @@ public class Dashboard {
     @GetMapping("/dashboard")
     public Map<String, Object> dashboard() {
 
-        List<BuildingDto> buildings = buildingService.getAllBuildingsDto();
+        List<Building> buildings = buildingService.getAllBuildings();
         long totalPayers = paymentService.getTotalPayers();
-        int totalUsers = buildings.stream().mapToInt(BuildingDto::getTotalUsers).sum();
+        int totalUsers = buildings.stream().mapToInt(Building::getTotalUsers).sum();
 
         Map<String, Object> response = new HashMap<>();
         response.put("totalPayers", totalPayers);
@@ -45,11 +46,11 @@ public class Dashboard {
      */
     @GetMapping("/buildings")
     public Map<String, Object> buildings() {
-        List<BuildingDto> buildings = buildingService.getAllBuildingsDto();
+        List<Building> buildings = buildingService.getAllBuildings();
 
         Map<String, Object> response = new HashMap<>();
         response.put("buildings", buildings.stream()
-                .map(BuildingDto::getName)
+                .map(Building::getName)
                 .collect(Collectors.toList()));
 
         return response;

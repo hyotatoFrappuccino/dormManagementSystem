@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.service;
 
-import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,12 +24,6 @@ public class BuildingService {
 
     public Optional<Building> getBuildingById(Long id) {
         return buildingRepository.findById(id);
-    }
-
-    public List<BuildingDto> getAllBuildingsDto() {
-        return buildingRepository.findAll().stream()
-                .map(BuildingDto::from)
-                .collect(Collectors.toList());
     }
 
     public List<Building> getAllBuildings() {
