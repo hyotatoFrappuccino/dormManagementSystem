@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.service;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class BuildingService {
 
     public List<Building> getAllBuildings() {
         return buildingRepository.findAll();
+    }
+
+    public Building getByName(String name) {
+        Optional<Building> byName = buildingRepository.findByName(name);
+        return byName.orElseThrow(() -> new EntityNotFoundException("\"" + name + "\"이름의 건물명을 찾을 수 없습니다. 서약서 새로고침 중 이 문제가 발생했다면, 서약서 양식에 따라 설문지를 제작해주세요."));
+
     }
 
     public int getTotalSlots(Building building) {

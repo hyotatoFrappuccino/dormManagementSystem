@@ -8,6 +8,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -16,11 +17,14 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class GoogleSheetsService {
+
+    private final AppConfigService appConfigService;
 
     private static final String APPLICATION_NAME = "Google Sheets API Spring Boot";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String SPREADSHEET_ID = "1bFGORsfUHgQqpKqvW7Xhq24ibw8en3DSTlK_AQgFH7U"; // 구글 시트 ID
+//    private static final String SPREADSHEET_ID = "1bFGORsfUHgQqpKqvW7Xhq24ibw8en3DSTlK_AQgFH7U"; // 구글 시트 ID
     private static final String RANGE = "A:Z"; // 가져올 데이터 범위
 //    knu-dorm-management-system@knu-dorm-management-system.iam.gserviceaccount.com
 //    1분당 읽기요청 : 300
@@ -42,6 +46,10 @@ public class GoogleSheetsService {
     }
 
     public List<List<Object>> getSurveyResponses() throws IOException, GeneralSecurityException {
+        String SPREADSHEET_ID = appConfigService.getConfigValue("googleSheetId", "");
+        if (SPREADSHEET_ID.isEmpty()) {
+            throw new IllegalStateException("설정에서 서약서 구글 시트 ID를 설정해주세요.");
+        }
         Sheets sheetsService = getSheetsService();
         ValueRange response = sheetsService.spreadsheets().values()
                 .get(SPREADSHEET_ID, RANGE)

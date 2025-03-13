@@ -1,36 +1,61 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Survey;
-import com.studiop.dormmanagementsystem.service.BuildingService;
-import com.studiop.dormmanagementsystem.service.GoogleSheetsService;
+import com.studiop.dormmanagementsystem.service.AppConfigService;
 import com.studiop.dormmanagementsystem.service.SurveyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/survey")
 @RequiredArgsConstructor
 public class SurveyController {
 
-    private final GoogleSheetsService googleSheetsService;
-    private final BuildingService buildingService;
     private final SurveyService surveyService;
+    private final AppConfigService appConfigService;
 
     @PostMapping
-    public void getSurveyResponses() throws IOException, GeneralSecurityException {
-        List<List<Object>> responses = googleSheetsService.getSurveyResponses();
-        List<Survey> surveys = responses.stream()
-                .skip(1) // 첫 번째 행(헤더) 건너뛰기
-                .map(row -> SurveyParser.parseSurvey(row, buildingService.getAllBuildings()))
-                .toList();
-        for (Survey survey : surveys) {
+    public CompletableFuture<ResponseEntity<String>> updateSurveyResponses() {
+        String lastFetchedTime1 = appConfigService.getConfigValue("last_fetched_time", "2020-01-01T00:00:00");
+        log.info("log1 = " + lastFetchedTime1);
 
-        }
+        LocalDateTime lastFetchedTime = LocalDateTime.parse(lastFetchedTime1, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+
+        log.info("log2 = " + lastFetchedTime);
+
+        updateLastFetchedTime();
+
+        return surveyService.updateSurveyFromGoogleSheets(lastFetchedTime)
+                .thenApply(v -> ResponseEntity.ok("Survey updated successfully"))
+                .exceptionally(ex -> ResponseEntity.internalServerError().body(ex.getCause().getMessage()));
+    }
+
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<List<Survey>> get() {
+        return ResponseEntity.ok(surveyService.getAllSurveys());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteSurvey(@PathVariable("id") Long id) {
+        surveyService.deleteSurvey(id);
+    }
+
+    @DeleteMapping("/all")
+    public void deleteAllSurveys() {
+        surveyService.deleteAllSurveys();
+    }
+
+    public void updateLastFetchedTime() {
+        appConfigService.setConfigValue("last_fetched_time", LocalDateTime.now().toString());
     }
 }
