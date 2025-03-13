@@ -29,6 +29,14 @@ public class SurveyService {
         return surveyRepository.findAll();
     }
 
+    public boolean isSubmitted(String studentId) {
+        return surveyRepository.existsByStudentIdAndAgreedIsTrue(studentId);
+    }
+
+    public Survey getSurvey(String studentId) {
+        return surveyRepository.findByStudentId(studentId).orElse(null);
+    }
+
     @Async
     @Transactional
     public CompletableFuture<Void> updateSurveyFromGoogleSheets(LocalDateTime lastFetchedTime) {

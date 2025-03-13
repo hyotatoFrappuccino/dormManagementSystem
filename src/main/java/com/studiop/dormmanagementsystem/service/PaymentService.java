@@ -45,6 +45,10 @@ public class PaymentService {
         paymentRepository.save(new Payment(member, name, amount, paymentDate, PaymentStatus.PAID, paymentType));
     }
 
+    public boolean isPaid(String studentId) {
+        return paymentRepository.existsByNameAndStatus(studentId, PaymentStatus.PAID);
+    }
+
     public List<Payment> getAllPayers() {
         return paymentRepository.findAll();
     }
