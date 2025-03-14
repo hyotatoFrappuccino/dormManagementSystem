@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController()
 @RequestMapping("/api/v1")
@@ -32,27 +30,10 @@ public class DashboardController {
         long totalPayers = paymentService.getNumOfTotalPayers();
         long totalUsers = buildings.stream().mapToLong(Building::getTotalUsers).sum();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("totalPayers", totalPayers);
-        response.put("totalUsers", totalUsers);
-        response.put("buildings", buildings);
-
-        return response;
+        return Map.of(
+                "totalPayers", totalPayers,
+                "totalUsers", totalUsers,
+                "buildings", buildings
+        );
     }
-
-    /**
-     * @return 건물 목록
-     */
-    @GetMapping("/buildings")
-    public Map<String, Object> buildings() {
-        List<Building> buildings = buildingService.getAllBuildings();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("buildings", buildings.stream()
-                .map(Building::getName)
-                .collect(Collectors.toList()));
-
-        return response;
-    }
-
 }

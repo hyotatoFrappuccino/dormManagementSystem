@@ -24,14 +24,8 @@ public class SurveyController {
 
     @PostMapping
     public CompletableFuture<ResponseEntity<String>> updateSurveyResponses() {
-        String lastFetchedTime1 = appConfigService.getConfigValue("last_fetched_time", "2020-01-01T00:00:00");
-        log.info("log1 = " + lastFetchedTime1);
-
+        String lastFetchedTime1 = appConfigService.getConfigValue("last_fetched_time", LocalDateTime.MIN.toString());
         LocalDateTime lastFetchedTime = LocalDateTime.parse(lastFetchedTime1, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
-
-        log.info("log2 = " + lastFetchedTime);
-
         updateLastFetchedTime();
 
         return surveyService.updateSurveyFromGoogleSheets(lastFetchedTime)

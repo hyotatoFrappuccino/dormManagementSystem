@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -29,12 +30,8 @@ public class SurveyService {
         return surveyRepository.findAll();
     }
 
-    public boolean isSubmitted(String studentId) {
-        return surveyRepository.existsByStudentIdAndAgreedIsTrue(studentId);
-    }
-
-    public Survey getSurvey(String studentId) {
-        return surveyRepository.findByStudentId(studentId).orElse(null);
+    public Optional<Survey> getSurvey(String studentId) {
+        return surveyRepository.findByStudentId(studentId);
     }
 
     @Async
@@ -58,7 +55,7 @@ public class SurveyService {
 
                     String studentId = row.get(1).toString();
                     String name = row.get(2).toString();
-                    String phoneNumber = row.get(3).toString();
+                    String phoneNumber = formatPhoneNumber(row.get(3).toString());
                     String buildingName = row.get(4).toString();
                     String roomNumber = row.get(5).toString().replace("호", "");
 
@@ -84,5 +81,17 @@ public class SurveyService {
     @Transactional
     public void deleteAllSurveys() {
         surveyRepository.deleteAll();
+    }
+
+    public String formatPhoneNumber(String rawPhoneNumber) {
+        String digits = rawPhoneNumber.replaceAll("[^0-9]", "");
+
+        if (digits.length() == 10) {
+            return digits.replaceFirst("(\\d{2})(\\d{4})(\\d{4})", "0$1-$2-$3");
+        } else if (digits.length() == 11) {
+            return digits.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
+        }
+
+        return rawPhoneNumber;
     }
 }

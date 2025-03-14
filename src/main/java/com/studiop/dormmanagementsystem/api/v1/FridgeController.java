@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import com.studiop.dormmanagementsystem.service.SurveyService;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/fridge")
@@ -22,23 +23,20 @@ public class FridgeController {
 
     @GetMapping("/member")
     public Map<String, Object> getMember(@RequestParam String studentId) {
-        Map<String, Object> response = new HashMap<>();
-        Survey survey = surveyService.getSurvey(studentId);
-        String name = "-";
-        String building = "-";
-        String room = "-";
-        if (survey != null) {
-            name = survey.getName();
-            building = survey.getBuilding().getName();
-            room = survey.getRoomNumber();
-        }
-        response.put("name", name);
-        response.put("isPaid", paymentService.isPaid(studentId));
-        response.put("isSubmitted", surveyService.isSubmitted(studentId));
-        response.put("building", building);
-        response.put("roomNumber", room);
+        Optional<Survey> survey = surveyService.getSurvey(studentId);
 
-        return response;
+        String name = survey.map(Survey::getName).orElse("-");
+        String building = survey.flatMap(s -> Optional.ofNullable(s.getBuilding()).map(Building::getName)).orElse("-");
+        String room = survey.map(Survey::getRoomNumber).orElse("-");
+        boolean isPaid = paymentService.isPaid(studentId);
+        boolean isAgreed = survey.map(Survey::isAgreed).orElse(false);
+
+        return Map.of(
+                "name", name,
+                "isPaid", isPaid,
+                "isAgreed", isAgreed,
+                "building", building,
+                "roomNumber", room
+        );
     }
-
 }
