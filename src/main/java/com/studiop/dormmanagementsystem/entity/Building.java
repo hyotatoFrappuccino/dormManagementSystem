@@ -42,8 +42,8 @@ public class Building {
         return this.totalUsers;
     }
 
-    public int setUserSlots(int userSlots) {
-        this.totalUsers = userSlots;
+    public int setTotalSlots(int totalSlots) {
+        this.totalUsers = totalSlots;
         return this.totalUsers;
     }
 

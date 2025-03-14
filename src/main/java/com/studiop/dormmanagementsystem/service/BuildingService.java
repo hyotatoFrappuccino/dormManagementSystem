@@ -47,7 +47,7 @@ public class BuildingService {
 
     @Transactional
     public void setUserSlots(Building building, int userSlots) {
-        building.setUserSlots(userSlots);
+        building.setTotalSlots(userSlots);
     }
 
     @Transactional
@@ -55,4 +55,17 @@ public class BuildingService {
         building.changeName(newName);
     }
 
+    @Transactional
+    public void editBuilding(Long id, String buildingName, int userSlots) {
+        Building building = buildingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Building not found with id: " + id));
+
+        building.changeName(buildingName);
+        building.setTotalSlots(userSlots);
+    }
+
+    @Transactional
+    public void deleteBuilding(Long id) {
+        buildingRepository.deleteById(id);
+    }
 }
