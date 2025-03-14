@@ -53,6 +53,7 @@ public class SurveyController {
     @DeleteMapping("/all")
     public void deleteAllSurveys() {
         surveyService.deleteAllSurveys();
+        appConfigService.setConfigValue("last_fetched_time", LocalDateTime.MIN.toString());
     }
 
     public void updateLastFetchedTime() {

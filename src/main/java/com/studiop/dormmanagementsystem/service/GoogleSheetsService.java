@@ -45,11 +45,12 @@ public class GoogleSheetsService {
         if (SPREADSHEET_ID.isEmpty()) {
             throw new IllegalStateException("설정에서 서약서 구글 시트 ID를 설정해주세요.");
         }
+
         Sheets sheetsService = getSheetsService();
         ValueRange response = sheetsService.spreadsheets().values()
                 .get(SPREADSHEET_ID, RANGE)
                 .execute();
 
-        return response.getValues(); // 2D 리스트 형태로 응답 반환
+        return response.getValues();
     }
 }

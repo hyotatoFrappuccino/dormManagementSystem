@@ -47,17 +47,15 @@ public class SurveyService {
                     return; // 빈 데이터 반환
                 }
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. d a h:mm:ss")
-                        .withLocale(java.util.Locale.KOREAN);
-                for (int i = 1; i < responses.size(); i++) { // 첫 번째 행(헤더) 제외
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. d a h:mm:ss").withLocale(java.util.Locale.KOREAN);
+
+                for (int i = 1; i < responses.size(); i++) {
                     List<Object> row = responses.get(i);
-
-                    if (row.size() < 7) continue; // 데이터가 부족한 행 건너뛰기
-
                     LocalDateTime dateTime = LocalDateTime.parse(row.get(0).toString(), formatter);
                     if (dateTime.isBefore(lastFetchedTime)) {
                         continue;
                     }
+
                     String studentId = row.get(1).toString();
                     String name = row.get(2).toString();
                     String phoneNumber = row.get(3).toString();
