@@ -20,8 +20,8 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-        initService.mockBuilding();
-        initService.mockPayment();
+//        initService.mockBuilding();
+//        initService.mockPayment();
     }
 
     @Component

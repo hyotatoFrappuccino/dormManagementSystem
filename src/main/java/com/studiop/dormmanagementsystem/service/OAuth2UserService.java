@@ -17,14 +17,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        
-        // 사용자 정보 추출
+
         String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
 
         return new DefaultOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-            Map.of("email", email, "name", name),
+            Map.of("email", email),
             "email"
         );
     }

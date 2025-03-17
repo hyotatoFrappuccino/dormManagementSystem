@@ -1,10 +1,14 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +25,19 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(Map.of(
-            "email", principal.getAttribute("email"),
-            "name", principal.getAttribute("name")
+            "email", principal.getAttribute("email")
         ));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 현재 세션 무효화
+        request.getSession().invalidate();
+
+        // 인증 해제 (Spring Security)
+        SecurityContextHolder.clearContext();
+
+        // 로그아웃 성공 응답
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 }
