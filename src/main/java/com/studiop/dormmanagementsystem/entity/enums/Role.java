@@ -1,5 +1,16 @@
 package com.studiop.dormmanagementsystem.entity.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Role {
-    DEVELOPER, ADMIN, MANAGER
+    NOT_REGISTERED("ROLE_NOT_REGISTERED", "회원가입 이전 사용자"),
+    MANAGER("ROLE_MANAGER", "관리자"),
+    ADMIN("ROLE_ADMIN", "총관리자"),
+    DEVELOPER("ROLE_DEVELOPER", "개발자");
+
+    private final String key;
+    private final String title;
 }

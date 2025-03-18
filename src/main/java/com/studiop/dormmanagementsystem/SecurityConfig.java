@@ -26,6 +26,7 @@ public class SecurityConfig {
                     .requestMatchers("/", "/public/**", "/api/auth/user").permitAll()
                     .anyRequest().authenticated()
             )
+            // 인증 완료 후 리다이렉트
             .oauth2Login(oauth2 -> oauth2
                     .defaultSuccessUrl("http://localhost:3000", true)
             );
