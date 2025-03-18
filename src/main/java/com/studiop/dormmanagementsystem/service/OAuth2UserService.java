@@ -19,10 +19,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String email = oAuth2User.getAttribute("email");
+        String sub = oAuth2User.getAttribute("sub");
 
         return new DefaultOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-            Map.of("email", email),
+            Map.of("email", email, "sub", sub),
             "email"
         );
     }

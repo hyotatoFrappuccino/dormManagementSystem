@@ -23,20 +23,25 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Unauthorized"));
         }
 
-        return ResponseEntity.ok(Map.of(
-            "email", principal.getAttribute("email")
-        ));
+        String email = principal.getAttribute("email");
+        String sub = principal.getAttribute("sub");
+        if (email == null || sub == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "BAD REQUEST"));
+        }
+
+        return ResponseEntity.ok(Map.of("email", email, "sub", sub));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        // Spring Security 컨텍스트 초기화 (사용자 인증 정보 제거)
+        SecurityContextHolder.clearContext();
+
         // 현재 세션 무효화
         request.getSession().invalidate();
 
-        // 인증 해제 (Spring Security)
-        SecurityContextHolder.clearContext();
-
-        // 로그아웃 성공 응답
-        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+        // 로그아웃 성공 응답 반환
+        return ResponseEntity.ok().build();
     }
+
 }

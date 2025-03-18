@@ -19,15 +19,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/public/**", "/login/oauth2/**", "/api/auth/user").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("http://localhost:3000", true)
-                );
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(AbstractHttpConfigurer::disable)
+            // 로그인 없이 접근 가능한 URL
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/", "/public/**", "/api/auth/user").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                    .defaultSuccessUrl("http://localhost:3000", true)
+            );
 
         return http.build();
     }
@@ -42,8 +43,6 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        source.registerCorsConfiguration("/oauth2/**", configuration);
-        source.registerCorsConfiguration("/login/oauth2/**", configuration);
         return source;
     }
 }
