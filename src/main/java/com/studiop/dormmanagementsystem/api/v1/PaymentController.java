@@ -29,7 +29,7 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
-    @Operation(summary = "특정 id 납부자 조회")
+    @Operation(summary = "납부자 조회")
     @GetMapping("/{id}")
     public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
         Payment payment = paymentService.findById(id);
