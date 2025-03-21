@@ -1,80 +1,67 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
+import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/payment")
+@RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
 public class PaymentController {
 
     private final PaymentService paymentService;
 
-    /**납부자 추가*/
-    @PostMapping
-    public ResponseEntity<String> addPayment(@RequestBody Payment payment) {
-        paymentService.addPayment(
-                payment.getName(),
-                payment.getAmount(),
-                payment.getDate(),
-                payment.getType());
-        return ResponseEntity.ok("납부자 추가 완료");
-    }
-
-    /**
-     * 납부자 목록 반환
-     **/
+    @Operation(summary = "납부자 목록 조회")
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayers() {
-        List<Payment> allPayers = paymentService.getAllPayers();
-        return ResponseEntity.ok(allPayers);
+    public ResponseEntity<List<Payment>> getAllPayments() {
+        List<Payment> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
     }
 
-    /**
-     * 납부자 수정
-     **/
-    @PutMapping()
-    public ResponseEntity<String> paymentEdit(@RequestBody Payment payment) {
-        try {
-            paymentService.editPayment(
-                    payment.getId(),
-                    payment.getName(),
-                    payment.getAmount(),
-                    payment.getDate(),
-                    payment.getStatus(),
-                    payment.getType()
-            );
-            return ResponseEntity.ok("납부자 정보 수정 완료");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("납부자 업데이트 오류");
-        }
+    @Operation(summary = "특정 id 납부자 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
+        Payment payment = paymentService.findById(id);
+        return ResponseEntity.ok(payment);
     }
 
-    /** 납부자 정보 삭제 **/
-    @DeleteMapping("/{paymentId}")
-    public ResponseEntity<String> deletePayment(@PathVariable Long paymentId) {
-        try {
-            paymentService.deletePayment(paymentId);
-            return ResponseEntity.ok("납부자 삭제 완료");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("납부자 삭제 오류");
-        }
+    @Operation(summary = "납부자 추가")
+    @PostMapping
+    public ResponseEntity<Payment> addPayment(@RequestBody PaymentRequest request) {
+        Payment savedPayment = paymentService.addPayment(request);
+        URI location = URI.create("/api/v1/payments/" + savedPayment.getId());
+        return ResponseEntity.created(location).body(savedPayment);
     }
 
+    @Operation(summary = "납부자 수정")
+    @PutMapping("{id}")
+    public ResponseEntity<Void> editPayment(@PathVariable Long id, @RequestBody @Valid PaymentUpdateRequest request) {
+        paymentService.updatePayment(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "납부자 삭제")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+        paymentService.deletePayment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "전체 납부자 삭제")
     @DeleteMapping
-    public void deleteAllPayments() {
+    public ResponseEntity<Void> deleteAllPayments() {
         paymentService.deleteAllPayments();
+        return ResponseEntity.noContent().build();
     }
-
 }

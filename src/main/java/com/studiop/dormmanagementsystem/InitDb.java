@@ -1,9 +1,11 @@
 package com.studiop.dormmanagementsystem;
 
 import com.studiop.dormmanagementsystem.entity.Building;
+import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
+import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import com.studiop.dormmanagementsystem.service.BuildingService;
-import com.studiop.dormmanagementsystem.service.PaymentService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,8 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-//        initService.mockBuilding();
-//        initService.mockPayment();
+        initService.mockBuilding();
+        initService.mockPayment();
     }
 
     @Component
@@ -29,7 +31,7 @@ public class InitDb {
     static class InitService {
 
         private final BuildingService buildingService;
-        private final PaymentService paymentService;
+        private final PaymentRepository paymentRepository;
         private static final ThreadLocalRandom r = ThreadLocalRandom.current();
         private static final int DEFAULT_BUILDING_CAPACITY = 100;
         private static final int PAYMENT_AMOUNT = 7000;
@@ -57,8 +59,8 @@ public class InitDb {
 
         @Transactional
         public void mockPayment() {
-            paymentService.addPayment("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentType.BANK_TRANSFER);
-            paymentService.addPayment("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentType.ON_SITE);
+            paymentRepository.save(new Payment(null, "202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentStatus.PAID, PaymentType.BANK_TRANSFER));
+            paymentRepository.save(new Payment(null, "202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentStatus.PAID, PaymentType.ON_SITE));
 
             for (int i = 0; i < 500; i++) {
                 int year = r.nextInt(5);
@@ -73,7 +75,7 @@ public class InitDb {
                 } else {
                     paymentType = PaymentType.ON_SITE;
                 }
-                paymentService.addPayment("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), paymentType);
+                paymentRepository.save(new Payment(null, "202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
             }
         }
     }

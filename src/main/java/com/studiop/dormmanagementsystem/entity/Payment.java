@@ -50,7 +50,7 @@ public class Payment {
         this.type = type;
     }
 
-    public void editPayment(String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
+    public void updatePayment(String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
         this.name = depositName;
         this.amount = amount;
         this.date = paymentDate;
