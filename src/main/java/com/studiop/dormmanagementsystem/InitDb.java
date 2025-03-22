@@ -5,6 +5,7 @@ import com.studiop.dormmanagementsystem.entity.Payment;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
+import com.studiop.dormmanagementsystem.service.AppConfigService;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class InitDb {
     public void init() {
         initService.mockBuilding();
         initService.mockPayment();
+        initService.setupGoogleSheetId();
     }
 
     @Component
@@ -32,6 +34,7 @@ public class InitDb {
 
         private final BuildingService buildingService;
         private final PaymentRepository paymentRepository;
+        private final AppConfigService appConfigService;
         private static final ThreadLocalRandom r = ThreadLocalRandom.current();
         private static final int DEFAULT_BUILDING_CAPACITY = 100;
         private static final int PAYMENT_AMOUNT = 7000;
@@ -78,6 +81,10 @@ public class InitDb {
                 paymentRepository.save(new Payment(null, "202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
             }
         }
-    }
 
+        @Transactional
+        public void setupGoogleSheetId() {
+            appConfigService.setConfigValue("googleSheetId", "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
+        }
+    }
 }
