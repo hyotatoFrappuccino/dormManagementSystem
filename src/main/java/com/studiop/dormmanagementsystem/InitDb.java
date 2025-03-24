@@ -7,6 +7,7 @@ import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import com.studiop.dormmanagementsystem.service.AppConfigService;
 import com.studiop.dormmanagementsystem.service.BuildingService;
+import com.studiop.dormmanagementsystem.service.RoundService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class InitDb {
         initService.mockBuilding();
         initService.mockPayment();
         initService.setupGoogleSheetId();
+        initService.generateMockRounds();
     }
 
     @Component
@@ -38,6 +40,7 @@ public class InitDb {
         private static final ThreadLocalRandom r = ThreadLocalRandom.current();
         private static final int DEFAULT_BUILDING_CAPACITY = 100;
         private static final int PAYMENT_AMOUNT = 7000;
+        private final RoundService roundService;
 
         @Transactional
         public void mockBuilding() {
@@ -85,6 +88,32 @@ public class InitDb {
         @Transactional
         public void setupGoogleSheetId() {
             appConfigService.setConfigValue("googleSheetId", "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
+        }
+
+        @Transactional
+        public void generateMockRounds() {
+            // 1학기 회차 (2주 단위로 8개)
+            LocalDate springStart = LocalDate.of(2025, 3, 4);
+            for (int i = 0; i < 8; i++) {
+                LocalDate startDate = springStart.plusDays(i * 14);
+                LocalDate endDate = startDate.plusDays(13);
+                roundService.addRound("1학기 " + (i + 1) + "회차", startDate, endDate);
+            }
+
+            // 여름방학
+            LocalDate summerStart = LocalDate.of(2025, 6, 24);
+            LocalDate fallStart = LocalDate.of(2025, 9, 1);
+            roundService.addRound("여름학기", summerStart, fallStart.minusDays(1));
+
+            // 2학기 회차 (2주 단위로 8개)
+            for (int i = 0; i < 8; i++) {
+                LocalDate startDate = fallStart.plusDays(i * 14);
+                LocalDate endDate = startDate.plusDays(13);
+                roundService.addRound("2학기 " + (i + 1) + "회차", startDate, endDate);
+            }
+
+            // 겨울방학
+            roundService.addRound("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28));
         }
     }
 }

@@ -1,0 +1,57 @@
+package com.studiop.dormmanagementsystem.api.v1;
+
+import com.studiop.dormmanagementsystem.entity.Round;
+import com.studiop.dormmanagementsystem.entity.dto.RoundUpdateRequest;
+import com.studiop.dormmanagementsystem.service.RoundService;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/rounds")
+@RequiredArgsConstructor
+public class RoundController {
+
+    private final RoundService roundService;
+
+    @Operation(summary = "회차 목록 조회")
+    @GetMapping()
+    public ResponseEntity<List<Round>> getAllRounds() {
+        List<Round> rounds = roundService.getAllRounds();
+        return ResponseEntity.ok(rounds);
+    }
+
+    @Operation(summary = "회차 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<Round> getRoundById(@PathVariable Long id) {
+        Round round = roundService.getRoundById(id);
+        return ResponseEntity.ok(round);
+    }
+
+    @Operation(summary = "회차 추가")
+    @PostMapping()
+    public ResponseEntity<Round> addRounds(@RequestBody Round round) {
+        Round addedRound = roundService.addRound(round.getName(), round.getStartDate(), round.getEndDate());
+        URI location = URI.create("/api/v1/rounds/" + addedRound.getId());
+        return ResponseEntity.created(location).body(addedRound);
+    }
+
+    @Operation(summary = "회차 수정")
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> editRound(@PathVariable Long id,
+                                          @RequestBody RoundUpdateRequest roundUpdateRequest) {
+        roundService.updateRound(id, roundUpdateRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "회차 삭제")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        roundService.deleteRound(id);
+        return ResponseEntity.noContent().build();
+    }
+}

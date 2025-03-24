@@ -43,7 +43,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "납부자 수정")
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> editPayment(@PathVariable Long id, @RequestBody @Valid PaymentUpdateRequest request) {
         paymentService.updatePayment(id, request);
         return ResponseEntity.noContent().build();
