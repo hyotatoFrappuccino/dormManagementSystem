@@ -16,7 +16,7 @@ public class Admin {
 
     @Id
     @GeneratedValue
-    @Column(name = "member_id")
+    @Column(name = "admin_id")
     private Long id;
 
     private String email;

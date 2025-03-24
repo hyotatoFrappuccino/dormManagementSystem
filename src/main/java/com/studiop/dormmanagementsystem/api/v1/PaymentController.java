@@ -5,10 +5,8 @@ import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
