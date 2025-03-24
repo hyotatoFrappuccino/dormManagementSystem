@@ -8,6 +8,7 @@ import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import com.studiop.dormmanagementsystem.service.AppConfigService;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.RoundService;
+import com.studiop.dormmanagementsystem.service.SurveyService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,7 @@ public class InitDb {
         private static final int DEFAULT_BUILDING_CAPACITY = 100;
         private static final int PAYMENT_AMOUNT = 7000;
         private final RoundService roundService;
+        private final SurveyService surveyService;
 
         @Transactional
         public void mockBuilding() {
