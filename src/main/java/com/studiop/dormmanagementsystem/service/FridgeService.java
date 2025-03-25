@@ -72,7 +72,7 @@ public class FridgeService {
                 });
 
         // 새로운 신청 추가
-        FridgeApplication application = new FridgeApplication(round, request.getType());
+        FridgeApplication application = new FridgeApplication(member, round, request.getType());
         member.addFridgeApplication(application);
         fridgeApplicationRepository.save(application);
     }

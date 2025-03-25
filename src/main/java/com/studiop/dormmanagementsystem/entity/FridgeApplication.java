@@ -14,8 +14,13 @@ import java.time.LocalDateTime;
 public class FridgeApplication {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
+    @Column(name = "fridgeApplication_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "round_id")
@@ -26,7 +31,8 @@ public class FridgeApplication {
 
     private LocalDateTime appliedAt; // 신청 시간
 
-    public FridgeApplication(Round round, FridgeType type) {
+    public FridgeApplication(Member member, Round round, FridgeType type) {
+        this.member = member;
         this.round = round;
         this.type = type;
         this.appliedAt = LocalDateTime.now();

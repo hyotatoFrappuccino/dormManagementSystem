@@ -1,15 +1,14 @@
 package com.studiop.dormmanagementsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +26,9 @@ public class Round {
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "round")
+    private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 
     public Round(String name, LocalDate startDate, LocalDate endDate) {
         this.name = name;

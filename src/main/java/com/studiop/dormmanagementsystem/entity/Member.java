@@ -37,7 +37,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Payment> payments = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "member")
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 
     public void setPaid() {
