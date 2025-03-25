@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.api.v1;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,7 @@ public class DashboardController {
     private final BuildingService buildingService;
     private final PaymentService paymentService;
 
-    /**
-     * 대시보드
-     * @return 전체 납부자 수, 전체 이용자 수, 건물별 이용자 수
-     */
+    @Operation(summary = "대시보드 조회")
     @GetMapping("/dashboard")
     public Map<String, Object> dashboard() {
 

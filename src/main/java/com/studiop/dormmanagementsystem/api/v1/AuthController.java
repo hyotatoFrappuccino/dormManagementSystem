@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -16,8 +16,8 @@ public class FridgeController {
     private final FridgeService fridgeService;
 
     @Operation(summary = "냉장고 신청 관련 학생 정보 조회")
-    @GetMapping()
-    public ResponseEntity<FridgeMemberInfoResponse> getMember(@RequestParam String studentId) {
+    @GetMapping("/{studentId}")
+    public ResponseEntity<FridgeMemberInfoResponse> getMember(@PathVariable String studentId) {
         FridgeMemberInfoResponse response = new FridgeMemberInfoResponse(
                 fridgeService.getMemberInfo(studentId),
                 fridgeService.getFridgeByMemberInfo(studentId)

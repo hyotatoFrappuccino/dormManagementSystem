@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.service.SurveyService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class SurveyController {
 
     private final SurveyService surveyService;
 
+    @Operation(summary = "서약서 업데이트")
     @PostMapping
     public ResponseEntity<String> updateSurveyResponses() {
         log.info("Controller - start updateSurveyResponses");
@@ -37,18 +39,21 @@ public class SurveyController {
         }
     }
 
+    @Operation(summary = "전체 서약서 목록 반환")
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<Survey>> getAllSurveys() {
         return ResponseEntity.ok(surveyService.getAllSurveys());
     }
 
+    @Operation(summary = "서약서 삭제")
     @DeleteMapping("/{id}")
     public void deleteSurvey(@PathVariable("id") Long id) {
         surveyService.deleteSurvey(id);
     }
 
-    @DeleteMapping("/all")
+    @Operation(summary = "전체 서약서 삭제")
+    @DeleteMapping()
     public void deleteAllSurveys() {
         surveyService.deleteAllSurveys();
     }
