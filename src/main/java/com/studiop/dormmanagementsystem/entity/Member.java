@@ -48,6 +48,10 @@ public class Member {
         this.fridgeApplications.add(application);
     }
 
+    public void removeFridgeApplication(FridgeApplication application) {
+        this.fridgeApplications.remove(application);
+    }
+
     //todo 생성자 고민
     public Member(String studentId, String name, String phone, Building building, String roomNumber, PaymentStatus paymentStatus) {
         this.studentId = studentId;

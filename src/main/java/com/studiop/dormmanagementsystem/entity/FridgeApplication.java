@@ -18,6 +18,7 @@ public class FridgeApplication {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "round_id")
     private Round round;
 
     @Enumerated(EnumType.STRING)
