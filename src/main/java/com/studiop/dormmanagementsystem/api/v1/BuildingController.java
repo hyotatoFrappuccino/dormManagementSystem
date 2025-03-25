@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Building;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +26,15 @@ public class BuildingController {
     }
 
     @PostMapping("/building")
-    public void addBuilding(@RequestParam String buildingName, @RequestParam int totalSlots) {
-        buildingService.addBuilding(buildingName, totalSlots);
+    public void addBuilding(@RequestBody BuildingDto request) {
+        buildingService.addBuilding(request.getName(), request.getTotalSlots());
     }
 
     @PutMapping("/building")
     public ResponseEntity<String> editBuilding(
             @RequestParam Long id,
-            @RequestParam String buildingName,
-            @RequestParam int totalSlots) {
-        buildingService.editBuilding(id, buildingName, totalSlots);
+            @RequestBody BuildingDto request) {
+        buildingService.editBuilding(id, request.getName(), request.getTotalSlots());
 
         return ResponseEntity.ok("OK");
     }

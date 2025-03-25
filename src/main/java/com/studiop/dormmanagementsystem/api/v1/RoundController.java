@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Round;
+import com.studiop.dormmanagementsystem.entity.dto.RoundDto;
 import com.studiop.dormmanagementsystem.entity.dto.RoundUpdateRequest;
 import com.studiop.dormmanagementsystem.service.RoundService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/rounds")
@@ -20,8 +22,8 @@ public class RoundController {
 
     @Operation(summary = "회차 목록 조회")
     @GetMapping()
-    public ResponseEntity<List<Round>> getAllRounds() {
-        List<Round> rounds = roundService.getAllRounds();
+    public ResponseEntity<List<RoundDto>> getAllRounds() {
+        List<RoundDto> rounds = roundService.getAllRounds();
         return ResponseEntity.ok(rounds);
     }
 
@@ -30,6 +32,12 @@ public class RoundController {
     public ResponseEntity<Round> getRoundById(@PathVariable Long id) {
         Round round = roundService.getRoundById(id);
         return ResponseEntity.ok(round);
+    }
+
+    @Operation(summary = "해당 회차 건물별 이용자 수 조회")
+    @GetMapping("/fridgeApplications/{id}")
+    public ResponseEntity<Map<Long, Integer>> getFridgeApplicationsByRoundId(@PathVariable Long id) {
+        return ResponseEntity.ok(roundService.getFridgeCountByBuilding(id));
     }
 
     @Operation(summary = "회차 추가")

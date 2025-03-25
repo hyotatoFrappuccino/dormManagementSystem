@@ -28,11 +28,9 @@ public class DashboardController {
 
         List<Building> buildings = buildingService.getAllBuildings();
         long totalPayers = paymentService.getNumOfTotalPayers();
-        long totalUsers = buildings.stream().mapToLong(Building::getTotalUsers).sum();
 
         return Map.of(
                 "totalPayers", totalPayers,
-                "totalUsers", totalUsers,
                 "buildings", buildings
         );
     }

@@ -36,32 +36,17 @@ public class BuildingService {
     }
 
     @Transactional
-    public void increaseUser(Building building) {
-        building.increaseUser();
-    }
-
-    @Transactional
-    public void decreaseUser(Building building) {
-        building.decreaseUser();
-    }
-
-    @Transactional
-    public void setUserSlots(Building building, int userSlots) {
-        building.setTotalSlots(userSlots);
-    }
-
-    @Transactional
     public void changeName(Building building, String newName) {
         building.changeName(newName);
     }
 
     @Transactional
-    public void editBuilding(Long id, String buildingName, int userSlots) {
+    public void editBuilding(Long id, String buildingName, int totalSlots) {
         Building building = buildingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Building not found with id: " + id));
 
         building.changeName(buildingName);
-        building.setTotalSlots(userSlots);
+        building.changeTotalSlots(totalSlots);
     }
 
     @Transactional

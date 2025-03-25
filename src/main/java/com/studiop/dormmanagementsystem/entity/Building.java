@@ -22,32 +22,16 @@ public class Building {
 
     private int totalSlots;
 
-    private int totalUsers;
-
     public Building(String name, int totalSlots) {
         this.name = name;
         this.totalSlots = totalSlots;
-        this.totalUsers = 0;
-    }
-
-    public int increaseUser() {
-        this.totalUsers++;
-        return this.totalUsers;
-    }
-
-    public int decreaseUser() {
-        if (this.totalUsers > 0) {
-            this.totalUsers--;
-        }
-        return this.totalUsers;
-    }
-
-    public int setTotalSlots(int totalSlots) {
-        this.totalUsers = totalSlots;
-        return this.totalUsers;
     }
 
     public void changeName(String newName) {
         this.name = newName;
+    }
+
+    public void changeTotalSlots(int newTotalSlots) {
+        this.totalSlots = newTotalSlots;
     }
 }

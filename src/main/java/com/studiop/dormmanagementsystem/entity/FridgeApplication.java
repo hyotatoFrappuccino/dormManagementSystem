@@ -23,6 +23,10 @@ public class FridgeApplication {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "building_id")
+    private Building building;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "round_id")
     private Round round;
 
@@ -33,6 +37,7 @@ public class FridgeApplication {
 
     public FridgeApplication(Member member, Round round, FridgeType type) {
         this.member = member;
+        this.building = member.getBuilding();
         this.round = round;
         this.type = type;
         this.appliedAt = LocalDateTime.now();

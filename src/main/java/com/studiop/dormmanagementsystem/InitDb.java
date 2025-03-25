@@ -54,15 +54,6 @@ public class InitDb {
             Building building6 = buildingService.addBuilding("난지원", DEFAULT_BUILDING_CAPACITY);
             Building building7 = buildingService.addBuilding("국지원", DEFAULT_BUILDING_CAPACITY);
             Building building8 = buildingService.addBuilding("퇴계관", DEFAULT_BUILDING_CAPACITY);
-
-            buildingService.setUserSlots(building1, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building2, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building3, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building4, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building5, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building6, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building7, r.nextInt(DEFAULT_BUILDING_CAPACITY));
-            buildingService.setUserSlots(building8, r.nextInt(DEFAULT_BUILDING_CAPACITY));
         }
 
         @Transactional
