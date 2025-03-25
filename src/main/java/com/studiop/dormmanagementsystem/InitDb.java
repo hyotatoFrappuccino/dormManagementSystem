@@ -58,8 +58,8 @@ public class InitDb {
 
         @Transactional
         public void mockPayment() {
-            paymentRepository.save(new Payment(null, "202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentStatus.PAID, PaymentType.BANK_TRANSFER));
-            paymentRepository.save(new Payment(null, "202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentStatus.PAID, PaymentType.ON_SITE));
+            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentStatus.PAID, PaymentType.BANK_TRANSFER));
+            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentStatus.PAID, PaymentType.ON_SITE));
 
             for (int i = 0; i < 500; i++) {
                 int year = r.nextInt(5);
@@ -74,7 +74,7 @@ public class InitDb {
                 } else {
                     paymentType = PaymentType.ON_SITE;
                 }
-                paymentRepository.save(new Payment(null, "202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
+                paymentRepository.save(new Payment("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
             }
         }
 

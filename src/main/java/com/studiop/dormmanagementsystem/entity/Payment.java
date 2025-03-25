@@ -22,10 +22,6 @@ public class Payment {
     @Column(name = "payment_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
     @NotBlank
     private String name;
 
@@ -41,8 +37,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentType type;
 
-    public Payment(Member member, String name, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
-        this.member = member;
+    public Payment(String name, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
         this.name = name;
         this.amount = amount;
         this.date = date;

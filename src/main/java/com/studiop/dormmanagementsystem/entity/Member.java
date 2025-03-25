@@ -35,14 +35,7 @@ public class Member {
     private PaymentStatus paymentStatus;
 
     @OneToMany(mappedBy = "member")
-    private List<Payment> payments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
-
-    public void setPaid() {
-        this.paymentStatus = PaymentStatus.PAID;
-    }
 
     public void addFridgeApplication(FridgeApplication application) {
         this.fridgeApplications.add(application);
@@ -52,7 +45,6 @@ public class Member {
         this.fridgeApplications.remove(application);
     }
 
-    //todo 생성자 고민
     public Member(String studentId, String name, String phone, Building building, String roomNumber, PaymentStatus paymentStatus) {
         this.studentId = studentId;
         this.name = name;

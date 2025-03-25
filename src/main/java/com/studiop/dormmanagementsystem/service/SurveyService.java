@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Survey;
+import com.studiop.dormmanagementsystem.entity.dto.SurveyDto;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,8 +26,11 @@ public class SurveyService {
     private final SurveyTransactionService surveyTransactionService;
     private final AppConfigService appConfigService;
 
-    public List<Survey> getAllSurveys() {
-        return surveyRepository.findAll();
+    public List<SurveyDto> getAllSurveys() {
+        List<Survey> surveys = surveyRepository.findAll();
+        return surveys.stream()
+                .map(SurveyDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public Optional<Survey> getSurvey(String studentId) {

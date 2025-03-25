@@ -1,6 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Survey;
+import com.studiop.dormmanagementsystem.entity.dto.SurveyDto;
 import com.studiop.dormmanagementsystem.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class SurveyController {
     @Operation(summary = "전체 서약서 목록 반환")
     @GetMapping
     @ResponseBody
-    public ResponseEntity<List<Survey>> getAllSurveys() {
+    public ResponseEntity<List<SurveyDto>> getAllSurveys() {
         return ResponseEntity.ok(surveyService.getAllSurveys());
     }
 
