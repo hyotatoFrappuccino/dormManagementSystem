@@ -43,6 +43,10 @@ public class FridgeService {
                 .collect(Collectors.toList());
     }
 
+    public List<FridgeApplication> getAllFridgeApplications() {
+        return fridgeApplicationRepository.findAll();
+    }
+
     @Transactional
     public void apply(FridgeApplyRequest request) {
         String studentId = request.getStudentId();

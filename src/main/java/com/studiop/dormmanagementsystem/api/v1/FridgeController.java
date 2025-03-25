@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.entity.FridgeApplication;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeMemberInfoResponse;
 import com.studiop.dormmanagementsystem.service.FridgeService;
@@ -7,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/fridge")
@@ -25,8 +28,14 @@ public class FridgeController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "냉장고 신청 목록 전체 조회")
+    @GetMapping
+    public ResponseEntity<List<FridgeApplication>> getAllFridgeApplications() {
+        return ResponseEntity.ok(fridgeService.getAllFridgeApplications());
+    }
+
     @Operation(summary = "냉장고 신청")
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> apply(@RequestBody FridgeApplyRequest request) {
         fridgeService.apply(request);
         return ResponseEntity.ok().build();

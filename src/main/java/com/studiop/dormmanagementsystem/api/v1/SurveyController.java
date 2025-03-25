@@ -53,7 +53,7 @@ public class SurveyController {
     }
 
     @Operation(summary = "전체 서약서 삭제")
-    @DeleteMapping()
+    @DeleteMapping
     public void deleteAllSurveys() {
         surveyService.deleteAllSurveys();
     }

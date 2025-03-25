@@ -21,7 +21,7 @@ public class RoundController {
     private final RoundService roundService;
 
     @Operation(summary = "회차 목록 조회")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<RoundDto>> getAllRounds() {
         List<RoundDto> rounds = roundService.getAllRounds();
         return ResponseEntity.ok(rounds);
@@ -41,7 +41,7 @@ public class RoundController {
     }
 
     @Operation(summary = "회차 추가")
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Round> addRounds(@RequestBody Round round) {
         Round addedRound = roundService.addRound(round.getName(), round.getStartDate(), round.getEndDate());
         URI location = URI.create("/api/v1/rounds/" + addedRound.getId());

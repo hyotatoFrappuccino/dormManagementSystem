@@ -18,14 +18,14 @@ public class BuildingController {
     private final BuildingService buildingService;
 
     @Operation(summary = "건물 전체 목록 반환")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Building>> buildings() {
         List<Building> buildings = buildingService.getAllBuildings();
         return ResponseEntity.ok(buildings);
     }
 
     @Operation(summary = "건물 추가")
-    @PostMapping()
+    @PostMapping
     public void addBuilding(@RequestBody BuildingDto request) {
         buildingService.addBuilding(request.getName(), request.getTotalSlots());
     }
