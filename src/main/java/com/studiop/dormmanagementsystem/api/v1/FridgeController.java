@@ -1,6 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.FridgeApplication;
+import com.studiop.dormmanagementsystem.entity.dto.FridgeApplicationDto;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeMemberInfoResponse;
 import com.studiop.dormmanagementsystem.service.FridgeService;
@@ -30,8 +30,8 @@ public class FridgeController {
 
     @Operation(summary = "냉장고 신청 목록 전체 조회")
     @GetMapping
-    public ResponseEntity<List<FridgeApplication>> getAllFridgeApplications() {
-        return ResponseEntity.ok(fridgeService.getAllFridgeApplications());
+    public ResponseEntity<List<FridgeApplicationDto>> getAllFridgeApplications() {
+        return ResponseEntity.ok(fridgeService.getAllFridgeApplications().stream().map(FridgeApplicationDto::fromEntity).toList());
     }
 
     @Operation(summary = "냉장고 신청")

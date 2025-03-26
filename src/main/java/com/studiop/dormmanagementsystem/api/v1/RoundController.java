@@ -29,8 +29,8 @@ public class RoundController {
 
     @Operation(summary = "회차 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<Round> getRoundById(@PathVariable Long id) {
-        Round round = roundService.getRoundById(id);
+    public ResponseEntity<RoundDto> getRoundById(@PathVariable Long id) {
+        RoundDto round = roundService.getDtoById(id);
         return ResponseEntity.ok(round);
     }
 
@@ -42,10 +42,10 @@ public class RoundController {
 
     @Operation(summary = "회차 추가")
     @PostMapping
-    public ResponseEntity<Round> addRounds(@RequestBody Round round) {
+    public ResponseEntity<RoundDto> addRounds(@RequestBody Round round) {
         Round addedRound = roundService.addRound(round.getName(), round.getStartDate(), round.getEndDate());
         URI location = URI.create("/api/v1/rounds/" + addedRound.getId());
-        return ResponseEntity.created(location).body(addedRound);
+        return ResponseEntity.created(location).body(RoundDto.fromEntity(addedRound));
     }
 
     @Operation(summary = "회차 수정")

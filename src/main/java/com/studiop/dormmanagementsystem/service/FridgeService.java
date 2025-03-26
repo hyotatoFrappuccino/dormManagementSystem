@@ -63,7 +63,7 @@ public class FridgeService {
                         survey.getBuilding(), survey.getRoomNumber(), PaymentStatus.PAID
                 )));
 
-        Round round = roundService.getRoundById(request.getRoundId());
+        Round round = roundService.getById(request.getRoundId());
 
         // 해당 회차에 기존 신청이 있다면 삭제
         member.getFridgeApplications()

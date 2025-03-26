@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,23 +35,19 @@ public class RoundService {
     }
 
     public List<RoundDto> getAllRounds() {
-        List<Round> rounds = roundRepository.findAll();
-        return rounds.stream()
-                .map(round -> new RoundDto(
-                        round.getId(),
-                        round.getName(),
-                        round.getStartDate(),
-                        round.getEndDate()
-                ))
-                .collect(Collectors.toList());
+        return roundRepository.findAll().stream().map(RoundDto::fromEntity).toList();
     }
 
-    public Round getRoundById(Long id) {
+    public Round getById(Long id) {
         return roundRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    public RoundDto getDtoById(Long id) {
+        return RoundDto.fromEntity(roundRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+    }
+
     public Map<Long, Integer> getFridgeCountByBuilding(Long id) {
-        List<FridgeApplication> fridgeApplications = getRoundById(id).getFridgeApplications();
+        List<FridgeApplication> fridgeApplications = getById(id).getFridgeApplications();
         Map<Long, Integer> fridgeCount = new HashMap<>();
         for (FridgeApplication fridgeApplication : fridgeApplications) {
             Building building = fridgeApplication.getBuilding();
@@ -66,13 +61,6 @@ public class RoundService {
         Round round = findById(id);
         round.updateRound(request.getName(), request.getStartDate(), request.getEndDate());
         roundRepository.save(round);
-    }
-
-    public Optional<Round> getCurrentRound() {
-        LocalDate today = LocalDate.now();
-        return roundRepository.findAll().stream()
-                .filter(round -> !today.isBefore(round.getStartDate()) && !today.isAfter(round.getEndDate()))
-                .findFirst();
     }
 
     public Round findById(Long id) {

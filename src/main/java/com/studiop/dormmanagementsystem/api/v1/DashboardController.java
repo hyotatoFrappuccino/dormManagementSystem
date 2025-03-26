@@ -1,6 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Building;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public Map<String, Object> dashboard() {
 
-        List<Building> buildings = buildingService.getAllBuildings();
+        List<BuildingDto> buildings = buildingService.getAllBuildings();
         long totalPayers = paymentService.getNumOfTotalPayers();
 
         return Map.of(

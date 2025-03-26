@@ -62,7 +62,7 @@ public class SurveyTransactionService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy. M. d a h:mm:ss").withLocale(java.util.Locale.KOREAN);
         List<Survey> surveysToSave = new ArrayList<>();
         LocalDateTime lastFetchedTime = getAndUpdateLastFetchedTime();
-        List<Building> buildingList = buildingService.getAllBuildings();
+        List<Building> buildingList = buildingService.getAllBuildingsEntity();
 
         for (int i = 1; i < responses.size(); i++) {
             List<Object> row = responses.get(i);

@@ -10,13 +10,21 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class FridgeApplicationDto {
-    private String roundName;
+    private Long id;
+    private MemberDto member;
+    private BuildingDto building;
+    private RoundDto round;
     private FridgeType type;
+    private LocalDateTime appliedAt;
 
     public static FridgeApplicationDto fromEntity(FridgeApplication application) {
         return new FridgeApplicationDto(
-                application.getRound().getName(),
-                application.getType()
+                application.getId(),
+                MemberDto.fromEntity(application.getMember()),
+                BuildingDto.fromEntity(application.getBuilding()),
+                RoundDto.fromEntity(application.getRound()),
+                application.getType(),
+                application.getAppliedAt()
         );
     }
 }

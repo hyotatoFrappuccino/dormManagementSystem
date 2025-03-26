@@ -11,6 +11,6 @@ public class PaymentUpdateRequest {
     private String name;
     private Integer amount;
     private LocalDate date;
-    private PaymentType type;
     private PaymentStatus status;
+    private PaymentType type;
 }

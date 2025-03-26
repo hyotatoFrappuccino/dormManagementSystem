@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,7 +21,6 @@ import java.util.List;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final MemberService memberService;
 
     @Transactional
     public Payment addPayment(PaymentRequest request) {
@@ -27,8 +28,8 @@ public class PaymentService {
         return paymentRepository.save(payment);
     }
 
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    public List<PaymentDto> getAllPayments() {
+        return paymentRepository.findAll().stream().map(PaymentDto::fromEntity).collect(Collectors.toList());
     }
 
     public Long getNumOfTotalPayers() {
@@ -38,6 +39,10 @@ public class PaymentService {
     public Payment findById(Long id) {
         return paymentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id));
+    }
+
+    public PaymentDto findDtoById(Long id) {
+        return PaymentDto.fromEntity(findById(id));
     }
 
     @Transactional

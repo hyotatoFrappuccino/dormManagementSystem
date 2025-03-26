@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,24 +20,23 @@ public class BuildingController {
 
     @Operation(summary = "건물 전체 목록 반환")
     @GetMapping
-    public ResponseEntity<List<Building>> buildings() {
-        List<Building> buildings = buildingService.getAllBuildings();
+    public ResponseEntity<List<BuildingDto>> buildings() {
+        List<BuildingDto> buildings = buildingService.getAllBuildings();
         return ResponseEntity.ok(buildings);
     }
 
     @Operation(summary = "건물 추가")
     @PostMapping
-    public void addBuilding(@RequestBody BuildingDto request) {
-        buildingService.addBuilding(request.getName(), request.getTotalSlots());
+    public ResponseEntity<BuildingDto> addBuilding(@RequestBody BuildingDto request) {
+        Building savedBuilding = buildingService.addBuilding(request.getName(), request.getTotalSlots());
+        URI location = URI.create("/api/v1/buildings/" + savedBuilding.getId());
+        return ResponseEntity.created(location).body(BuildingDto.fromEntity(savedBuilding));
     }
 
     @Operation(summary = "건물 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<String> editBuilding(
-            @PathVariable("id") Long id,
-            @RequestBody BuildingDto request) {
+    public ResponseEntity<String> updateBuilding(@PathVariable("id") Long id, @RequestBody BuildingDto request) {
         buildingService.editBuilding(id, request.getName(), request.getTotalSlots());
-
         return ResponseEntity.ok("OK");
     }
 

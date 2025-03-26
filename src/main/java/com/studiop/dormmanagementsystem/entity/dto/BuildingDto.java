@@ -7,12 +7,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class BuildingDto {
+    private Long id;
     private String name;
     private int totalSlots;
 
     public static BuildingDto fromEntity(Building building) {
         return new BuildingDto(
-                building.getName(), building.getTotalSlots()
+                building.getId(), building.getName(), building.getTotalSlots()
         );
     }
 }

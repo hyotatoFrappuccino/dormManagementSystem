@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.service.PaymentService;
@@ -22,24 +23,24 @@ public class PaymentController {
 
     @Operation(summary = "납부자 목록 조회")
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments() {
-        List<Payment> payments = paymentService.getAllPayments();
+    public ResponseEntity<List<PaymentDto>> getAllPayments() {
+        List<PaymentDto> payments = paymentService.getAllPayments();
         return ResponseEntity.ok(payments);
     }
 
     @Operation(summary = "납부자 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
-        Payment payment = paymentService.findById(id);
+    public ResponseEntity<PaymentDto> getPaymentById(@PathVariable Long id) {
+        PaymentDto payment = paymentService.findDtoById(id);
         return ResponseEntity.ok(payment);
     }
 
     @Operation(summary = "납부자 추가")
     @PostMapping
-    public ResponseEntity<Payment> addPayment(@RequestBody PaymentRequest request) {
+    public ResponseEntity<PaymentDto> addPayment(@RequestBody PaymentRequest request) {
         Payment savedPayment = paymentService.addPayment(request);
         URI location = URI.create("/api/v1/payments/" + savedPayment.getId());
-        return ResponseEntity.created(location).body(savedPayment);
+        return ResponseEntity.created(location).body(PaymentDto.fromEntity(savedPayment));
     }
 
     @Operation(summary = "납부자 수정")

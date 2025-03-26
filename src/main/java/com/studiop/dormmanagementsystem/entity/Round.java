@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
