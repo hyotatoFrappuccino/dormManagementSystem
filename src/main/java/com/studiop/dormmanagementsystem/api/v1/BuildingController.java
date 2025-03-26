@@ -28,7 +28,7 @@ public class BuildingController {
     @Operation(summary = "건물 추가")
     @PostMapping
     public ResponseEntity<BuildingDto> addBuilding(@RequestBody BuildingDto request) {
-        Building savedBuilding = buildingService.addBuilding(request.getName(), request.getTotalSlots());
+        Building savedBuilding = buildingService.addBuilding(request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
         URI location = URI.create("/api/v1/buildings/" + savedBuilding.getId());
         return ResponseEntity.created(location).body(BuildingDto.fromEntity(savedBuilding));
     }
@@ -36,7 +36,7 @@ public class BuildingController {
     @Operation(summary = "건물 수정")
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBuilding(@PathVariable("id") Long id, @RequestBody BuildingDto request) {
-        buildingService.editBuilding(id, request.getName(), request.getTotalSlots());
+        buildingService.editBuilding(id, request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
         return ResponseEntity.ok("OK");
     }
 

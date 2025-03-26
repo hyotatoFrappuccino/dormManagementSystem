@@ -1,14 +1,13 @@
 package com.studiop.dormmanagementsystem;
 
-import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import com.studiop.dormmanagementsystem.service.AppConfigService;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import com.studiop.dormmanagementsystem.service.RoundService;
-import com.studiop.dormmanagementsystem.service.SurveyService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,21 +38,19 @@ public class InitDb {
         private final PaymentRepository paymentRepository;
         private final AppConfigService appConfigService;
         private static final ThreadLocalRandom r = ThreadLocalRandom.current();
-        private static final int DEFAULT_BUILDING_CAPACITY = 100;
         private static final int PAYMENT_AMOUNT = 7000;
         private final RoundService roundService;
-        private final SurveyService surveyService;
 
         @Transactional
         public void mockBuilding() {
-            Building building1 = buildingService.addBuilding("새롬관(여)", DEFAULT_BUILDING_CAPACITY);
-            Building building2 = buildingService.addBuilding("새롬관(남)", DEFAULT_BUILDING_CAPACITY);
-            Building building3 = buildingService.addBuilding("이룸관(여)", DEFAULT_BUILDING_CAPACITY);
-            Building building4 = buildingService.addBuilding("이룸관(남)", DEFAULT_BUILDING_CAPACITY);
-            Building building5 = buildingService.addBuilding("예지원", DEFAULT_BUILDING_CAPACITY);
-            Building building6 = buildingService.addBuilding("난지원", DEFAULT_BUILDING_CAPACITY);
-            Building building7 = buildingService.addBuilding("국지원", DEFAULT_BUILDING_CAPACITY);
-            Building building8 = buildingService.addBuilding("퇴계관", DEFAULT_BUILDING_CAPACITY);
+            buildingService.addBuilding("새롬관(여)", 32, 25, 0, FridgeType.ALL);
+            buildingService.addBuilding("새롬관(남)", 30, 20, 0, FridgeType.ALL);
+            buildingService.addBuilding("이룸관(여)", 25, 20, 0, FridgeType.ALL);
+            buildingService.addBuilding("이룸관(남)", 20, 15, 0, FridgeType.ALL);
+            buildingService.addBuilding("예지원", 20, 15, 0, FridgeType.ALL);
+            buildingService.addBuilding("난지원", 30, 20, 0, FridgeType.ALL);
+            buildingService.addBuilding("국지원", 30, 20, 0, FridgeType.ALL);
+            buildingService.addBuilding("퇴계관", 20, 15, 0, FridgeType.ALL);
         }
 
         @Transactional

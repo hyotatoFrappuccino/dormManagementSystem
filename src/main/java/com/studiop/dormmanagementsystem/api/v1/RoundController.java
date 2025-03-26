@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.api.v1;
 import com.studiop.dormmanagementsystem.entity.Round;
 import com.studiop.dormmanagementsystem.entity.dto.RoundDto;
 import com.studiop.dormmanagementsystem.entity.dto.RoundUpdateRequest;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.service.RoundService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class RoundController {
 
     @Operation(summary = "해당 회차 건물별 이용자 수 조회")
     @GetMapping("/fridgeApplications/{id}")
-    public ResponseEntity<Map<Long, Integer>> getFridgeApplicationsByRoundId(@PathVariable Long id) {
+    public ResponseEntity<Map<Long, Map<FridgeType, Integer>>> getFridgeApplicationsByRoundId(@PathVariable Long id) {
         return ResponseEntity.ok(roundService.getFridgeCountByBuilding(id));
     }
 

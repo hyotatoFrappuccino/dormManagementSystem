@@ -1,9 +1,7 @@
 package com.studiop.dormmanagementsystem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,18 +18,38 @@ public class Building {
 
     private String name;
 
-    private int totalSlots;
+    private int fridgeSlots; // 냉장 슬롯
+    private int freezerSlots; // 냉동 슬롯
+    private int integratedSlots; // 통합 슬롯
 
-    public Building(String name, int totalSlots) {
+    @Enumerated(EnumType.STRING)
+    private FridgeType type;
+
+    public Building(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
         this.name = name;
-        this.totalSlots = totalSlots;
+        this.fridgeSlots = fridgeSlots;
+        this.freezerSlots = freezerSlots;
+        this.integratedSlots = integratedSlots;
+        this.type = type;
     }
 
     public void changeName(String newName) {
         this.name = newName;
     }
 
-    public void changeTotalSlots(int newTotalSlots) {
-        this.totalSlots = newTotalSlots;
+    public void changeFridgeSlots(int newFridgeSlots) {
+        this.fridgeSlots = newFridgeSlots;
+    }
+
+    public void changeFreezerSlots(int newFreezerSlots) {
+        this.freezerSlots = newFreezerSlots;
+    }
+
+    public void changeIntegratedSlots(int newIntegratedSlots) {
+        this.integratedSlots = newIntegratedSlots;
+    }
+
+    public void changeType(FridgeType type) {
+        this.type = type;
     }
 }

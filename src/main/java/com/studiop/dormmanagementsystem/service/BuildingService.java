@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,8 @@ public class BuildingService {
 
     private final BuildingRepository buildingRepository;
 
-    public Building addBuilding(String name, int totalSlots) {
-        return buildingRepository.save(new Building(name, totalSlots));
+    public Building addBuilding(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
+        return buildingRepository.save(new Building(name, fridgeSlots, freezerSlots, integratedSlots, type));
     }
 
     public List<Building> getAllBuildingsEntity() {
@@ -32,12 +33,15 @@ public class BuildingService {
     }
 
     @Transactional
-    public void editBuilding(Long id, String buildingName, int totalSlots) {
+    public void editBuilding(Long id, String buildingName, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
         Building building = buildingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Building not found with id: " + id));
 
         building.changeName(buildingName);
-        building.changeTotalSlots(totalSlots);
+        building.changeFridgeSlots(fridgeSlots);
+        building.changeFreezerSlots(freezerSlots);
+        building.changeIntegratedSlots(integratedSlots);
+        building.changeType(type);
     }
 
     @Transactional

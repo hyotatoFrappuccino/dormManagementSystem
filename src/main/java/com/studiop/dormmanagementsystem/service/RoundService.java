@@ -5,6 +5,7 @@ import com.studiop.dormmanagementsystem.entity.FridgeApplication;
 import com.studiop.dormmanagementsystem.entity.Round;
 import com.studiop.dormmanagementsystem.entity.dto.RoundDto;
 import com.studiop.dormmanagementsystem.entity.dto.RoundUpdateRequest;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.repository.RoundRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +46,30 @@ public class RoundService {
         return RoundDto.fromEntity(roundRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public Map<Long, Integer> getFridgeCountByBuilding(Long id) {
+    public Map<Long, Map<FridgeType, Integer>> getFridgeCountByBuilding(Long id) {
         List<FridgeApplication> fridgeApplications = getById(id).getFridgeApplications();
-        Map<Long, Integer> fridgeCount = new HashMap<>();
+
+        // 결과를 반환할 Map. 각 건물에 대해 {FridgeType -> count} 형식으로 반환
+        Map<Long, Map<FridgeType, Integer>> fridgeCountByBuilding = new HashMap<>();
+
         for (FridgeApplication fridgeApplication : fridgeApplications) {
             Building building = fridgeApplication.getBuilding();
-            fridgeCount.put(building.getId(), fridgeCount.getOrDefault(building.getId(), 0) + 1);
+            FridgeType type = fridgeApplication.getType();  // 냉장/냉동/통합 타입
+
+            // 건물에 해당하는 카운트를 가져오거나 초기화
+            fridgeCountByBuilding.putIfAbsent(building.getId(), new HashMap<>());
+            Map<FridgeType, Integer> buildingFridgeCount = fridgeCountByBuilding.get(building.getId());
+
+            // 'ALL' 타입일 경우 냉장, 냉동 슬롯 모두 업데이트
+            if (type == FridgeType.ALL) {
+                buildingFridgeCount.put(FridgeType.REFRIGERATOR, buildingFridgeCount.getOrDefault(FridgeType.REFRIGERATOR, 0) + 1);
+                buildingFridgeCount.put(FridgeType.FREEZER, buildingFridgeCount.getOrDefault(FridgeType.FREEZER, 0) + 1);
+            } else {
+                // 해당 타입의 카운트를 업데이트
+                buildingFridgeCount.put(type, buildingFridgeCount.getOrDefault(type, 0) + 1);
+            }
         }
-        return fridgeCount;
+        return fridgeCountByBuilding;
     }
 
     @Transactional
