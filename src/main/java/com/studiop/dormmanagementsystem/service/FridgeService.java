@@ -6,6 +6,7 @@ import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.MemberInfoDto;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.repository.FridgeApplicationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class FridgeService {
 
         return new MemberInfoDto(
                 survey.map(Survey::getName).orElse("-"),
-                paymentService.isPaid(studentId),
+                paymentService.getPaymentStatus(studentId),
                 survey.map(Survey::isAgreed).orElse(null),
                 survey.flatMap(s -> Optional.ofNullable(s.getBuilding()).map(Building::getName)).orElse("-"),
                 survey.map(Survey::getRoomNumber).orElse("-")
@@ -51,7 +52,7 @@ public class FridgeService {
     public void apply(FridgeApplyRequest request) {
         String studentId = request.getStudentId();
         if (!isAvailableRequest(studentId)) {
-            throw new IllegalStateException("신청 요건이 충족되지 않았습니다.");
+            throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 또는 서약서 상태를 확인해주세요.");
         }
 
         Survey survey = surveyService.getSurvey(studentId)
@@ -82,6 +83,13 @@ public class FridgeService {
     }
 
     private boolean isAvailableRequest(String studentId) {
-        return surveyService.getSurvey(studentId).map(Survey::isAgreed).orElse(false) && paymentService.isPaid(studentId);
+        return surveyService.getSurvey(studentId).map(Survey::isAgreed).orElse(false) && paymentService.getPaymentStatus(studentId) == PaymentStatus.PAID;
+    }
+
+    public void deleteFridgeApplication(Long id) {
+        if (!fridgeApplicationRepository.existsById(id)) {
+            throw new EntityNotFoundException("해당 ID의 냉장고 신청 내역을 찾을 수 없습니다: " + id);
+        }
+        fridgeApplicationRepository.deleteById(id);
     }
 }

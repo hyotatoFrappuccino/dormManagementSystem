@@ -87,7 +87,7 @@ public class InitDb {
             for (int i = 0; i < 8; i++) {
                 LocalDate startDate = springStart.plusDays(i * 14);
                 LocalDate endDate = startDate.plusDays(13);
-                roundService.addRound("1학기 " + (i + 1) + "회차", startDate, endDate);
+                roundService.addRound((i + 1) + "회차", startDate, endDate);
             }
 
             // 여름방학
@@ -99,7 +99,7 @@ public class InitDb {
             for (int i = 0; i < 8; i++) {
                 LocalDate startDate = fallStart.plusDays(i * 14);
                 LocalDate endDate = startDate.plusDays(13);
-                roundService.addRound("2학기 " + (i + 1) + "회차", startDate, endDate);
+                roundService.addRound((i + 1) + "회차", startDate, endDate);
             }
 
             // 겨울방학

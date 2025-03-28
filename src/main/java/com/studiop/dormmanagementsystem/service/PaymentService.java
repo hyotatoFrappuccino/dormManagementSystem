@@ -64,7 +64,10 @@ public class PaymentService {
         paymentRepository.deleteAllInBatch();
     }
 
-    public boolean isPaid(String studentId) {
-        return paymentRepository.existsByNameAndStatus(studentId, PaymentStatus.PAID);
+    public PaymentStatus getPaymentStatus(String studentId) {
+        if (paymentRepository.existsByName(studentId)) {
+            return paymentRepository.findStatusByName(studentId);
+        }
+        return PaymentStatus.NONE;
     }
 }
