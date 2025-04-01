@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,15 +16,19 @@ public class Admin {
     @Column(name = "admin_id")
     private Long id;
 
+    private String name;
+
     private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @CreatedDate
-    private LocalDateTime creationDate;
+//    todo baseEntity 추가
+//    @CreatedDate
+//    private LocalDateTime creationDate;
 
-    public Admin(String email, Role role) {
+    public Admin(String name, String email, Role role) {
+        this.name = name;
         this.email = email;
         this.role = role;
     }
