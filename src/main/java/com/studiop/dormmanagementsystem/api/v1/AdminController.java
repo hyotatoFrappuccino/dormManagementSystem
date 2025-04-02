@@ -41,8 +41,11 @@ public class AdminController {
     public ResponseEntity<List<RoleDto>> getAllRoles() {
         return ResponseEntity.ok(
                 Arrays.stream(Role.values())
-                .map(role -> new RoleDto(role.getKey(), role.getTitle()))
-                .toList()
+                        .map(role -> new RoleDto(
+                                role.getKey().replaceFirst("^ROLE_", ""),
+                                role.getTitle()
+                        ))
+                        .toList()
         );
     }
 
@@ -52,6 +55,13 @@ public class AdminController {
         Admin savedAdmin = adminService.addAdmin(request);
         URI location = URI.create("/api/v1/admins/" + savedAdmin.getId());
         return ResponseEntity.created(location).body(AdminDto.fromEntity(savedAdmin));
+    }
+
+    @Operation(summary = "관리자 수정")
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateAdmin(@PathVariable("id") Long id, @RequestBody AdminDto request) {
+        adminService.editAdmin(id, request);
+        return ResponseEntity.ok("OK");
     }
 
     @Operation(summary = "관리자삭제")

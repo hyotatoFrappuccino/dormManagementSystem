@@ -19,7 +19,7 @@ public class AppConfigService {
 
     public void setConfigValue(String key, String value) {
         AppConfig config = appConfigRepository.findByConfigKey(key)
-                .orElse(new AppConfig(null, key, value, null));
+                .orElse(new AppConfig(null, key, value));
         config.setConfigValue(value);
         appConfigRepository.save(config);
     }

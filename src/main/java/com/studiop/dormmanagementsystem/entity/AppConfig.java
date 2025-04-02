@@ -2,9 +2,6 @@ package com.studiop.dormmanagementsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -12,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "app_config")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AppConfig {
+public class AppConfig extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -23,7 +20,4 @@ public class AppConfig {
 
     @Column(nullable = false)
     private String configValue;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Survey {
+public class Survey extends BaseEntity{
 
     @Id
     @GeneratedValue

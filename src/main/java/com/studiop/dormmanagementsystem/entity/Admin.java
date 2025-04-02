@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin {
+public class Admin extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -23,13 +23,21 @@ public class Admin {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    todo baseEntity 추가
-//    @CreatedDate
-//    private LocalDateTime creationDate;
-
     public Admin(String name, String email, Role role) {
         this.name = name;
         this.email = email;
+        this.role = role;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changeRole(Role role) {
         this.role = role;
     }
 }

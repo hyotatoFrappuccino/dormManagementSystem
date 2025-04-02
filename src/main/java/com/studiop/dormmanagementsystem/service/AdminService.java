@@ -58,4 +58,13 @@ public class AdminService {
     public void deleteAllAdmins() {
         adminRepository.deleteAllInBatch();
     }
+
+    @Transactional
+    public void editAdmin(Long id, AdminDto request) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found with id: " + id));
+        admin.changeName(request.getName());
+        admin.changeEmail(request.getEmail());
+        admin.changeRole(request.getRole());
+    }
 }

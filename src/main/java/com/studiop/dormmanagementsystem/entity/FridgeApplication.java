@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FridgeApplication {
+public class FridgeApplication extends BaseEntity{
 
     @Id
     @GeneratedValue
