@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public class SurveyService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Survey> getSurvey(String studentId) {
+    public List<Survey> getSurvey(String studentId) {
         return surveyRepository.findByStudentId(studentId);
     }
 

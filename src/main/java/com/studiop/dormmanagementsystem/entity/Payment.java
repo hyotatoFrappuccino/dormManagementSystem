@@ -23,7 +23,7 @@ public class Payment extends BaseEntity{
     private Long id;
 
     @NotBlank
-    private String name;
+    private String studentId;
 
     @NotNull
     @Range(min = 0)
@@ -37,8 +37,8 @@ public class Payment extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private PaymentType type;
 
-    public Payment(String name, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
-        this.name = name;
+    public Payment(String studentId, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
+        this.studentId = studentId;
         this.amount = amount;
         this.date = date;
         this.status = status;
@@ -46,7 +46,7 @@ public class Payment extends BaseEntity{
     }
 
     public void updatePayment(String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {
-        this.name = depositName;
+        this.studentId = depositName;
         this.amount = amount;
         this.date = paymentDate;
         this.status = paymentStatus;

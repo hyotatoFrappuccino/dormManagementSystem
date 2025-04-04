@@ -20,7 +20,7 @@ public class PaymentDto {
 
     public static PaymentDto fromEntity(Payment payment) {
         return new PaymentDto(
-                payment.getId(), payment.getName(), payment.getAmount(), payment.getDate(), payment.getStatus(), payment.getType()
+                payment.getId(), payment.getStudentId(), payment.getAmount(), payment.getDate(), payment.getStatus(), payment.getType()
         );
     }
 }

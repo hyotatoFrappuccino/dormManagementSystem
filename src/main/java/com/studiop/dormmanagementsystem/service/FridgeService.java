@@ -24,15 +24,20 @@ public class FridgeService {
     private final RoundService roundService;
 
     public MemberInfoDto getMemberInfo(String studentId) {
-        Optional<Survey> survey = surveyService.getSurvey(studentId);
+        List<Survey> surveys = surveyService.getSurvey(studentId);
+        PaymentStatus paymentStatus = paymentService.getPaymentStatus(studentId);
 
-        return new MemberInfoDto(
-                survey.map(Survey::getName).orElse("-"),
-                paymentService.getPaymentStatus(studentId),
-                survey.map(Survey::isAgreed).orElse(null),
-                survey.flatMap(s -> Optional.ofNullable(s.getBuilding()).map(Building::getName)).orElse("-"),
-                survey.map(Survey::getRoomNumber).orElse("-")
-        );
+        return surveys.stream()
+                .filter(Survey::isAgreed)
+                .reduce((first, second) -> second)  // 마지막 요소 찾기
+                .map(survey -> new MemberInfoDto(
+                        survey.getName(),
+                        paymentStatus,
+                        true,
+                        survey.getBuilding().getName(),
+                        survey.getRoomNumber()
+                ))
+                .orElse(new MemberInfoDto("-", paymentStatus, null, "-", "-"));
     }
 
     public List<FridgeApplicationDto> getFridgeByMemberInfo(String studentId) {
@@ -55,8 +60,12 @@ public class FridgeService {
             throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 또는 서약서 상태를 확인해주세요.");
         }
 
-        Survey survey = surveyService.getSurvey(studentId)
-                .orElseThrow(() -> new IllegalStateException("서약서 정보 없음"));
+        List<Survey> surveys = surveyService.getSurvey(studentId);
+
+        Survey survey = surveys.stream()
+                .reduce((first, second) -> second)
+                .filter(Survey::isAgreed)
+                .orElseThrow(() -> new IllegalStateException("동의한 서약서 정보 없음"));
 
         Member member = memberService.findByStudentId(studentId)
                 .orElseGet(() -> memberService.addMember(new Member(
@@ -83,7 +92,15 @@ public class FridgeService {
     }
 
     private boolean isAvailableRequest(String studentId) {
-        return surveyService.getSurvey(studentId).map(Survey::isAgreed).orElse(false) && paymentService.getPaymentStatus(studentId) == PaymentStatus.PAID;
+        List<Survey> surveys = surveyService.getSurvey(studentId);
+
+        for (int i = surveys.size() - 1; i >= 0; i--) {
+            if (surveys.get(i).isAgreed()) {
+                return paymentService.getPaymentStatus(studentId) == PaymentStatus.PAID;
+            }
+        }
+
+        return false;
     }
 
     public void deleteFridgeApplication(Long id) {

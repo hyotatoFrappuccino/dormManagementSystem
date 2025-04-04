@@ -65,9 +65,17 @@ public class PaymentService {
     }
 
     public PaymentStatus getPaymentStatus(String studentId) {
-        if (paymentRepository.existsByName(studentId)) {
-            return paymentRepository.findStatusByName(studentId);
+        // 납부 -> 환불 -> 미납 순서로 확인해야 하기때문에 2번 순회
+        List<Payment> list = paymentRepository.findAllByStudentId(studentId);
+
+        if (list.stream().anyMatch(p -> p.getStatus() == PaymentStatus.PAID)) {
+            return PaymentStatus.PAID;
         }
+
+        if (list.stream().anyMatch(p -> p.getStatus() == PaymentStatus.REFUNDED)) {
+            return PaymentStatus.REFUNDED;
+        }
+
         return PaymentStatus.NONE;
     }
 }

@@ -3,9 +3,8 @@ package com.studiop.dormmanagementsystem.repository;
 import com.studiop.dormmanagementsystem.entity.Survey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
-    boolean existsByStudentIdAndAgreedIsTrue(String studentId);
-    Optional<Survey> findByStudentId(String studentId);
+    List<Survey> findByStudentId(String studentId);
 }
