@@ -16,10 +16,13 @@ public class Admin extends BaseEntity{
     @Column(name = "admin_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

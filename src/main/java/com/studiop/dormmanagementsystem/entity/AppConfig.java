@@ -15,7 +15,7 @@ public class AppConfig extends BaseEntity{
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String configKey;
 
     @Column(nullable = false)

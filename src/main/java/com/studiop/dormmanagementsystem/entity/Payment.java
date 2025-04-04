@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.entity;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -22,19 +23,21 @@ public class Payment extends BaseEntity{
     @Column(name = "payment_id")
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String studentId;
 
-    @NotNull
-    @Range(min = 0)
+    @Min(0)
     private Integer amount;
 
+    @Column(nullable = false)
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentType type;
 
     public Payment(String studentId, int amount, LocalDate date, PaymentStatus status, PaymentType type) {

@@ -19,10 +19,13 @@ public class Round extends BaseEntity{
     @Column(name = "round_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private LocalDate startDate;
 
+    @Column(nullable = false)
     private LocalDate endDate;
 
     @OneToMany(mappedBy = "round")

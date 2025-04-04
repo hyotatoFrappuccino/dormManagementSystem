@@ -31,8 +31,10 @@ public class FridgeApplication extends BaseEntity{
     private Round round;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FridgeType type; // 냉장/냉동/통합
 
+    @Column(nullable = false)
     private LocalDateTime appliedAt; // 신청 시간
 
     public FridgeApplication(Member member, Round round, FridgeType type) {

@@ -19,19 +19,24 @@ public class Member extends BaseEntity{
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false)
     private String studentId;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     private Building building;
 
+    @Column(nullable = false)
     private String roomNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
     @OneToMany(mappedBy = "member")

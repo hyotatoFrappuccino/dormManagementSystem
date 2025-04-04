@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.entity;
 
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,15 +14,22 @@ public class Building extends BaseEntity{
 
     @Id
     @GeneratedValue
-    @Column(name ="building_id")
+    @Column(name = "building_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Min(0)
     private int fridgeSlots; // 냉장 슬롯
+
+    @Min(0)
     private int freezerSlots; // 냉동 슬롯
+
+    @Min(0)
     private int integratedSlots; // 통합 슬롯
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FridgeType type;
 
