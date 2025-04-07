@@ -39,6 +39,8 @@ public class Member extends BaseEntity{
     @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
+    private int warningCount;
+
     @OneToMany(mappedBy = "member")
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 
@@ -48,6 +50,16 @@ public class Member extends BaseEntity{
 
     public void removeFridgeApplication(FridgeApplication application) {
         this.fridgeApplications.remove(application);
+    }
+
+    public void increaseWarningCount() {
+        this.warningCount++;
+    }
+
+    public void decreaseWarningCount() {
+        if (this.warningCount > 0) {
+            this.warningCount--;
+        }
     }
 
     public Member(String studentId, String name, String phone, Building building, String roomNumber, PaymentStatus paymentStatus) {
