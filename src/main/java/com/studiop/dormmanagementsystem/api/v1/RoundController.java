@@ -2,7 +2,7 @@ package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.Round;
 import com.studiop.dormmanagementsystem.entity.dto.RoundDto;
-import com.studiop.dormmanagementsystem.entity.dto.RoundUpdateRequest;
+import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.service.RoundService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,8 +43,8 @@ public class RoundController {
 
     @Operation(summary = "회차 추가")
     @PostMapping
-    public ResponseEntity<RoundDto> addRounds(@RequestBody Round round) {
-        Round addedRound = roundService.addRound(round.getName(), round.getStartDate(), round.getEndDate());
+    public ResponseEntity<RoundDto> addRounds(@RequestBody RoundRequest request) {
+        Round addedRound = roundService.addRound(request);
         URI location = URI.create("/api/v1/rounds/" + addedRound.getId());
         return ResponseEntity.created(location).body(RoundDto.fromEntity(addedRound));
     }
@@ -52,8 +52,8 @@ public class RoundController {
     @Operation(summary = "회차 수정")
     @PutMapping("/{id}")
     public ResponseEntity<Void> editRound(@PathVariable Long id,
-                                          @RequestBody RoundUpdateRequest roundUpdateRequest) {
-        roundService.updateRound(id, roundUpdateRequest);
+                                          @RequestBody RoundRequest request) {
+        roundService.updateRound(id, request);
         return ResponseEntity.noContent().build();
     }
 
