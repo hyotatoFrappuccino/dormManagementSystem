@@ -30,12 +30,6 @@ public class FridgeController {
         return ResponseEntity.ok(response);
     }
 
-//    @Operation(summary = "냉장고 신청 목록 전체 조회")
-//    @GetMapping
-//    public ResponseEntity<List<FridgeApplicationDto>> getAllFridgeApplications() {
-//        return ResponseEntity.ok(fridgeService.getAllFridgeApplications().stream().map(FridgeApplicationDto::fromEntity).toList());
-//    }
-
     @Operation(summary = "냉장고 신청 목록 전체 조회")
     @GetMapping
     public ResponseEntity<List<MemberFridgeApplicationResponse>> getAllMemberFridgeApplications() {
