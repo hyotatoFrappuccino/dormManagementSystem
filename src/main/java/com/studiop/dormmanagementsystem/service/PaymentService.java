@@ -1,10 +1,13 @@
 package com.studiop.dormmanagementsystem.service;
 
+import com.studiop.dormmanagementsystem.entity.Business;
 import com.studiop.dormmanagementsystem.entity.Payment;
+import com.studiop.dormmanagementsystem.entity.PaymentBusinessParticipation;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.repository.BusinessRepository;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final BusinessRepository businessRepository;
 
     @Transactional
     public Payment addPayment(PaymentRequest request) {
@@ -77,5 +81,45 @@ public class PaymentService {
         }
 
         return PaymentStatus.NONE;
+    }
+
+    public List<Business> getAllBusiness() {
+        return businessRepository.findAll();
+    }
+
+    @Transactional
+    public void addBusinessParticipation(Long paymentId, Long businessId) {
+        Payment payment = findById(paymentId);
+        Business business = businessRepository.findById(businessId).orElseThrow(EntityNotFoundException::new);
+
+        PaymentBusinessParticipation participation = new PaymentBusinessParticipation(payment, business);
+
+        payment.addBusinessParticipation(participation);
+        business.addBusinessParticipation(participation);
+    }
+
+    @Transactional
+    public void removeBusinessParticipation(Long paymentId, Long businessId) {
+        Payment payment = findById(paymentId);
+        Business business = businessRepository.findById(businessId).orElseThrow(EntityNotFoundException::new);
+
+        payment.getParticipations()
+                .stream()
+                .filter(p -> p.getBusiness().getId().equals(businessId))
+                .findFirst()
+                .ifPresent(ep -> {
+                    payment.removeBusinessParticipation(ep);
+                    business.removeBusinessParticipation(ep);
+                });
+    }
+
+    @Transactional
+    public void addBusiness(String name) {
+        businessRepository.save(new Business(name));
+    }
+
+    @Transactional
+    public void removeBusiness(Long id) {
+        businessRepository.deleteById(id);
     }
 }
