@@ -28,18 +28,22 @@ public class Round extends BaseEntity{
     @Column(nullable = false)
     private LocalDate endDate;
 
+    private String password;
+
     @OneToMany(mappedBy = "round")
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 
-    public Round(String name, LocalDate startDate, LocalDate endDate) {
+    public Round(String name, LocalDate startDate, LocalDate endDate, String password) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.password = password;
     }
 
-    public void updateRound(String name, LocalDate startDate, LocalDate endDate) {
+    public void updateRound(String name, LocalDate startDate, LocalDate endDate, String password) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.password = password;
     }
 }
