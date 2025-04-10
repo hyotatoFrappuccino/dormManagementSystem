@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.entity.dto.SurveyDto;
+import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,6 @@ public class SurveyService {
     @Transactional
     public void deleteAllSurveys() {
         surveyRepository.deleteAllInBatch();
-        appConfigService.setConfigValue("last_fetched_time", LocalDateTime.MIN.toString());
+        appConfigService.setConfigValue(AppConfigKey.LAST_FETCHED_TIME, LocalDateTime.MIN.toString());
     }
 }

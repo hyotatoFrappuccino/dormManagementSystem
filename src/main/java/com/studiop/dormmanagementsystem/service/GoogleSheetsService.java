@@ -8,6 +8,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class GoogleSheetsService {
     }
 
     public List<List<Object>> getSurveyResponses() throws IOException, GeneralSecurityException {
-        String SPREADSHEET_ID = appConfigService.getConfigValue("googleSheetId", "");
+        String SPREADSHEET_ID = appConfigService.getConfigValue(AppConfigKey.GOOGLE_SHEET_ID, "");
         if (SPREADSHEET_ID.isEmpty()) {
             throw new IllegalStateException("설정에서 서약서 구글 시트 ID를 설정해주세요.");
         }

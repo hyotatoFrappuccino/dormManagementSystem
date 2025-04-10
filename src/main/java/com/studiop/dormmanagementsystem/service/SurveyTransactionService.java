@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.service;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.Survey;
+import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -90,9 +91,9 @@ public class SurveyTransactionService {
 
     private LocalDateTime getAndUpdateLastFetchedTime() {
         // 마지막 업데이트 시간 이후에 추가된 설문만 가져오기
-        String lastFetchedTimeConfig = appConfigService.getConfigValue("last_fetched_time", LocalDateTime.MIN.toString());
+        String lastFetchedTimeConfig = appConfigService.getConfigValue(AppConfigKey.LAST_FETCHED_TIME, LocalDateTime.MIN.toString());
         LocalDateTime lastFetchedTime = LocalDateTime.parse(lastFetchedTimeConfig, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        appConfigService.setConfigValue("last_fetched_time", LocalDateTime.now().toString());
+        appConfigService.setConfigValue(AppConfigKey.LAST_FETCHED_TIME, LocalDateTime.now().toString());
         return lastFetchedTime;
     }
 
