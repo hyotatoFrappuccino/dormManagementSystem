@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Operation(summary = "현재 로그인된 사용자 정보 조회")
     @GetMapping("/user")
     public ResponseEntity<Map<String, String>> getUser(@AuthenticationPrincipal OAuth2User principal) {
         if (principal == null) {
@@ -25,6 +27,7 @@ public class AuthController {
 
         String email = principal.getAttribute("email");
         String sub = principal.getAttribute("sub");
+
         if (email == null || sub == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "BAD REQUEST"));
         }
@@ -32,6 +35,7 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("email", email, "sub", sub));
     }
 
+    @Operation(summary = "로그아웃")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         // Spring Security 컨텍스트 초기화 (사용자 인증 정보 제거)

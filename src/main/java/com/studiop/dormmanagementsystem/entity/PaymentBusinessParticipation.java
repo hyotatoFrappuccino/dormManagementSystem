@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public class PaymentBusinessParticipation {
+public class PaymentBusinessParticipation extends BaseEntity {
 
     @Id
     @GeneratedValue

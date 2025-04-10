@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Building extends BaseEntity{
+public class Building extends BaseEntity {
 
     @Id
     @GeneratedValue

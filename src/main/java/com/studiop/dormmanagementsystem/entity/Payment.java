@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Payment extends BaseEntity{
+public class Payment extends BaseEntity {
 
     @Id
     @GeneratedValue

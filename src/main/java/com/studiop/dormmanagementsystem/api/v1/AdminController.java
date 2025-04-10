@@ -25,18 +25,16 @@ public class AdminController {
     @Operation(summary = "관리자 목록 조회")
     @GetMapping
     public ResponseEntity<List<AdminDto>> getAllAdmins() {
-        List<AdminDto> admins = adminService.getAllAdmins();
-        return ResponseEntity.ok(admins);
+        return ResponseEntity.ok(adminService.getAllAdmins());
     }
 
     @Operation(summary = "관리자 조회")
     @GetMapping("/{id}")
     public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
-        AdminDto admin = adminService.findDtoById(id);
-        return ResponseEntity.ok(admin);
+        return ResponseEntity.ok(adminService.findDtoById(id));
     }
 
-    @Operation(summary = "역할 조회")
+    @Operation(summary = "역할 목록 조회")
     @GetMapping("/roles")
     public ResponseEntity<List<RoleDto>> getAllRoles() {
         return ResponseEntity.ok(
@@ -59,12 +57,12 @@ public class AdminController {
 
     @Operation(summary = "관리자 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAdmin(@PathVariable("id") Long id, @RequestBody AdminDto request) {
+    public ResponseEntity<Void> updateAdmin(@PathVariable Long id, @RequestBody AdminDto request) {
         adminService.editAdmin(id, request);
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "관리자삭제")
+    @Operation(summary = "관리자 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         adminService.deleteAdmin(id);

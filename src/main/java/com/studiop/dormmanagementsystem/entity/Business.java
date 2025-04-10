@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Business {
+public class Business extends BaseEntity {
 
     @Id
     @GeneratedValue

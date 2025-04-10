@@ -21,9 +21,9 @@ public class AppConfigController {
 
     @Operation(summary = "설정값 저장/변경")
     @PostMapping("/{key}")
-    public ResponseEntity<String> setConfig(@PathVariable String key, @RequestBody String value) {
+    public ResponseEntity<Void> setConfig(@PathVariable String key, @RequestBody String value) {
         appConfigService.setConfigValue(key, value);
-        return ResponseEntity.ok("설정값이 저장되었습니다.");
+        return ResponseEntity.ok().build();
     }
 
 }

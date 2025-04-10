@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Round extends BaseEntity{
+public class Round extends BaseEntity {
 
     @Id
     @GeneratedValue

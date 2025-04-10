@@ -22,9 +22,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         String sub = oAuth2User.getAttribute("sub");
 
         return new DefaultOAuth2User(
-            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-            Map.of("email", email, "sub", sub),
-            "email"
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                Map.of("email", email, "sub", sub),
+                "email"
         );
     }
 }

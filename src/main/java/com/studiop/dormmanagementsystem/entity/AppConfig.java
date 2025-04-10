@@ -9,7 +9,7 @@ import lombok.*;
 @Table(name = "app_config")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AppConfig extends BaseEntity{
+public class AppConfig extends BaseEntity {
 
     @Id
     @GeneratedValue
