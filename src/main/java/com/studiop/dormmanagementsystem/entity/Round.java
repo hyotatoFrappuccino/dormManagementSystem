@@ -30,7 +30,7 @@ public class Round extends BaseEntity {
 
     private String password;
 
-    @OneToMany(mappedBy = "round")
+    @OneToMany(mappedBy = "round", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 
     public Round(String name, LocalDate startDate, LocalDate endDate, String password) {

@@ -6,6 +6,7 @@ import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.MemberInfoDto;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.repository.FridgeApplicationRepository;
+import com.studiop.dormmanagementsystem.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class FridgeService {
     private final FridgeApplicationRepository fridgeApplicationRepository;
     private final MemberService memberService;
     private final RoundService roundService;
+    private final MemberRepository memberRepository;
 
     public MemberInfoDto getMemberInfo(String studentId) {
         List<Survey> surveys = surveyService.getSurvey(studentId);
@@ -103,10 +105,18 @@ public class FridgeService {
         return false;
     }
 
+    @Transactional
     public void deleteFridgeApplication(Long id) {
-        if (!fridgeApplicationRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 냉장고 신청 내역을 찾을 수 없습니다: " + id);
+        FridgeApplication application = fridgeApplicationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 냉장고 신청 내역을 찾을 수 없습니다: " + id));
+
+        Member member = application.getMember();
+        member.getFridgeApplications().remove(application);
+
+        fridgeApplicationRepository.delete(application);
+
+        if (member.getFridgeApplications().isEmpty()) {
+            memberRepository.delete(member);
         }
-        fridgeApplicationRepository.deleteById(id);
     }
 }

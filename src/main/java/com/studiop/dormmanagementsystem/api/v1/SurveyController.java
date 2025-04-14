@@ -30,7 +30,7 @@ public class SurveyController {
         try {
             String result = futureResult.get(); // CompletableFuture 결과 기다리기
             if (result.startsWith("실패")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body (result);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
             }
             return ResponseEntity.ok(result);
         } catch (InterruptedException | ExecutionException e) {

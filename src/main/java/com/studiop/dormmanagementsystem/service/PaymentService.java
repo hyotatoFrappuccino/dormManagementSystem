@@ -68,19 +68,15 @@ public class PaymentService {
         paymentRepository.deleteAllInBatch();
     }
 
+    // 납부 -> 환불 -> 미납 우선순위 순
     public PaymentStatus getPaymentStatus(String studentId) {
-        // 납부 -> 환불 -> 미납 순서로 확인해야 하기때문에 2번 순회
-        List<Payment> list = paymentRepository.findAllByStudentId(studentId);
-
-        if (list.stream().anyMatch(p -> p.getStatus() == PaymentStatus.PAID)) {
-            return PaymentStatus.PAID;
-        }
-
-        if (list.stream().anyMatch(p -> p.getStatus() == PaymentStatus.REFUNDED)) {
-            return PaymentStatus.REFUNDED;
-        }
-
-        return PaymentStatus.NONE;
+        return paymentRepository.findAllByStudentId(studentId).stream()
+                .map(Payment::getStatus)
+                .reduce(PaymentStatus.NONE, (acc, status) -> {
+                    if (status == PaymentStatus.PAID) return PaymentStatus.PAID;
+                    if (status == PaymentStatus.REFUNDED) return PaymentStatus.REFUNDED;
+                    return acc;
+                });
     }
 
     public List<Business> getAllBusiness() {
