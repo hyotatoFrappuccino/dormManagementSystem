@@ -5,6 +5,7 @@ import com.studiop.dormmanagementsystem.entity.dto.BusinessDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
+import com.studiop.dormmanagementsystem.service.BusinessService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final BusinessService businessService;
 
     @Operation(summary = "납부자 목록 조회")
     @GetMapping
@@ -68,7 +70,7 @@ public class PaymentController {
     @Operation(summary = "사업 전체 조회")
     @GetMapping("/business")
     public ResponseEntity<List<BusinessDto>> getAllBusinesses() {
-        return ResponseEntity.ok(paymentService.getAllBusiness().stream().map(BusinessDto::fromEntity).toList());
+        return ResponseEntity.ok(businessService.getAllBusiness().stream().map(BusinessDto::fromEntity).toList());
     }
 
     @Operation(summary = "사업 참여 추가")
@@ -88,14 +90,14 @@ public class PaymentController {
     @Operation(summary = "사업 추가")
     @PostMapping("/business")
     public ResponseEntity<String> addBusinessParticipation(@RequestBody String name) {
-        paymentService.addBusiness(name);
+        businessService.addBusiness(name);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "사업 삭제")
     @DeleteMapping("/business/{id}")
     public ResponseEntity<String> deleteBusinessParticipation(@PathVariable Long id) {
-        paymentService.removeBusiness(id);
+        businessService.removeBusiness(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final BusinessRepository businessRepository;
+    private final BusinessService businessService;
 
     @Transactional
     public Payment addPayment(PaymentRequest request) {
@@ -79,14 +79,10 @@ public class PaymentService {
                 });
     }
 
-    public List<Business> getAllBusiness() {
-        return businessRepository.findAll();
-    }
-
     @Transactional
     public void addBusinessParticipation(Long paymentId, Long businessId) {
         Payment payment = findById(paymentId);
-        Business business = businessRepository.findById(businessId).orElseThrow(EntityNotFoundException::new);
+        Business business = businessService.findById(businessId);
 
         PaymentBusinessParticipation participation = new PaymentBusinessParticipation(payment, business);
 
@@ -97,7 +93,7 @@ public class PaymentService {
     @Transactional
     public void removeBusinessParticipation(Long paymentId, Long businessId) {
         Payment payment = findById(paymentId);
-        Business business = businessRepository.findById(businessId).orElseThrow(EntityNotFoundException::new);
+        Business business = businessService.findById(businessId);
 
         payment.getParticipations()
                 .stream()
@@ -107,15 +103,5 @@ public class PaymentService {
                     payment.removeBusinessParticipation(ep);
                     business.removeBusinessParticipation(ep);
                 });
-    }
-
-    @Transactional
-    public void addBusiness(String name) {
-        businessRepository.save(new Business(name));
-    }
-
-    @Transactional
-    public void removeBusiness(Long id) {
-        businessRepository.deleteById(id);
     }
 }
