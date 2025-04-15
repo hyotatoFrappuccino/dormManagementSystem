@@ -4,8 +4,10 @@ import com.studiop.dormmanagementsystem.entity.AppConfig;
 import com.studiop.dormmanagementsystem.repository.AppConfigRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AppConfigService {
 
@@ -17,6 +19,7 @@ public class AppConfigService {
                 .orElse(defaultValue);
     }
 
+    @Transactional
     public void setConfigValue(String key, String value) {
         AppConfig config = appConfigRepository.findByConfigKey(key)
                 .orElse(new AppConfig(null, key, value));

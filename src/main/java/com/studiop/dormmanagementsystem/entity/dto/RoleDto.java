@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class RoleDto {
+
     private String key;
     private String title;
 

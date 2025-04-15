@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class SurveyDto {
+
     private Long id;
     private LocalDateTime dateTime;
     private String studentId;

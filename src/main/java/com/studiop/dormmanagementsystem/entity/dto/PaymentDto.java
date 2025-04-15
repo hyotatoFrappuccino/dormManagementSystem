@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class PaymentDto {
+
     private Long id;
     private String name;
     private Integer amount;

@@ -6,7 +6,6 @@ import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.MemberInfoDto;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.repository.FridgeApplicationRepository;
-import com.studiop.dormmanagementsystem.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FridgeService {
+
     private final PaymentService paymentService;
     private final SurveyService surveyService;
-    private final FridgeApplicationRepository fridgeApplicationRepository;
     private final MemberService memberService;
     private final RoundService roundService;
-    private final MemberRepository memberRepository;
+    private final FridgeApplicationRepository fridgeApplicationRepository;
 
     public MemberInfoDto getMemberInfo(String studentId) {
-        List<Survey> surveys = surveyService.getSurvey(studentId);
+        List<Survey> surveys = surveyService.getSurveys(studentId);
         PaymentStatus paymentStatus = paymentService.getPaymentStatus(studentId);
 
         return surveys.stream()
@@ -62,7 +62,7 @@ public class FridgeService {
             throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 또는 서약서 상태를 확인해주세요.");
         }
 
-        List<Survey> surveys = surveyService.getSurvey(studentId);
+        List<Survey> surveys = surveyService.getSurveys(studentId);
 
         Survey survey = surveys.stream()
                 .reduce((first, second) -> second)
@@ -94,7 +94,7 @@ public class FridgeService {
     }
 
     private boolean isAvailableRequest(String studentId) {
-        List<Survey> surveys = surveyService.getSurvey(studentId);
+        List<Survey> surveys = surveyService.getSurveys(studentId);
 
         for (int i = surveys.size() - 1; i >= 0; i--) {
             if (surveys.get(i).isAgreed()) {
@@ -116,7 +116,7 @@ public class FridgeService {
         fridgeApplicationRepository.delete(application);
 
         if (member.getFridgeApplications().isEmpty()) {
-            memberRepository.delete(member);
+            memberService.deleteMemberById(member.getId());
         }
     }
 }

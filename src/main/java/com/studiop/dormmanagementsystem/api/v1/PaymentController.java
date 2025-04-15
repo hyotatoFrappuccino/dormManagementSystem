@@ -34,7 +34,7 @@ public class PaymentController {
     @Operation(summary = "납부자 조회")
     @GetMapping("/{id}")
     public ResponseEntity<PaymentDto> getPaymentById(@PathVariable Long id) {
-        PaymentDto payment = paymentService.findDtoById(id);
+        PaymentDto payment = paymentService.getDtoById(id);
         return ResponseEntity.ok(payment);
     }
 

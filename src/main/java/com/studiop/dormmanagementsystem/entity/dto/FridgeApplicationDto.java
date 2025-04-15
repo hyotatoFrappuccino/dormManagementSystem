@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class FridgeApplicationDto {
+
     private Long id;
     private MemberDto member;
     private BuildingDto building;

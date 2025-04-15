@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PaymentBusinessParticipationDto {
+
     private Long id;
     private Long businessId;
 

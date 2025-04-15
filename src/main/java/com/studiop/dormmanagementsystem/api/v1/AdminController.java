@@ -31,7 +31,7 @@ public class AdminController {
     @Operation(summary = "관리자 조회")
     @GetMapping("/{id}")
     public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
-        return ResponseEntity.ok(adminService.findDtoById(id));
+        return ResponseEntity.ok(adminService.getDtoById(id));
     }
 
     @Operation(summary = "역할 목록 조회")
@@ -57,7 +57,7 @@ public class AdminController {
 
     @Operation(summary = "관리자 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateAdmin(@PathVariable Long id, @RequestBody AdminDto request) {
+    public ResponseEntity<Void> updateAdmin(@PathVariable Long id, @RequestBody AdminRequest request) {
         adminService.editAdmin(id, request);
         return ResponseEntity.ok().build();
     }

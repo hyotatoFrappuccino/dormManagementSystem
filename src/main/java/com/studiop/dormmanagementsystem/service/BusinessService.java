@@ -10,18 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BusinessService {
 
     private final BusinessRepository businessRepository;
 
-    public List<Business> getAllBusiness() {
-        return businessRepository.findAll();
-    }
-
-    public Business findById(Long id) {
+    public Business getById(Long id) {
         return businessRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 사업을 찾을 수 없습니다: " + id));
+    }
+
+    public List<Business> getAllBusiness() {
+        return businessRepository.findAll();
     }
 
     @Transactional
@@ -31,6 +32,9 @@ public class BusinessService {
 
     @Transactional
     public void removeBusiness(Long id) {
+        if (!businessRepository.existsById(id)) {
+            throw new EntityNotFoundException("해당 ID의 사업을 찾을 수 없습니다: " + id);
+        }
         businessRepository.deleteById(id);
     }
 }

@@ -17,10 +17,24 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RoundService {
 
     private final RoundRepository roundRepository;
+
+    public Round getById(Long id) {
+        return roundRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 회차를 찾을 수 없습니다: " + id));
+    }
+
+    public RoundDto getDtoById(Long id) {
+        return RoundDto.fromEntity(getById(id));
+    }
+
+    public List<RoundDto> getAllRounds() {
+        return roundRepository.findAll().stream().map(RoundDto::fromEntity).toList();
+    }
 
     @Transactional
     public Round addRound(RoundRequest request) {
@@ -29,26 +43,17 @@ public class RoundService {
     }
 
     @Transactional
-    public void deleteRound(Long id) {
-        roundRepository.deleteById(id);
-    }
-
-    @Transactional
     public void updateRound(Long id, RoundRequest request) {
         Round round = getById(id);
         round.updateRound(request.getName(), request.getStartDate(), request.getEndDate(), request.getPassword());
     }
 
-    public List<RoundDto> getAllRounds() {
-        return roundRepository.findAll().stream().map(RoundDto::fromEntity).toList();
-    }
-
-    public RoundDto getDtoById(Long id) {
-        return RoundDto.fromEntity(roundRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-    }
-
-    public Round getById(Long id) {
-        return roundRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    @Transactional
+    public void deleteRound(Long id) {
+        if (!roundRepository.existsById(id)) {
+            throw new EntityNotFoundException("해당 ID의 회차를 찾을 수 없습니다: " + id);
+        }
+        roundRepository.deleteById(id);
     }
 
     public Map<Long, Map<FridgeType, Integer>> getFridgeCountByBuilding(Long id) {

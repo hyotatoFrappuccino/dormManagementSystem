@@ -25,5 +25,4 @@ public class AppConfigController {
         appConfigService.setConfigValue(key, value);
         return ResponseEntity.ok().build();
     }
-
 }

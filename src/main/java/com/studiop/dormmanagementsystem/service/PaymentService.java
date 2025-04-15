@@ -7,29 +7,30 @@ import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
-import com.studiop.dormmanagementsystem.repository.BusinessRepository;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final BusinessService businessService;
 
-    @Transactional
-    public Payment addPayment(PaymentRequest request) {
-        Payment payment = new Payment(request.getName(), request.getAmount(), request.getDate(), PaymentStatus.PAID, request.getType());
-        return paymentRepository.save(payment);
+    public Payment getById(Long id) {
+        return paymentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id));
+    }
+
+    public PaymentDto getDtoById(Long id) {
+        return PaymentDto.fromEntity(getById(id));
     }
 
     public List<PaymentDto> getAllPayments() {
@@ -40,18 +41,15 @@ public class PaymentService {
         return paymentRepository.count();
     }
 
-    public Payment findById(Long id) {
-        return paymentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id));
-    }
-
-    public PaymentDto findDtoById(Long id) {
-        return PaymentDto.fromEntity(findById(id));
+    @Transactional
+    public Payment addPayment(PaymentRequest request) {
+        Payment payment = new Payment(request.getName(), request.getAmount(), request.getDate(), PaymentStatus.PAID, request.getType());
+        return paymentRepository.save(payment);
     }
 
     @Transactional
     public void updatePayment(Long id, PaymentUpdateRequest request) {
-        Payment payment = findById(id);
+        Payment payment = getById(id);
         payment.updatePayment(request.getName(), request.getAmount(), request.getDate(), request.getStatus(), request.getType());
     }
 
@@ -68,6 +66,8 @@ public class PaymentService {
         paymentRepository.deleteAllInBatch();
     }
 
+    // ===== 메소드 ===== //
+
     // 납부 -> 환불 -> 미납 우선순위 순
     public PaymentStatus getPaymentStatus(String studentId) {
         return paymentRepository.findAllByStudentId(studentId).stream()
@@ -79,10 +79,12 @@ public class PaymentService {
                 });
     }
 
+    // ===== 사업 참여 ===== //
+
     @Transactional
     public void addBusinessParticipation(Long paymentId, Long businessId) {
-        Payment payment = findById(paymentId);
-        Business business = businessService.findById(businessId);
+        Payment payment = getById(paymentId);
+        Business business = businessService.getById(businessId);
 
         PaymentBusinessParticipation participation = new PaymentBusinessParticipation(payment, business);
 
@@ -92,8 +94,8 @@ public class PaymentService {
 
     @Transactional
     public void removeBusinessParticipation(Long paymentId, Long businessId) {
-        Payment payment = findById(paymentId);
-        Business business = businessService.findById(businessId);
+        Payment payment = getById(paymentId);
+        Business business = businessService.getById(businessId);
 
         payment.getParticipations()
                 .stream()

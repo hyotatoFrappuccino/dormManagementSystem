@@ -14,10 +14,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AdminService {
 
     private final AdminRepository adminRepository;
+
+    public Admin getById(Long id) {
+        return adminRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 관리자를 찾을 수 없습니다: " + id));
+    }
+
+    public AdminDto getDtoById(Long id) {
+        return AdminDto.fromEntity(getById(id));
+    }
+
+    public Optional<Admin> findByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
+
+    public List<AdminDto> getAllAdmins() {
+        return adminRepository.findAll().stream().map(AdminDto::fromEntity).collect(Collectors.toList());
+    }
 
     @Transactional
     public Admin addAdmin(AdminRequest request) {
@@ -25,8 +43,12 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
-    public Optional<Admin> findByEmail(String email) {
-        return adminRepository.findByEmail(email);
+    @Transactional
+    public void editAdmin(Long id, AdminRequest request) {
+        Admin admin = getById(id);
+        admin.changeName(request.getName());
+        admin.changeEmail(request.getEmail());
+        admin.changeRole(request.getRole());
     }
 
     @Transactional
@@ -37,34 +59,8 @@ public class AdminService {
         adminRepository.deleteById(id);
     }
 
-    public List<Admin> findAll() {
-        return adminRepository.findAll();
-    }
-
-    public List<AdminDto> getAllAdmins() {
-        return adminRepository.findAll().stream().map(AdminDto::fromEntity).collect(Collectors.toList());
-    }
-
-    public AdminDto findDtoById(Long id) {
-        return AdminDto.fromEntity(findById(id));
-    }
-
-    public Admin findById(Long id) {
-        return adminRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 관리자를 찾을 수 없습니다: " + id));
-    }
-
     @Transactional
     public void deleteAllAdmins() {
         adminRepository.deleteAllInBatch();
-    }
-
-    @Transactional
-    public void editAdmin(Long id, AdminDto request) {
-        Admin admin = adminRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Admin not found with id: " + id));
-        admin.changeName(request.getName());
-        admin.changeEmail(request.getEmail());
-        admin.changeRole(request.getRole());
     }
 }

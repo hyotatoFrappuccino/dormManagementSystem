@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class RoundDto {
+
     private Long id;
     private String name;
     private LocalDate startDate;

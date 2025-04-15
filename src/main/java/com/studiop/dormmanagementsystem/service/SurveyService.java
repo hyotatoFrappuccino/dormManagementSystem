@@ -4,6 +4,7 @@ import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.entity.dto.SurveyDto;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @EnableAsync
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SurveyService {
 
@@ -26,15 +28,15 @@ public class SurveyService {
     private final SurveyTransactionService surveyTransactionService;
     private final AppConfigService appConfigService;
 
+    public List<Survey> getSurveys(String studentId) {
+        return surveyRepository.findByStudentId(studentId);
+    }
+
     public List<SurveyDto> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
         return surveys.stream()
                 .map(SurveyDto::fromEntity)
                 .collect(Collectors.toList());
-    }
-
-    public List<Survey> getSurvey(String studentId) {
-        return surveyRepository.findByStudentId(studentId);
     }
 
     @Async
@@ -52,6 +54,9 @@ public class SurveyService {
 
     @Transactional
     public void deleteSurvey(Long id) {
+        if (!surveyRepository.existsById(id)) {
+            throw new EntityNotFoundException("해당 ID의 서약서를 찾을 수 없습니다: " + id);
+        }
         surveyRepository.deleteById(id);
     }
 

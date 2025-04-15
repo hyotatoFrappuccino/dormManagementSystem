@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class BuildingDto {
+
     private Long id;
     private String name;
     private int fridgeSlots; // 냉장 슬롯
