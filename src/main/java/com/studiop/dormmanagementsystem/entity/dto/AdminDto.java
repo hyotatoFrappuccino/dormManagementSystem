@@ -5,6 +5,8 @@ import com.studiop.dormmanagementsystem.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 public class AdminDto {
@@ -12,10 +14,11 @@ public class AdminDto {
     private String name;
     private String email;
     private Role role;
+    private LocalDate creationDate;
 
     public static AdminDto fromEntity(Admin admin) {
         return new AdminDto(
-                admin.getId(), admin.getName(), admin.getEmail(), admin.getRole()
+                admin.getId(), admin.getName(), admin.getEmail(), admin.getRole(), admin.getCreatedDate().toLocalDate()
         );
     }
 }
