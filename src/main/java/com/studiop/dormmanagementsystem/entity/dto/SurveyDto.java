@@ -15,13 +15,13 @@ public class SurveyDto {
     private String studentId;
     private String name;
     private String phoneNumber;
-    private BuildingDto building;
+    private String buildingName;
     private String roomNumber;
     private boolean agreed;
 
     public static SurveyDto fromEntity(Survey survey) {
         return new SurveyDto(
-                survey.getId(), survey.getDateTime(), survey.getStudentId(), survey.getName(), survey.getPhoneNumber(), BuildingDto.fromEntity(survey.getBuilding()), survey.getRoomNumber(), survey.isAgreed()
+                survey.getId(), survey.getDateTime(), survey.getStudentId(), survey.getName(), survey.getPhoneNumber(), survey.getBuilding().getName(), survey.getRoomNumber(), survey.isAgreed()
         );
     }
 }

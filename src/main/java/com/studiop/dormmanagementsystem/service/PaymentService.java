@@ -34,7 +34,10 @@ public class PaymentService {
     }
 
     public List<PaymentDto> getAllPayments() {
-        return paymentRepository.findAll().stream().map(PaymentDto::fromEntity).collect(Collectors.toList());
+        List<Payment> payments = paymentRepository.findAllWithParticipations();
+        return payments.stream()
+                .map(PaymentDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public Long getNumOfTotalPayers() {

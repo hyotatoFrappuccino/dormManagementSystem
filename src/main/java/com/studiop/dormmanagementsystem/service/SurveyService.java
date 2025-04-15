@@ -33,7 +33,7 @@ public class SurveyService {
     }
 
     public List<SurveyDto> getAllSurveys() {
-        List<Survey> surveys = surveyRepository.findAll();
+        List<Survey> surveys = surveyRepository.findAllWithBuilding();
         return surveys.stream()
                 .map(SurveyDto::fromEntity)
                 .collect(Collectors.toList());
