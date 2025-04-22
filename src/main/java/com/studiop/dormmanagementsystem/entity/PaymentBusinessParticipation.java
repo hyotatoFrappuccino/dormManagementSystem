@@ -1,13 +1,13 @@
 package com.studiop.dormmanagementsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class PaymentBusinessParticipation extends BaseEntity {
 
     @Id
@@ -20,9 +20,4 @@ public class PaymentBusinessParticipation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Business business;
-
-    public PaymentBusinessParticipation(Payment payment, Business business) {
-        this.payment = payment;
-        this.business = business;
-    }
 }

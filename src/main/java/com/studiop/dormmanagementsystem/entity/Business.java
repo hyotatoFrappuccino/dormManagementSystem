@@ -1,9 +1,7 @@
 package com.studiop.dormmanagementsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +9,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Business extends BaseEntity {
 
     @Id
@@ -29,9 +29,5 @@ public class Business extends BaseEntity {
 
     public void removeBusinessParticipation(PaymentBusinessParticipation businessParticipation) {
         this.participations.remove(businessParticipation);
-    }
-
-    public Business(String name) {
-        this.name = name;
     }
 }

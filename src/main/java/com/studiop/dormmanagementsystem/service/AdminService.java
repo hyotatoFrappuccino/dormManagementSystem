@@ -39,7 +39,11 @@ public class AdminService {
 
     @Transactional
     public Admin addAdmin(AdminRequest request) {
-        Admin admin = new Admin(request.getName(), request.getEmail(), request.getRole());
+        Admin admin = Admin.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .role(request.getRole())
+                .build();
         return adminRepository.save(admin);
     }
 

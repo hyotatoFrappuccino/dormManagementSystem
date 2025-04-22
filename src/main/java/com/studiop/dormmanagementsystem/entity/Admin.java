@@ -2,13 +2,13 @@ package com.studiop.dormmanagementsystem.entity;
 
 import com.studiop.dormmanagementsystem.entity.enums.Role;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Admin extends BaseEntity {
 
     @Id
@@ -25,12 +25,6 @@ public class Admin extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public Admin(String name, String email, Role role) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
-    }
 
     public void changeName(String name) {
         this.name = name;

@@ -80,7 +80,15 @@ public class SurveyTransactionService {
             boolean agreed = row.stream().noneMatch(cell -> cell.toString().contains("동의하지 않습니다"));
             Building building = buildingList.stream().filter(b -> b.getName().equals(buildingName)).findFirst().orElse(null);
 
-            Survey survey = new Survey(dateTime, studentId, name, phoneNumber, building, roomNumber, agreed);
+            Survey survey = Survey.builder()
+                    .dateTime(dateTime)
+                    .studentId(studentId)
+                    .name(name)
+                    .phoneNumber(phoneNumber)
+                    .building(building)
+                    .roomNumber(roomNumber)
+                    .agreed(agreed)
+                    .build();
             surveysToSave.add(survey);
         }
 

@@ -2,9 +2,7 @@ package com.studiop.dormmanagementsystem.entity;
 
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +10,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Member extends BaseEntity {
 
     @Id
@@ -60,14 +60,5 @@ public class Member extends BaseEntity {
         if (this.warningCount > 0) {
             this.warningCount--;
         }
-    }
-
-    public Member(String studentId, String name, String phone, Building building, String roomNumber, PaymentStatus paymentStatus) {
-        this.studentId = studentId;
-        this.name = name;
-        this.phone = phone;
-        this.building = building;
-        this.roomNumber = roomNumber;
-        this.paymentStatus = paymentStatus;
     }
 }

@@ -4,9 +4,7 @@ import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +13,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Payment extends BaseEntity {
 
     @Id
@@ -48,14 +48,6 @@ public class Payment extends BaseEntity {
 
     public void removeBusinessParticipation(PaymentBusinessParticipation businessParticipation) {
         this.participations.remove(businessParticipation);
-    }
-
-    public Payment(String studentId, int amount, LocalDate date, PaymentStatus status, PaymentType type) {
-        this.studentId = studentId;
-        this.amount = amount;
-        this.date = date;
-        this.status = status;
-        this.type = type;
     }
 
     public void updatePayment(String depositName, int amount, LocalDate paymentDate, PaymentStatus paymentStatus, PaymentType paymentType) {

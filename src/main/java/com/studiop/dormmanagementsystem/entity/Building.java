@@ -3,13 +3,13 @@ package com.studiop.dormmanagementsystem.entity;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Building extends BaseEntity {
 
     @Id
@@ -32,14 +32,6 @@ public class Building extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FridgeType type;
-
-    public Building(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
-        this.name = name;
-        this.fridgeSlots = fridgeSlots;
-        this.freezerSlots = freezerSlots;
-        this.integratedSlots = integratedSlots;
-        this.type = type;
-    }
 
     public void changeName(String newName) {
         this.name = newName;

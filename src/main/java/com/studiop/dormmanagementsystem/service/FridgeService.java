@@ -70,10 +70,16 @@ public class FridgeService {
                 .orElseThrow(() -> new IllegalStateException("동의한 서약서 정보 없음"));
 
         Member member = memberService.findByStudentId(studentId)
-                .orElseGet(() -> memberService.addMember(new Member(
-                        studentId, survey.getName(), survey.getPhoneNumber(),
-                        survey.getBuilding(), survey.getRoomNumber(), PaymentStatus.PAID
-                )));
+                .orElseGet(() -> memberService.addMember(
+                        Member.builder()
+                                .studentId(studentId)
+                                .name(survey.getName())
+                                .phone(survey.getPhoneNumber())
+                                .building(survey.getBuilding())
+                                .roomNumber(survey.getRoomNumber())
+                                .paymentStatus(PaymentStatus.PAID)
+                                .build()
+                ));
 
         Round round = roundService.getById(request.getRoundId());
 
@@ -88,7 +94,11 @@ public class FridgeService {
                 });
 
         // 새로운 신청 추가
-        FridgeApplication application = new FridgeApplication(member, round, request.getType());
+        FridgeApplication application = FridgeApplication.builder()
+                .member(member)
+                .round(round)
+                .type(request.getType())
+                .build();
         member.addFridgeApplication(application);
         fridgeApplicationRepository.save(application);
     }

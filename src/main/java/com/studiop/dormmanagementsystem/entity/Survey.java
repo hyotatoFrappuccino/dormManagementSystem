@@ -1,15 +1,15 @@
 package com.studiop.dormmanagementsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Survey extends BaseEntity {
 
     @Id
@@ -38,14 +38,4 @@ public class Survey extends BaseEntity {
 
     @Column(nullable = false)
     private boolean agreed;
-
-    public Survey(LocalDateTime dateTime, String studentId, String name, String phoneNumber, Building building, String roomNumber, boolean agreed) {
-        this.dateTime = dateTime;
-        this.studentId = studentId;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.building = building;
-        this.roomNumber = roomNumber;
-        this.agreed = agreed;
-    }
 }

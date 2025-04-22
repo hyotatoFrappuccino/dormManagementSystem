@@ -9,6 +9,7 @@ import lombok.*;
 @Table(name = "app_config")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class AppConfig extends BaseEntity {
 
     @Id

@@ -38,7 +38,12 @@ public class RoundService {
 
     @Transactional
     public Round addRound(RoundRequest request) {
-        Round round = new Round(request.getName(), request.getStartDate(), request.getEndDate(), request.getPassword());
+        Round round = Round.builder()
+                .name(request.getName())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .password(request.getPassword())
+                .build();
         return roundRepository.save(round);
     }
 

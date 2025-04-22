@@ -2,15 +2,15 @@ package com.studiop.dormmanagementsystem.entity;
 
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class FridgeApplication extends BaseEntity {
 
     @Id
@@ -36,12 +36,4 @@ public class FridgeApplication extends BaseEntity {
 
     @Column(nullable = false)
     private LocalDateTime appliedAt; // 신청 시간
-
-    public FridgeApplication(Member member, Round round, FridgeType type) {
-        this.member = member;
-        this.building = member.getBuilding();
-        this.round = round;
-        this.type = type;
-        this.appliedAt = LocalDateTime.now();
-    }
 }

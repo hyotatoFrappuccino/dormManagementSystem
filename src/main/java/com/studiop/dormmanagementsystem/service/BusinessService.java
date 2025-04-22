@@ -27,7 +27,11 @@ public class BusinessService {
 
     @Transactional
     public void addBusiness(String name) {
-        businessRepository.save(new Business(name));
+        businessRepository.save(
+                Business.builder()
+                        .name(name)
+                        .build()
+        );
     }
 
     @Transactional

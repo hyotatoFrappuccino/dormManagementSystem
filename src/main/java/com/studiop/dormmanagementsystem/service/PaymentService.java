@@ -46,7 +46,13 @@ public class PaymentService {
 
     @Transactional
     public Payment addPayment(PaymentRequest request) {
-        Payment payment = new Payment(request.getName(), request.getAmount(), request.getDate(), PaymentStatus.PAID, request.getType());
+        Payment payment = Payment.builder()
+                .studentId(request.getName())
+                .amount(request.getAmount())
+                .date(request.getDate())
+                .status(PaymentStatus.PAID)
+                .type(request.getType())
+                .build();
         return paymentRepository.save(payment);
     }
 
@@ -89,8 +95,10 @@ public class PaymentService {
         Payment payment = getById(paymentId);
         Business business = businessService.getById(businessId);
 
-        PaymentBusinessParticipation participation = new PaymentBusinessParticipation(payment, business);
-
+        PaymentBusinessParticipation participation = PaymentBusinessParticipation.builder()
+                .payment(payment)
+                .business(business)
+                .build();
         payment.addBusinessParticipation(participation);
         business.addBusinessParticipation(participation);
     }
