@@ -1,10 +1,9 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.entity.Building;
+import com.studiop.dormmanagementsystem.entity.Business;
 import com.studiop.dormmanagementsystem.entity.Payment;
-import com.studiop.dormmanagementsystem.entity.dto.BusinessDto;
-import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
-import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
-import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
+import com.studiop.dormmanagementsystem.entity.dto.*;
 import com.studiop.dormmanagementsystem.service.BusinessService;
 import com.studiop.dormmanagementsystem.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,9 +88,10 @@ public class PaymentController {
 
     @Operation(summary = "사업 추가")
     @PostMapping("/business")
-    public ResponseEntity<String> addBusinessParticipation(@RequestBody String name) {
-        businessService.addBusiness(name);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<BusinessDto> addBusinessParticipation(@RequestBody String name) {
+        Business savedBusiness = businessService.addBusiness(name);
+        URI location = URI.create("/api/v1/payments/businesses/" + savedBusiness.getId());
+        return ResponseEntity.created(location).body(BusinessDto.fromEntity(savedBusiness));
     }
 
     @Operation(summary = "사업 삭제")

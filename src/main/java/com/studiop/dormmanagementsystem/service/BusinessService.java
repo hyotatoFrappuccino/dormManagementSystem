@@ -26,12 +26,12 @@ public class BusinessService {
     }
 
     @Transactional
-    public void addBusiness(String name) {
-        businessRepository.save(
-                Business.builder()
-                        .name(name)
-                        .build()
-        );
+    public Business addBusiness(String name) {
+        Business business = Business.builder()
+                .name(name)
+                .build();
+
+        return businessRepository.save(business);
     }
 
     @Transactional

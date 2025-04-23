@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +25,15 @@ public class BuildingService {
 
     @Transactional
     public Building addBuilding(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
-        return buildingRepository.save(new Building(name, fridgeSlots, freezerSlots, integratedSlots, type));
+        Building building = Building.builder()
+                .name(name)
+                .fridgeSlots(fridgeSlots)
+                .freezerSlots(freezerSlots)
+                .integratedSlots(integratedSlots)
+                .type(type)
+                .build();
+
+        return buildingRepository.save(building);
     }
 
     public List<Building> getAllBuildingsEntity() {
@@ -35,9 +42,10 @@ public class BuildingService {
 
     public List<BuildingDto> getAllBuildings() {
         List<Building> buildings = buildingRepository.findAll();
+
         return buildings.stream()
                 .map(BuildingDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -56,6 +64,7 @@ public class BuildingService {
         if (!buildingRepository.existsById(id)) {
             throw new EntityNotFoundException("해당 ID의 건물을 찾을 수 없습니다: " + id);
         }
+
         buildingRepository.deleteById(id);
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +33,9 @@ public class AdminService {
     }
 
     public List<AdminDto> getAllAdmins() {
-        return adminRepository.findAll().stream().map(AdminDto::fromEntity).collect(Collectors.toList());
+        return adminRepository.findAll().stream()
+                .map(AdminDto::fromEntity)
+                .toList();
     }
 
     @Transactional
@@ -44,12 +45,14 @@ public class AdminService {
                 .email(request.getEmail())
                 .role(request.getRole())
                 .build();
+
         return adminRepository.save(admin);
     }
 
     @Transactional
     public void editAdmin(Long id, AdminRequest request) {
         Admin admin = getById(id);
+
         admin.changeName(request.getName());
         admin.changeEmail(request.getEmail());
         admin.changeRole(request.getRole());
@@ -60,6 +63,7 @@ public class AdminService {
         if (!adminRepository.existsById(id)) {
             throw new EntityNotFoundException("해당 ID의 관리자를 찾을 수 없습니다: " + id);
         }
+
         adminRepository.deleteById(id);
     }
 

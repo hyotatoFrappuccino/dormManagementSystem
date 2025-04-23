@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +47,7 @@ public class FridgeService {
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(FridgeApplicationDto::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<FridgeApplication> getAllFridgeApplications() {
