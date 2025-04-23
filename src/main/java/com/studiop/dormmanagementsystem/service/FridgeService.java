@@ -24,10 +24,12 @@ public class FridgeService {
     private final RoundService roundService;
     private final FridgeApplicationRepository fridgeApplicationRepository;
 
+    // 냉장고 신청/연장 화면 신청자 정보 조회
     public MemberInfoDto getMemberInfo(String studentId) {
         List<Survey> surveys = surveyService.getSurveys(studentId);
         PaymentStatus paymentStatus = paymentService.getPaymentStatus(studentId);
 
+        // 해당 학번의 동의한 서약서 중 가장 최근의 서약서를 골라 매핑, 납부 여부와 결합하여 반환
         return surveys.stream()
                 .filter(Survey::isAgreed)
                 .reduce((first, second) -> second)  // 마지막 요소 찾기
@@ -38,9 +40,11 @@ public class FridgeService {
                         survey.getBuilding().getName(),
                         survey.getRoomNumber()
                 ))
+                // 동의한 서약서가 없는 경우 기본값 반환
                 .orElse(new MemberInfoDto("-", paymentStatus, null, "-", "-"));
     }
 
+    // 해당 학번의 냉장고 신청 내역 반환
     public List<FridgeApplicationDto> getFridgeByMemberInfo(String studentId) {
         return memberService.findByStudentId(studentId)
                 .map(Member::getFridgeApplications)
@@ -50,24 +54,24 @@ public class FridgeService {
                 .toList();
     }
 
-    public List<FridgeApplication> getAllFridgeApplications() {
-        return fridgeApplicationRepository.findAll();
-    }
+//    // 전체 냉장고 신청 내역 반환
+//    public List<FridgeApplication> getAllFridgeApplications() {
+//        return fridgeApplicationRepository.findAll();
+//    }
 
     @Transactional
     public void apply(FridgeApplyRequest request) {
         String studentId = request.getStudentId();
-        if (!isAvailableRequest(studentId)) {
-            throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 또는 서약서 상태를 확인해주세요.");
+
+        // 가장 최근의 동의한 서약서 가져오기
+        Survey survey = getRecentAgreedSurvey(studentId);
+
+        // 납부자인지 확인
+        if (paymentService.getPaymentStatus(studentId) != PaymentStatus.PAID) {
+            throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 상태를 확인해주세요.");
         }
 
-        List<Survey> surveys = surveyService.getSurveys(studentId);
-
-        Survey survey = surveys.stream()
-                .reduce((first, second) -> second)
-                .filter(Survey::isAgreed)
-                .orElseThrow(() -> new IllegalStateException("동의한 서약서 정보 없음"));
-
+        // 기존 신청자라면 Member 엔티티 반환, 신규 신청자라면 새 Member 엔티티 생성 후 반환
         Member member = memberService.findByStudentId(studentId)
                 .orElseGet(() -> memberService.addMember(
                         Member.builder()
@@ -80,9 +84,10 @@ public class FridgeService {
                                 .build()
                 ));
 
+        // 신청 회차
         Round round = roundService.getById(request.getRoundId());
 
-        // 해당 회차에 기존 신청이 있다면 삭제
+        // 중복 신청 방지를 위해 해당 회차 기존 신청 내역 제거
         member.getFridgeApplications()
                 .stream()
                 .filter(app -> app.getRound().equals(round))
@@ -102,16 +107,12 @@ public class FridgeService {
         fridgeApplicationRepository.save(application);
     }
 
-    private boolean isAvailableRequest(String studentId) {
+    private Survey getRecentAgreedSurvey(String studentId) {
         List<Survey> surveys = surveyService.getSurveys(studentId);
-
-        for (int i = surveys.size() - 1; i >= 0; i--) {
-            if (surveys.get(i).isAgreed()) {
-                return paymentService.getPaymentStatus(studentId) == PaymentStatus.PAID;
-            }
-        }
-
-        return false;
+        return surveys.stream()
+                .reduce((first, second) -> second)
+                .filter(Survey::isAgreed)
+                .orElseThrow(() -> new IllegalStateException("신청 요건이 충족되지 않았습니다. 서약서 동의 상태를 확인해주세요."));
     }
 
     @Transactional
