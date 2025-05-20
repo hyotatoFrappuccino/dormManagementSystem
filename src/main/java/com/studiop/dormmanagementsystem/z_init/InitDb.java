@@ -9,6 +9,7 @@
 //import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 //import com.studiop.dormmanagementsystem.service.AppConfigService;
 //import com.studiop.dormmanagementsystem.service.BuildingService;
+//import com.studiop.dormmanagementsystem.service.PaymentService;
 //import com.studiop.dormmanagementsystem.service.RoundService;
 //import jakarta.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@
 //        private static final ThreadLocalRandom r = ThreadLocalRandom.current();
 //        private static final int PAYMENT_AMOUNT = 7000;
 //        private final RoundService roundService;
+//        private final PaymentService paymentService;
 //
 //        @Transactional
 //        public void mockBuilding() {

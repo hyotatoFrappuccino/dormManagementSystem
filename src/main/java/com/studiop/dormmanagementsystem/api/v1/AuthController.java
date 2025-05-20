@@ -1,7 +1,9 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.security.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +35,11 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(Map.of("email", email, "sub", sub));
+    }
+
+    @GetMapping("/success")
+    public ResponseEntity<LoginResponse> loginSuccess(@Valid LoginResponse loginResponse) {
+        return ResponseEntity.ok(loginResponse);
     }
 
     @Operation(summary = "로그아웃")
