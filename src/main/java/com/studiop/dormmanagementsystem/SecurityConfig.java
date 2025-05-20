@@ -21,8 +21,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    // 구글 등에서 가져온 사용자 정보를 가공하는 커스텀 서비스
     private final OAuth2UserService oAuth2UserService;
+    // OAuth 로그인 성공 시 JWT 발급 및 리다이렉트
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
 
     @Bean
@@ -64,9 +67,9 @@ public class SecurityConfig {
                 )
 
                 // jwt 관련 설정
-                .addFilterBefore(tokenAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenAuthenticationFilter, TokenAuthenticationFilter.class)
+//                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions

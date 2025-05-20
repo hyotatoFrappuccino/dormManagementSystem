@@ -2,7 +2,6 @@
 //
 //import com.studiop.dormmanagementsystem.entity.Payment;
 //import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
-//import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 //import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 //import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 //import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
@@ -81,9 +80,7 @@
 //
 //        @Transactional
 //        public void setupGoogleSheetId() {
-//            appConfigService.setConfigValue(AppConfigKey.GOOGLE_SHEET_ID, "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
-//            appConfigService.setConfigValue(AppConfigKey.IS_CONFIGURED, "true");
-//            appConfigService.setConfigValue(AppConfigKey.DEFAULT_AMOUNT, "7000");
+//            appConfigService.setConfigValue("googleSheetId", "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
 //        }
 //
 //        @Transactional
@@ -93,23 +90,23 @@
 //            for (int i = 0; i < 8; i++) {
 //                LocalDate startDate = springStart.plusDays(i * 14);
 //                LocalDate endDate = startDate.plusDays(13);
-//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "000" + (i + 1)));
+//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
 //            }
 //
 //            // 여름방학
 //            LocalDate summerStart = LocalDate.of(2025, 6, 24);
 //            LocalDate fallStart = LocalDate.of(2025, 9, 1);
-//            roundService.addRound(new RoundRequest("여름학기", summerStart, fallStart.minusDays(1), "9999"));
+//            roundService.addRound(new RoundRequest("여름학기", summerStart, fallStart.minusDays(1), "0000"));
 //
-////            // 2학기 회차 (2주 단위로 8개)
-////            for (int i = 0; i < 8; i++) {
-////                LocalDate startDate = fallStart.plusDays(i * 14);
-////                LocalDate endDate = startDate.plusDays(13);
-////                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
-////            }
-////
-////            // 겨울방학
-////            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28), "0000"));
+//            // 2학기 회차 (2주 단위로 8개)
+//            for (int i = 0; i < 8; i++) {
+//                LocalDate startDate = fallStart.plusDays(i * 14);
+//                LocalDate endDate = startDate.plusDays(13);
+//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
+//            }
+//
+//            // 겨울방학
+//            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28), "0000"));
 //        }
 //    }
 //}
