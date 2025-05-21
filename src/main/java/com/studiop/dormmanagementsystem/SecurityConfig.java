@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -26,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     // 구글 등에서 가져온 사용자 정보를 가공하는 커스텀 서비스
-    private final OAuth2UserService oAuth2UserService;
+    private final CustomOAuth2UserService customOAuth2UserService;
     // OAuth 로그인 성공 시 JWT 발급 및 리다이렉트
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
@@ -66,15 +65,15 @@ public class SecurityConfig {
                 // oauth2 설정
                 .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
                 // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정을 담당
-                oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))
+                oauth.userInfoEndpoint(c -> c.userService(customOAuth2UserService))
                         // 로그인 성공 시 핸들러
                         .successHandler(oAuth2SuccessHandler)
                 )
 
                 // jwt 관련 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(tokenAuthenticationFilter, TokenAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
+                .addFilterBefore(tokenAuthenticationFilter, TokenAuthenticationFilter.class)
+//                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions

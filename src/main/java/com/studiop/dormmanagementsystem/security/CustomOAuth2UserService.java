@@ -19,7 +19,7 @@ import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class OAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final AdminRepository adminRepository;
 
