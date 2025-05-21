@@ -4,6 +4,7 @@ import com.studiop.dormmanagementsystem.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
@@ -40,7 +44,8 @@ public class SecurityConfig {
         http
                 // rest api 설정
                 .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화 -> cookie를 사용하지 않으면 꺼도 된다. (cookie를 사용할 경우 httpOnly(XSS 방어), sameSite(CSRF 방어)로 방어해야 한다.)
-                .cors(AbstractHttpConfigurer::disable) // cors 비활성화 -> 프론트와 연결 시 따로 설정 필요
+//                .cors(AbstractHttpConfigurer::disable) // cors 비활성화 -> 프론트와 연결 시 따로 설정 필요
+                .cors(Customizer.withDefaults()) // cors 허용
                 .httpBasic(AbstractHttpConfigurer::disable) // 기본 인증 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 login form 비활성화
                 .logout(AbstractHttpConfigurer::disable) // 기본 logout 비활성화
@@ -50,13 +55,13 @@ public class SecurityConfig {
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용하지 않음
 
                 // request 인증, 인가 설정
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers(
-                                new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/api/auth/success")
-                                ).permitAll()
-                .anyRequest().authenticated()
-                )
+//                .authorizeHttpRequests(request ->
+//                        request.requestMatchers(
+////                                new AntPathRequestMatcher("/"),
+//                                new AntPathRequestMatcher("/api/auth/success")
+//                                ).permitAll()
+//                .anyRequest().authenticated()
+//                )
 
                 // oauth2 설정
                 .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
@@ -68,8 +73,8 @@ public class SecurityConfig {
 
                 // jwt 관련 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(tokenAuthenticationFilter, TokenAuthenticationFilter.class)
-//                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
+//                .addFilterBefore(tokenAuthenticationFilter, TokenAuthenticationFilter.class)
+                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
@@ -77,6 +82,19 @@ public class SecurityConfig {
                         .accessDeniedHandler(new CustomAccessDeniedHandler()));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
 

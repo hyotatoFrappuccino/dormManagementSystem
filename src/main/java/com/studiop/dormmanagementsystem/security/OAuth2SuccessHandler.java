@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
@@ -29,6 +31,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String redirectUrl = UriComponentsBuilder.fromUriString(URI)
                 .queryParam("accessToken", accessToken)
                 .build().toUriString();
+
+        log.info("authentication.getPrincipal(): {}", authentication.getPrincipal());
+        log.info("accessToken: {}", accessToken);
 
         response.sendRedirect(redirectUrl);
     }

@@ -4,6 +4,7 @@ import com.studiop.dormmanagementsystem.entity.Admin;
 import com.studiop.dormmanagementsystem.exception.AuthException;
 import com.studiop.dormmanagementsystem.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
@@ -26,6 +28,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // 1. 유저 정보(attributes) 가져오기 [sub, name, email ...]
         Map<String, Object> oAuth2UserAttributes = super.loadUser(userRequest).getAttributes();
+        log.info("oAuth2UserAttributes: {}", oAuth2UserAttributes);
         
         // 2. registrationId 가져오기 (third-party id. yml에서 설정한 client.registration의 값[google])
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
