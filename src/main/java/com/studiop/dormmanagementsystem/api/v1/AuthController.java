@@ -54,4 +54,11 @@ public class AuthController {
         // 로그아웃 성공 응답 반환
         return ResponseEntity.ok().build();
     }
+
+//    @DeleteMapping("/auth/logout")
+//    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
+//        tokenService.deleteRefreshToken(userDetails.getUsername());
+//        redisMessageService.removeSubscribe(userDetails.getUsername());
+//        return ResponseEntity.noContent().build();
+//    }
 }

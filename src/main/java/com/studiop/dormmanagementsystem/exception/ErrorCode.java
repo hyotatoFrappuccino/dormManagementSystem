@@ -18,7 +18,7 @@ public enum ErrorCode {
 
     // admin
     MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
-    ADMIN_NOT_FOUND(NOT_FOUND, "관리자를 찾을 수 없습니다."),
+    ADMIN_NOT_FOUND(NOT_FOUND, "등록되지 않은 관리자입니다."),
 
     // global
     RESOURCE_LOCKED(LOCKED, "자원이 잠겨있어 접근할 수 없습니다."),
