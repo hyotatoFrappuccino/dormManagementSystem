@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -44,8 +43,7 @@ public class SecurityConfig {
         http
                 // rest api 설정
                 .csrf(AbstractHttpConfigurer::disable) // csrf 비활성화 -> cookie를 사용하지 않으면 꺼도 된다. (cookie를 사용할 경우 httpOnly(XSS 방어), sameSite(CSRF 방어)로 방어해야 한다.)
-//                .cors(AbstractHttpConfigurer::disable) // cors 비활성화 -> 프론트와 연결 시 따로 설정 필요
-                .cors(Customizer.withDefaults()) // cors 허용
+                .cors(Customizer.withDefaults()) // corsConfigurationSource
                 .httpBasic(AbstractHttpConfigurer::disable) // 기본 인증 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable) // 기본 login form 비활성화
                 .logout(AbstractHttpConfigurer::disable) // 기본 logout 비활성화
@@ -56,11 +54,11 @@ public class SecurityConfig {
 
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(
-                                new AntPathRequestMatcher("/")
-//                                new AntPathRequestMatcher("/api/auth/success")
-                                ).permitAll()
-                .anyRequest().authenticated()
+                    request
+//                                .requestMatchers(
+//                                new AntPathRequestMatcher("/")
+//                                ).permitAll()
+                    .anyRequest().authenticated()
                 )
 
                 // oauth2 설정

@@ -34,9 +34,9 @@ public class TokenProvider {
     @Value("${jwt.key}")
     private String key;
     private SecretKey secretKey;
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
-    private static final String KEY_ROLE = "ROLE_MANAGER";
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L; // 60분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7; // 7일
+    private static final String KEY_ROLE = "role";
     private final TokenService tokenService;
 
     @PostConstruct
