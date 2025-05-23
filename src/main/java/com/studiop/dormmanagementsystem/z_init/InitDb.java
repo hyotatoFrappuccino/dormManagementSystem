@@ -1,11 +1,9 @@
 //package com.studiop.dormmanagementsystem.z_init;
 //
-//import com.studiop.dormmanagementsystem.entity.Payment;
+//import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 //import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
 //import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
-//import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 //import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
-//import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 //import com.studiop.dormmanagementsystem.service.AppConfigService;
 //import com.studiop.dormmanagementsystem.service.BuildingService;
 //import com.studiop.dormmanagementsystem.service.PaymentService;
@@ -37,7 +35,6 @@
 //    static class InitService {
 //
 //        private final BuildingService buildingService;
-//        private final PaymentRepository paymentRepository;
 //        private final AppConfigService appConfigService;
 //        private static final ThreadLocalRandom r = ThreadLocalRandom.current();
 //        private static final int PAYMENT_AMOUNT = 7000;
@@ -58,8 +55,8 @@
 //
 //        @Transactional
 //        public void mockPayment() {
-//            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentStatus.PAID, PaymentType.BANK_TRANSFER));
-//            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentStatus.PAID, PaymentType.ON_SITE));
+//            paymentService.addPayment(new PaymentRequest("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentType.BANK_TRANSFER));
+//            paymentService.addPayment(new PaymentRequest("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentType.ON_SITE));
 //
 //            for (int i = 0; i < 500; i++) {
 //                int year = r.nextInt(5);
@@ -74,7 +71,7 @@
 //                } else {
 //                    paymentType = PaymentType.ON_SITE;
 //                }
-//                paymentRepository.save(new Payment("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
+//                paymentService.addPayment(new PaymentRequest("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), paymentType));
 //            }
 //        }
 //
