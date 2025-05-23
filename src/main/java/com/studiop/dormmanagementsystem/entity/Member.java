@@ -41,6 +41,7 @@ public class Member extends BaseEntity {
 
     private int warningCount;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FridgeApplication> fridgeApplications = new ArrayList<>();
 

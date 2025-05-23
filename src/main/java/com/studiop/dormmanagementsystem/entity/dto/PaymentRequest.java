@@ -4,11 +4,13 @@ import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
+@AllArgsConstructor
 public class PaymentRequest {
     @NotBlank
     private String name;

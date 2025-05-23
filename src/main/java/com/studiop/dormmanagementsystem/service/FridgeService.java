@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -100,8 +101,10 @@ public class FridgeService {
         // 새로운 신청 추가
         FridgeApplication application = FridgeApplication.builder()
                 .member(member)
+                .building(survey.getBuilding())
                 .round(round)
                 .type(request.getType())
+                .appliedAt(LocalDateTime.now())
                 .build();
         member.addFridgeApplication(application);
         fridgeApplicationRepository.save(application);

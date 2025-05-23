@@ -1,14 +1,12 @@
 //package com.studiop.dormmanagementsystem.z_init;
 //
-//import com.studiop.dormmanagementsystem.entity.Payment;
+//import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 //import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
-//import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 //import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
-//import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 //import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
-//import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 //import com.studiop.dormmanagementsystem.service.AppConfigService;
 //import com.studiop.dormmanagementsystem.service.BuildingService;
+//import com.studiop.dormmanagementsystem.service.PaymentService;
 //import com.studiop.dormmanagementsystem.service.RoundService;
 //import jakarta.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
@@ -37,11 +35,11 @@
 //    static class InitService {
 //
 //        private final BuildingService buildingService;
-//        private final PaymentRepository paymentRepository;
 //        private final AppConfigService appConfigService;
 //        private static final ThreadLocalRandom r = ThreadLocalRandom.current();
 //        private static final int PAYMENT_AMOUNT = 7000;
 //        private final RoundService roundService;
+//        private final PaymentService paymentService;
 //
 //        @Transactional
 //        public void mockBuilding() {
@@ -57,8 +55,8 @@
 //
 //        @Transactional
 //        public void mockPayment() {
-//            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentStatus.PAID, PaymentType.BANK_TRANSFER));
-//            paymentRepository.save(new Payment("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentStatus.PAID, PaymentType.ON_SITE));
+//            paymentService.addPayment(new PaymentRequest("202112648", PAYMENT_AMOUNT, LocalDate.now(), PaymentType.BANK_TRANSFER));
+//            paymentService.addPayment(new PaymentRequest("202112648", PAYMENT_AMOUNT, LocalDate.now().minusDays(1), PaymentType.ON_SITE));
 //
 //            for (int i = 0; i < 500; i++) {
 //                int year = r.nextInt(5);
@@ -73,15 +71,13 @@
 //                } else {
 //                    paymentType = PaymentType.ON_SITE;
 //                }
-//                paymentRepository.save(new Payment("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), PaymentStatus.PAID, paymentType));
+//                paymentService.addPayment(new PaymentRequest("202" + year + sid, PAYMENT_AMOUNT, LocalDate.now().minusDays(day), paymentType));
 //            }
 //        }
 //
 //        @Transactional
 //        public void setupGoogleSheetId() {
-//            appConfigService.setConfigValue(AppConfigKey.GOOGLE_SHEET_ID, "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
-//            appConfigService.setConfigValue(AppConfigKey.IS_CONFIGURED, "true");
-//            appConfigService.setConfigValue(AppConfigKey.DEFAULT_AMOUNT, "7000");
+//            appConfigService.setConfigValue("googleSheetId", "1-I1jGTrlwqSwyBB-NpGkMeltbe4MjxyM27kDVztnA2A");
 //        }
 //
 //        @Transactional
@@ -91,23 +87,23 @@
 //            for (int i = 0; i < 8; i++) {
 //                LocalDate startDate = springStart.plusDays(i * 14);
 //                LocalDate endDate = startDate.plusDays(13);
-//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "000" + (i + 1)));
+//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
 //            }
 //
 //            // 여름방학
 //            LocalDate summerStart = LocalDate.of(2025, 6, 24);
 //            LocalDate fallStart = LocalDate.of(2025, 9, 1);
-//            roundService.addRound(new RoundRequest("여름학기", summerStart, fallStart.minusDays(1), "9999"));
+//            roundService.addRound(new RoundRequest("여름학기", summerStart, fallStart.minusDays(1), "0000"));
 //
-////            // 2학기 회차 (2주 단위로 8개)
-////            for (int i = 0; i < 8; i++) {
-////                LocalDate startDate = fallStart.plusDays(i * 14);
-////                LocalDate endDate = startDate.plusDays(13);
-////                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
-////            }
-////
-////            // 겨울방학
-////            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28), "0000"));
+//            // 2학기 회차 (2주 단위로 8개)
+//            for (int i = 0; i < 8; i++) {
+//                LocalDate startDate = fallStart.plusDays(i * 14);
+//                LocalDate endDate = startDate.plusDays(13);
+//                roundService.addRound(new RoundRequest((i + 1) + "회차", startDate, endDate, "0000"));
+//            }
+//
+//            // 겨울방학
+//            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28), "0000"));
 //        }
 //    }
 //}
