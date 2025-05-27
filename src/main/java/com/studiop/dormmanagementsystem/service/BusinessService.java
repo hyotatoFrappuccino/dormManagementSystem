@@ -1,13 +1,15 @@
 package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Business;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.BusinessRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,7 +20,7 @@ public class BusinessService {
 
     public Business getById(Long id) {
         return businessRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 사업을 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     public List<Business> getAllBusiness() {
@@ -37,7 +39,7 @@ public class BusinessService {
     @Transactional
     public void removeBusiness(Long id) {
         if (!businessRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 사업을 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
         businessRepository.deleteById(id);
     }

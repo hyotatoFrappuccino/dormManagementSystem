@@ -15,6 +15,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 //        log.error("AuthenticationException is occurred. ", authException);
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증에 실패하였습니다.");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write("""
+                    {
+                      "code": "FAILED_AUTHORIZED",
+                      "message": "인증에 실패하였습니다."
+                    }
+                """);
     }
 }

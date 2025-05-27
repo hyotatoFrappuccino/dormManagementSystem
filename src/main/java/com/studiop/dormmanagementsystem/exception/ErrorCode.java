@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.exception;
 
-
 import static org.springframework.http.HttpStatus.*;
 
 import lombok.Getter;
@@ -15,12 +14,12 @@ public enum ErrorCode {
     TOKEN_EXPIRED(UNAUTHORIZED, "토큰이 만료되었습니다."),
     INVALID_TOKEN(UNAUTHORIZED, "올바르지 않은 토큰입니다."),
     INVALID_JWT_SIGNATURE(UNAUTHORIZED, "잘못된 JWT 시그니처입니다."),
+    FAILED_AUTHORIZED(UNAUTHORIZED, "인증에 실패하였습니다."),
 
     // admin
     ADMIN_NOT_FOUND(NOT_FOUND, "등록되지 않은 관리자입니다."),
 
     // global
-    RESOURCE_LOCKED(LOCKED, "자원이 잠겨있어 접근할 수 없습니다."),
     NO_ACCESS(FORBIDDEN, "접근 권한이 없습니다."),
     RESOURCE_NOT_FOUND(NOT_FOUND, "요청한 자원을 찾을 수 없습니다."),
     INVALID_REQUEST(BAD_REQUEST, "올바르지 않은 요청입니다."),

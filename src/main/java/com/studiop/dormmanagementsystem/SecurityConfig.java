@@ -76,8 +76,8 @@ public class SecurityConfig {
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                        .accessDeniedHandler(new CustomAccessDeniedHandler()));
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) //401 Unauthorized
+                        .accessDeniedHandler(new CustomAccessDeniedHandler())); //403 Forbidden
 
         return http.build();
     }

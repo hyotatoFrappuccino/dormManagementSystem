@@ -5,7 +5,6 @@ import com.studiop.dormmanagementsystem.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,20 +22,11 @@ public class SurveyController {
 
     @Operation(summary = "서약서 업데이트")
     @PostMapping
-    public ResponseEntity<String> updateSurveyResponses() {
+    public ResponseEntity<String> updateSurveyResponses() throws ExecutionException, InterruptedException {
         log.info("Controller - start updateSurveyResponses");
         CompletableFuture<String> futureResult = surveyService.updateSurveyFromGoogleSheets();
-
-        try {
-            String result = futureResult.get(); // CompletableFuture 결과 기다리기
-            if (result.startsWith("실패")) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-            }
-            return ResponseEntity.ok(result);
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("비동기 작업 대기 중 예외 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비동기 작업 실패");
-        }
+        String result = futureResult.get();
+        return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "전체 서약서 목록 반환")

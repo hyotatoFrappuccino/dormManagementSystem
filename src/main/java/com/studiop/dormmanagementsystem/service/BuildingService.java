@@ -3,13 +3,15 @@ package com.studiop.dormmanagementsystem.service;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,7 +22,7 @@ public class BuildingService {
 
     public Building getById(Long id) {
         return buildingRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 건물 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     @Transactional
@@ -62,7 +64,7 @@ public class BuildingService {
     @Transactional
     public void deleteBuilding(Long id) {
         if (!buildingRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 건물을 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
 
         buildingRepository.deleteById(id);

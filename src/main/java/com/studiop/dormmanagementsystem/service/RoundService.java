@@ -6,8 +6,8 @@ import com.studiop.dormmanagementsystem.entity.Round;
 import com.studiop.dormmanagementsystem.entity.dto.RoundDto;
 import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.RoundRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +27,7 @@ public class RoundService {
 
     public Round getById(Long id) {
         return roundRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 회차를 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     public RoundDto getDtoById(Long id) {
@@ -56,7 +58,7 @@ public class RoundService {
     @Transactional
     public void deleteRound(Long id) {
         if (!roundRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 회차를 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
         roundRepository.deleteById(id);
     }

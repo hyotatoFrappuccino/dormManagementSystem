@@ -7,14 +7,16 @@ import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +28,7 @@ public class PaymentService {
 
     public Payment getById(Long id) {
         return paymentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     public PaymentDto getDtoById(Long id) {
@@ -65,7 +67,7 @@ public class PaymentService {
     @Transactional
     public void deletePayment(Long id) {
         if (!paymentRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 납부자를 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
         paymentRepository.deleteById(id);
     }

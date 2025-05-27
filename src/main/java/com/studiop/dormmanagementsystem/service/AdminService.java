@@ -3,14 +3,16 @@ package com.studiop.dormmanagementsystem.service;
 import com.studiop.dormmanagementsystem.entity.Admin;
 import com.studiop.dormmanagementsystem.entity.dto.AdminDto;
 import com.studiop.dormmanagementsystem.entity.dto.AdminRequest;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.AdminRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,15 +23,11 @@ public class AdminService {
 
     public Admin getById(Long id) {
         return adminRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 관리자를 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     public AdminDto getDtoById(Long id) {
         return AdminDto.fromEntity(getById(id));
-    }
-
-    public Optional<Admin> findByEmail(String email) {
-        return adminRepository.findByEmail(email);
     }
 
     public List<AdminDto> getAllAdmins() {
@@ -61,7 +59,7 @@ public class AdminService {
     @Transactional
     public void deleteAdmin(Long id) {
         if (!adminRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 관리자를 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
 
         adminRepository.deleteById(id);

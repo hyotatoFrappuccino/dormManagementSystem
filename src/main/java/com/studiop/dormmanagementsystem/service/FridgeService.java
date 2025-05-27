@@ -5,14 +5,16 @@ import com.studiop.dormmanagementsystem.entity.dto.FridgeApplicationDto;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.MemberInfoDto;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.FridgeApplicationRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,7 +71,7 @@ public class FridgeService {
 
         // 납부자인지 확인
         if (paymentService.getPaymentStatus(studentId) != PaymentStatus.PAID) {
-            throw new IllegalStateException("신청 요건이 충족되지 않았습니다. 납부 상태를 확인해주세요.");
+            throw new EntityException(INVALID_REQUEST, "신청 요건이 충족되지 않았습니다. 납부 상태를 확인해주세요.");
         }
 
         // 기존 신청자라면 Member 엔티티 반환, 신규 신청자라면 새 Member 엔티티 생성 후 반환
@@ -121,7 +123,7 @@ public class FridgeService {
     @Transactional
     public void deleteFridgeApplication(Long id) {
         FridgeApplication application = fridgeApplicationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 ID의 냉장고 신청 내역을 찾을 수 없습니다: " + id));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
 
         Member member = application.getMember();
         member.getFridgeApplications().remove(application);

@@ -2,14 +2,16 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Member;
 import com.studiop.dormmanagementsystem.entity.dto.MemberFridgeApplicationResponse;
+import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,12 +20,17 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    public Member getById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
+    }
+
     public Optional<Member> findByStudentId(String studentId) {
         return memberRepository.findByStudentId(studentId);
     }
 
     public List<MemberFridgeApplicationResponse> getAllMemberWithApplications() {
-        List<Member> members = memberRepository.findAllWithFridgeApplications(); // fetch join 추천
+        List<Member> members = memberRepository.findAllWithFridgeApplications();
         return members.stream()
                 .map(MemberFridgeApplicationResponse::fromEntity)
                 .toList();
@@ -37,7 +44,7 @@ public class MemberService {
     @Transactional
     public void deleteMemberById(Long id) {
         if (!memberRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 사용자를 찾을 수 없습니다: " + id);
+            throw new EntityException(RESOURCE_NOT_FOUND);
         }
         memberRepository.deleteById(id);
     }
@@ -47,20 +54,18 @@ public class MemberService {
     public int getWarningCount(Long id) {
         return memberRepository.findById(id)
                 .map(Member::getWarningCount)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
     @Transactional
     public void increaseWarning(Long id) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        Member member = getById(id);
         member.increaseWarningCount();
     }
 
     @Transactional
     public void decreaseWarning(Long id) {
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        Member member = getById(id);
         member.decreaseWarningCount();
     }
 }

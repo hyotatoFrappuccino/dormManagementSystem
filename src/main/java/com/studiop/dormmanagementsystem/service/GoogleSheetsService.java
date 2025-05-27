@@ -9,6 +9,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
+import com.studiop.dormmanagementsystem.exception.GoogleSheetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +49,7 @@ public class GoogleSheetsService {
     public List<List<Object>> getSurveyResponses() throws IOException, GeneralSecurityException {
         String SPREADSHEET_ID = appConfigService.getConfigValue(AppConfigKey.GOOGLE_SHEET_ID, "");
         if (SPREADSHEET_ID.isEmpty()) {
-            throw new IllegalStateException("설정에서 서약서 구글 시트 ID를 설정해주세요.");
+            throw new GoogleSheetException(INVALID_REQUEST, "설정에서 서약서 구글 시트 ID를 설정해주세요.");
         }
 
         Sheets sheetsService = getSheetsService();

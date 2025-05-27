@@ -3,8 +3,9 @@ package com.studiop.dormmanagementsystem.service;
 import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.entity.dto.SurveyDto;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
+import com.studiop.dormmanagementsystem.exception.EntityException;
+import com.studiop.dormmanagementsystem.exception.ErrorCode;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -42,20 +43,15 @@ public class SurveyService {
     @Async
     public CompletableFuture<String> updateSurveyFromGoogleSheets() {
         return CompletableFuture.supplyAsync(() -> {
-            try {
-                surveyTransactionService.updateSurvey();
-                return "성공";
-            } catch (Exception e) {
-                log.error("작업 중 예외 발생: {}", e.getMessage(), e);
-                return "실패: " + e.getMessage();
-            }
+            surveyTransactionService.updateSurvey();
+            return "성공";
         });
     }
 
     @Transactional
     public void deleteSurvey(Long id) {
         if (!surveyRepository.existsById(id)) {
-            throw new EntityNotFoundException("해당 ID의 서약서를 찾을 수 없습니다: " + id);
+            throw new EntityException(ErrorCode.RESOURCE_NOT_FOUND);
         }
         surveyRepository.deleteById(id);
     }
