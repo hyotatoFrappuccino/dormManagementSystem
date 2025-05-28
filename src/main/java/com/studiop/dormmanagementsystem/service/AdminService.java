@@ -38,6 +38,8 @@ public class AdminService {
 
     @Transactional
     public Admin addAdmin(AdminRequest request) {
+        isGmail(request.getEmail());
+
         Admin admin = Admin.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -49,6 +51,8 @@ public class AdminService {
 
     @Transactional
     public void editAdmin(Long id, AdminRequest request) {
+        isGmail(request.getEmail());
+
         Admin admin = getById(id);
 
         admin.changeName(request.getName());
@@ -68,5 +72,13 @@ public class AdminService {
     @Transactional
     public void deleteAllAdmins() {
         adminRepository.deleteAllInBatch();
+    }
+
+    private boolean isGmail(String email) {
+        if (email.endsWith("@gmail.com")) {
+            return true;
+        } else {
+            throw new EntityException(INVALID_REQUEST, "@gmail.com 이메일만 등록 가능합니다.");
+        }
     }
 }
