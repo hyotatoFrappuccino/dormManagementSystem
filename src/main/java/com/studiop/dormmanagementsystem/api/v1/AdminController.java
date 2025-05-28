@@ -9,6 +9,7 @@ import com.studiop.dormmanagementsystem.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -48,6 +49,7 @@ public class AdminController {
     }
 
     @Operation(summary = "관리자 추가")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @PostMapping
     public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminRequest request) {
         Admin savedAdmin = adminService.addAdmin(request);
@@ -56,6 +58,7 @@ public class AdminController {
     }
 
     @Operation(summary = "관리자 수정")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateAdmin(@PathVariable Long id, @RequestBody AdminRequest request) {
         adminService.editAdmin(id, request);
@@ -63,6 +66,7 @@ public class AdminController {
     }
 
     @Operation(summary = "관리자 삭제")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         adminService.deleteAdmin(id);
@@ -70,6 +74,7 @@ public class AdminController {
     }
 
     @Operation(summary = "전체 관리자 삭제")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @DeleteMapping
     public ResponseEntity<Void> deleteAllAdmins() {
         adminService.deleteAllAdmins();
