@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.Business;
 import com.studiop.dormmanagementsystem.entity.Payment;
 import com.studiop.dormmanagementsystem.entity.dto.*;
