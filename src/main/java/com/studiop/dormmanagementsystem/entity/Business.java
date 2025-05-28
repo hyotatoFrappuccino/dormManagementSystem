@@ -20,6 +20,7 @@ public class Business extends BaseEntity {
 
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "business", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentBusinessParticipation> participations = new ArrayList<>();
 

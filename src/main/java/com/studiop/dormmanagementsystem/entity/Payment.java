@@ -39,6 +39,7 @@ public class Payment extends BaseEntity {
     @Column(nullable = false)
     private PaymentType type;
 
+    @Builder.Default
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentBusinessParticipation> participations = new ArrayList<>();
 
