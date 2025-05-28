@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class RoundService {
 
     @Transactional
     public Round addRound(RoundRequest request) {
+        if (isOverlapping(request.getStartDate(), request.getEndDate())) {
+            throw new EntityException(INVALID_REQUEST, "해당 기간과 겹치는 회차가 존재합니다.");
+        }
         Round round = Round.builder()
                 .name(request.getName())
                 .startDate(request.getStartDate())
@@ -87,5 +91,12 @@ public class RoundService {
             }
         }
         return fridgeCountByBuilding;
+    }
+
+    private boolean isOverlapping(LocalDate startDate, LocalDate endDate) {
+        return roundRepository.findAll().stream()
+                .anyMatch(existing ->
+                        !(endDate.isBefore(existing.getStartDate()) || startDate.isAfter(existing.getEndDate()))
+                );
     }
 }
