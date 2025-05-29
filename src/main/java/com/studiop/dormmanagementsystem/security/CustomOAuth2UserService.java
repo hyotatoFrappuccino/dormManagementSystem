@@ -1,20 +1,18 @@
 package com.studiop.dormmanagementsystem.security;
 
 import com.studiop.dormmanagementsystem.entity.Admin;
-import com.studiop.dormmanagementsystem.exception.AuthException;
 import com.studiop.dormmanagementsystem.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-
-import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +41,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         
         // 5. 등록된 관리자 가져오기 (회원가입 불가)
         Admin admin = adminRepository.findByEmail(oAuth2UserInfo.email())
-                .orElseThrow(() -> new AuthException(ADMIN_NOT_FOUND));
+                .orElseThrow(() -> new OAuth2AuthenticationException(new OAuth2Error("admin_not_found", "등록된 관리자가 아닙니다.", null)));
         
         // 6. OAuth2User로 반환
         return new PrincipalDetails(admin, oAuth2UserAttributes, userNameAttributeName);

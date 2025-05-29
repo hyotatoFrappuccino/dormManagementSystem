@@ -17,14 +17,15 @@ public class OAuth2FailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
-        log.error("OAuth2 login fail. ", exception);
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//        log.error("OAuth2 login fail. ", exception);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("""
-                    {
-                      "code": "FAILED_LOGIN",
-                      "message": "소셜 로그인에 실패하였습니다."
-                    }
-                """);
+        response.getWriter().write(String.format("""
+                {
+                  "code": "FAILED_LOGIN",
+                  "message": "소셜 로그인에 실패하였습니다. %s"
+                }
+                """, exception.getMessage()));
+        response.sendRedirect("http://localhost:3000/unauthorized");
     }
 }
