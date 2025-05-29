@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -59,6 +60,7 @@ public class PaymentController {
     }
 
     @Operation(summary = "전체 납부자 삭제")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @DeleteMapping
     public ResponseEntity<Void> deleteAllPayments() {
         paymentService.deleteAllPayments();
