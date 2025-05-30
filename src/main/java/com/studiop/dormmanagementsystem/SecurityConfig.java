@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem;
 
 import com.studiop.dormmanagementsystem.security.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -26,10 +27,15 @@ public class SecurityConfig {
 
     // 구글 등에서 가져온 사용자 정보를 가공하는 커스텀 서비스
     private final CustomOAuth2UserService customOAuth2UserService;
+
     // OAuth 로그인 성공 시 JWT 발급 및 리다이렉트
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
     // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+
+    @Value("${url.frontend}")
+    private String frontendUrl;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
@@ -85,7 +91,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin(frontendUrl);
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
