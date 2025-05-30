@@ -103,7 +103,7 @@
 //            }
 //
 //            // 겨울방학
-//            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 15), LocalDate.of(2026, 2, 28), "0000"));
+//            roundService.addRound(new RoundRequest("겨울학기", LocalDate.of(2025, 12, 22), LocalDate.of(2026, 2, 28), "0000"));
 //        }
 //    }
 //}
