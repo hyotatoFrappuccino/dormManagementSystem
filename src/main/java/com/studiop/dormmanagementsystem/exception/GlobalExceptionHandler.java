@@ -1,5 +1,6 @@
 package com.studiop.dormmanagementsystem.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +14,18 @@ import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<?> handleCustomException(CustomException e) {
-        return toResponse(e.getErrorCode(), e.getMessage());
+    public ResponseEntity<?> handleCustomException(CustomException e, HttpServletRequest request) {
+        return toResponse(e.getErrorCode(), request.getRequestURI());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        return toResponse(DATA_INTEGRITY_VIOLATION, DATA_INTEGRITY_VIOLATION.getMessage());
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e,
+                                                                   HttpServletRequest request) {
+        return toResponse(DATA_INTEGRITY_VIOLATION, request.getRequestURI());
     }
 
-    private static ResponseEntity<ErrorResponse> toResponse(ErrorCode errorCode, String message) {
+    private static ResponseEntity<ErrorResponse> toResponse(ErrorCode errorCode, String path) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode, message));
+                .body(ErrorResponse.of(errorCode, path));
     }
 }
