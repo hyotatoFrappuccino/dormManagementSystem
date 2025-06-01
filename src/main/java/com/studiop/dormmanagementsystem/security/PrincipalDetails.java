@@ -38,7 +38,7 @@ public record PrincipalDetails(
 
     @Override
     public String getUsername() {
-        return admin.getName();
+        return admin.getEmail();
     }
 
     @Override
