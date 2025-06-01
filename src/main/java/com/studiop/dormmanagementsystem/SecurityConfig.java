@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     // OAuth 로그인 성공 시 JWT 발급 및 리다이렉트
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
@@ -73,7 +74,7 @@ public class SecurityConfig {
                     oauth.userInfoEndpoint(c -> c.userService(customOAuth2UserService))
                         // 로그인 성공 시 핸들러
                         .successHandler(oAuth2SuccessHandler)
-                        .failureHandler(new OAuth2FailureHandler())
+                        .failureHandler(oAuth2FailureHandler)
                 )
 
                 // jwt 관련 설정
@@ -95,6 +96,7 @@ public class SecurityConfig {
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
+        config.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

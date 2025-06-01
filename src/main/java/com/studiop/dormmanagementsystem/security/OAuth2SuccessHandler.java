@@ -34,9 +34,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .queryParam("accessToken", accessToken)
                 .build().toUriString();
 
-        log.info("authentication.getPrincipal(): {}", authentication.getPrincipal());
-        log.info("accessToken: {}", accessToken);
-
         response.sendRedirect(redirectUrl);
     }
 }
