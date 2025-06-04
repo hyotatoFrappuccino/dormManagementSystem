@@ -9,7 +9,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,13 +39,6 @@ public class SecurityConfig {
     private String frontendUrl;
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
-        return web -> web.ignoring()
-                // error endpoint
-                .requestMatchers("/error");
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // rest api 설정
@@ -62,20 +54,18 @@ public class SecurityConfig {
 
                 // request 인증, 인가 설정
                 .authorizeHttpRequests(request ->
-                    request
-//                                .requestMatchers(
-//                                new AntPathRequestMatcher("/")
-//                                ).permitAll()
-                    .anyRequest().authenticated()
+                        request
+                                .requestMatchers("/error").permitAll()
+                                .anyRequest().authenticated()
                 )
 
                 // oauth2 설정
                 .oauth2Login(oauth -> // OAuth2 로그인 기능에 대한 여러 설정의 진입점
-                // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정을 담당
-                    oauth.userInfoEndpoint(c -> c.userService(customOAuth2UserService))
-                        // 로그인 성공 시 핸들러
-                        .successHandler(oAuth2SuccessHandler)
-                        .failureHandler(oAuth2FailureHandler)
+                        // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때의 설정을 담당
+                        oauth.userInfoEndpoint(c -> c.userService(customOAuth2UserService))
+                                // 로그인 성공 시 핸들러
+                                .successHandler(oAuth2SuccessHandler)
+                                .failureHandler(oAuth2FailureHandler)
                 )
 
                 // jwt 관련 설정

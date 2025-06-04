@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/surveys")
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class SurveyController {
     @Operation(summary = "서약서 업데이트")
     @PostMapping
     public ResponseEntity<String> updateSurveyResponses() throws ExecutionException, InterruptedException {
-        log.info("Controller - start updateSurveyResponses");
         CompletableFuture<String> futureResult = surveyService.updateSurveyFromGoogleSheets();
         String result = futureResult.get();
         return ResponseEntity.ok(result);
