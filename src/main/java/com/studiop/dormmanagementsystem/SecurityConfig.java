@@ -34,6 +34,7 @@ public class SecurityConfig {
 
     // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final TokenExceptionFilter tokenExceptionFilter;
 
     @Value("${url.frontend}")
     private String frontendUrl;
@@ -41,8 +42,8 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
         return web -> web.ignoring()
-                // error endpoint를 열어줘야 함, favicon.ico 추가!
-                .requestMatchers("/error", "/favi.ico");
+                // error endpoint
+                .requestMatchers("/error");
     }
 
     @Bean
@@ -79,7 +80,7 @@ public class SecurityConfig {
 
                 // jwt 관련 설정
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass()) // 토큰 예외 핸들링
+                .addFilterBefore(tokenExceptionFilter, TokenAuthenticationFilter.class) // 토큰 예외 핸들링
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
