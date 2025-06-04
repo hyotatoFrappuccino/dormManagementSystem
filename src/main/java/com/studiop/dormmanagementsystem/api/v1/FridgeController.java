@@ -44,6 +44,13 @@ public class FridgeController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "냉장고 신청 목록 전체 삭제")
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll() {
+        fridgeService.deleteAllFridgeApplication();
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "냉장고 신청 취소")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -134,4 +134,9 @@ public class FridgeService {
             memberService.deleteMemberById(member.getId());
         }
     }
+
+    @Transactional
+    public void deleteAllFridgeApplication() {
+        fridgeApplicationRepository.deleteAllInBatch();
+    }
 }
