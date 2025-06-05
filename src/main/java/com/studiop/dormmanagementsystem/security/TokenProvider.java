@@ -34,6 +34,7 @@ public class TokenProvider {
     @Value("${jwt.key}")
     private String key;
     private SecretKey secretKey;
+
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L; // 60분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7; // 7일
     private static final String KEY_ROLE = "role";
@@ -44,16 +45,18 @@ public class TokenProvider {
         secretKey = Keys.hmacShaKeyFor(key.getBytes());
     }
 
+    // Access Token 생성
     public String generateAccessToken(Authentication authentication) {
         return generateToken(authentication, ACCESS_TOKEN_EXPIRE_TIME);
     }
 
-    // 1. refresh token 발급
+    // Refresh Token 생성
     public void generateRefreshToken(Authentication authentication, String accessToken) {
         String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
         tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken); // redis에 저장
     }
 
+    // JWT 토큰 생성
     private String generateToken(Authentication authentication, long expireTime) {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + expireTime);
@@ -71,21 +74,16 @@ public class TokenProvider {
                 .compact();
     }
 
+    // JWT 토큰에서 Authentication 객체 생성
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
-		
-        // 2. security의 User 객체 생성
+
         User principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
-    private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get(KEY_ROLE).toString()));
-    }
-
-    // 3. accessToken 재발급
+    // AccessToken 재발급
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
             Token token = tokenService.findByAccessTokenOrThrow(accessToken);
@@ -100,6 +98,7 @@ public class TokenProvider {
         return null;
     }
 
+    // JWT 토큰 유효성 검증
     public boolean validateToken(String token) {
         if (!StringUtils.hasText(token)) {
             return false;
@@ -109,6 +108,15 @@ public class TokenProvider {
         return claims.getExpiration().after(new Date());
     }
 
+    // 토큰 만료시간 반환
+    public long getTokenExpiration(String token) {
+        Claims claims = parseClaims(token);
+        return claims.getExpiration().getTime();
+    }
+
+    // ===== 내부 유틸 ===== //
+
+    // JWT 토큰 파싱
     private Claims parseClaims(String token) {
         try {
             return Jwts.parser().verifyWith(secretKey).build()
@@ -120,5 +128,11 @@ public class TokenProvider {
         } catch (SecurityException e) {
             throw new TokenException(INVALID_JWT_SIGNATURE);
         }
+    }
+
+    // Claims에서 권한 정보 추출
+    private List<SimpleGrantedAuthority> getAuthorities(Claims claims) {
+        return Collections.singletonList(new SimpleGrantedAuthority(
+                claims.get(KEY_ROLE).toString()));
     }
 }

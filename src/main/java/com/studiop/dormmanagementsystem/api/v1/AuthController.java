@@ -1,24 +1,28 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.security.LoginResponse;
+import com.studiop.dormmanagementsystem.security.*;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
+
+    private final TokenService tokenService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Operation(summary = "현재 로그인된 사용자 정보 조회")
     @GetMapping("/user")
@@ -44,21 +48,21 @@ public class AuthController {
 
     @Operation(summary = "로그아웃")
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
-        // Spring Security 컨텍스트 초기화 (사용자 인증 정보 제거)
-        SecurityContextHolder.clearContext();
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails,
+                                       @RequestHeader(value = AUTHORIZATION, required = false) String authHeader) {
+        tokenService.deleteRefreshToken(userDetails.getUsername());
 
-        // 현재 세션 무효화
-        request.getSession().invalidate();
+        String accessToken = resolveToken(authHeader);
+        tokenBlacklistService.addTokenToBlacklist(accessToken);
 
         // 로그아웃 성공 응답 반환
         return ResponseEntity.ok().build();
     }
 
-//    @DeleteMapping("/auth/logout")
-//    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
-//        tokenService.deleteRefreshToken(userDetails.getUsername());
-//        redisMessageService.removeSubscribe(userDetails.getUsername());
-//        return ResponseEntity.noContent().build();
-//    }
+    private String resolveToken(String authHeader) {
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(TokenKey.TOKEN_PREFIX)) {
+            return authHeader.substring(TokenKey.TOKEN_PREFIX.length());
+        }
+        return null;
+    }
 }
