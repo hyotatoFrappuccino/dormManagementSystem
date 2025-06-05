@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Business;
 import com.studiop.dormmanagementsystem.entity.Payment;
 import com.studiop.dormmanagementsystem.entity.dto.*;
 import com.studiop.dormmanagementsystem.service.BusinessService;
@@ -70,7 +69,7 @@ public class PaymentController {
     @Operation(summary = "사업 전체 조회")
     @GetMapping("/business")
     public ResponseEntity<List<BusinessDto>> getAllBusinesses() {
-        return ResponseEntity.ok(businessService.getAllBusiness().stream().map(BusinessDto::fromEntity).toList());
+        return ResponseEntity.ok(businessService.getAllBusiness());
     }
 
     @Operation(summary = "사업 참여 추가")
@@ -90,9 +89,9 @@ public class PaymentController {
     @Operation(summary = "사업 추가")
     @PostMapping("/business")
     public ResponseEntity<BusinessDto> addBusinessParticipation(@RequestBody String name) {
-        Business savedBusiness = businessService.addBusiness(name);
+        BusinessDto savedBusiness = businessService.addBusiness(name);
         URI location = URI.create("/api/v1/payments/businesses/" + savedBusiness.getId());
-        return ResponseEntity.created(location).body(BusinessDto.fromEntity(savedBusiness));
+        return ResponseEntity.created(location).body(savedBusiness);
     }
 
     @Operation(summary = "사업 삭제")

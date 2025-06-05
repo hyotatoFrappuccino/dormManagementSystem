@@ -8,6 +8,7 @@ import com.studiop.dormmanagementsystem.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class FridgeController {
     }
 
     @Operation(summary = "냉장고 신청 목록 전체 삭제")
+    @PreAuthorize("hasRole('PRESIDENT')")
     @DeleteMapping
     public ResponseEntity<Void> deleteAll() {
         fridgeService.deleteAllFridgeApplication();

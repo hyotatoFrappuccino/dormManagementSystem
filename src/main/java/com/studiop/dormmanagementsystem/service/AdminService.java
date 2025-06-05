@@ -42,7 +42,7 @@ public class AdminService {
     }
 
     @Transactional
-    public Admin addAdmin(AdminRequest request) {
+    public AdminDto addAdmin(AdminRequest request) {
         isGmail(request.getEmail());
 
         Admin admin = Admin.builder()
@@ -51,7 +51,8 @@ public class AdminService {
                 .role(request.getRole())
                 .build();
 
-        return adminRepository.save(admin);
+        Admin savedAdmin = adminRepository.save(admin);
+        return AdminDto.fromEntity(savedAdmin);
     }
 
     @Transactional

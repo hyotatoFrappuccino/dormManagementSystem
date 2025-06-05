@@ -26,7 +26,7 @@ public class BuildingService {
     }
 
     @Transactional
-    public Building addBuilding(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
+    public BuildingDto addBuilding(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
         Building building = Building.builder()
                 .name(name)
                 .fridgeSlots(fridgeSlots)
@@ -35,7 +35,8 @@ public class BuildingService {
                 .type(type)
                 .build();
 
-        return buildingRepository.save(building);
+        Building savedBuilding = buildingRepository.save(building);
+        return BuildingDto.fromEntity(savedBuilding);
     }
 
     public List<Building> getAllBuildingsEntity() {
@@ -63,10 +64,6 @@ public class BuildingService {
 
     @Transactional
     public void deleteBuilding(Long id) {
-        if (!buildingRepository.existsById(id)) {
-            throw new EntityException(RESOURCE_NOT_FOUND);
-        }
-
-        buildingRepository.deleteById(id);
+        buildingRepository.delete(getById(id));
     }
 }

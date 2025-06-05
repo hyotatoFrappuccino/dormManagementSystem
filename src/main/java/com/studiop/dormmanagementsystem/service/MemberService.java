@@ -43,10 +43,7 @@ public class MemberService {
 
     @Transactional
     public void deleteMemberById(Long id) {
-        if (!memberRepository.existsById(id)) {
-            throw new EntityException(RESOURCE_NOT_FOUND);
-        }
-        memberRepository.deleteById(id);
+        memberRepository.delete(getById(id));
     }
 
     // ====== 경고 ===== //

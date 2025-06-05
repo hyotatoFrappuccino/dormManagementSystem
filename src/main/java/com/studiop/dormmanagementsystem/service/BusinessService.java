@@ -1,6 +1,7 @@
 package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Business;
+import com.studiop.dormmanagementsystem.entity.dto.BusinessDto;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.BusinessRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,24 +24,22 @@ public class BusinessService {
                 .orElseThrow(() -> new EntityException(RESOURCE_NOT_FOUND));
     }
 
-    public List<Business> getAllBusiness() {
-        return businessRepository.findAll();
+    public List<BusinessDto> getAllBusiness() {
+        return businessRepository.findAll().stream().map(BusinessDto::fromEntity).toList();
     }
 
     @Transactional
-    public Business addBusiness(String name) {
+    public BusinessDto addBusiness(String name) {
         Business business = Business.builder()
                 .name(name)
                 .build();
 
-        return businessRepository.save(business);
+        Business savedBusiness = businessRepository.save(business);
+        return BusinessDto.fromEntity(savedBusiness);
     }
 
     @Transactional
     public void removeBusiness(Long id) {
-        if (!businessRepository.existsById(id)) {
-            throw new EntityException(RESOURCE_NOT_FOUND);
-        }
-        businessRepository.deleteById(id);
+        businessRepository.delete(getById(id));
     }
 }

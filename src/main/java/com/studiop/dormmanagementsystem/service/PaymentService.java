@@ -66,10 +66,7 @@ public class PaymentService {
 
     @Transactional
     public void deletePayment(Long id) {
-        if (!paymentRepository.existsById(id)) {
-            throw new EntityException(RESOURCE_NOT_FOUND);
-        }
-        paymentRepository.deleteById(id);
+        paymentRepository.delete(getById(id));
     }
 
     @Transactional

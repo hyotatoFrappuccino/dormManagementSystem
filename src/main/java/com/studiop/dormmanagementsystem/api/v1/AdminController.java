@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Admin;
 import com.studiop.dormmanagementsystem.entity.dto.AdminDto;
 import com.studiop.dormmanagementsystem.entity.dto.AdminRequest;
 import com.studiop.dormmanagementsystem.entity.dto.RoleDto;
@@ -52,9 +51,9 @@ public class AdminController {
     @PreAuthorize("hasRole('PRESIDENT')")
     @PostMapping
     public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminRequest request) {
-        Admin savedAdmin = adminService.addAdmin(request);
+        AdminDto savedAdmin = adminService.addAdmin(request);
         URI location = URI.create("/api/v1/admins/" + savedAdmin.getId());
-        return ResponseEntity.created(location).body(AdminDto.fromEntity(savedAdmin));
+        return ResponseEntity.created(location).body(savedAdmin);
     }
 
     @Operation(summary = "관리자 수정")
@@ -70,14 +69,6 @@ public class AdminController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         adminService.deleteAdmin(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "전체 관리자 삭제")
-    @PreAuthorize("hasRole('PRESIDENT')")
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAllAdmins() {
-        adminService.deleteAllAdmins();
         return ResponseEntity.noContent().build();
     }
 }

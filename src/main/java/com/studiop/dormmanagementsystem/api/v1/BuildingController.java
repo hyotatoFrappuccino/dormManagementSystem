@@ -1,6 +1,5 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
-import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +27,9 @@ public class BuildingController {
     @Operation(summary = "건물 추가")
     @PostMapping
     public ResponseEntity<BuildingDto> addBuilding(@RequestBody BuildingDto request) {
-        Building savedBuilding = buildingService.addBuilding(request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
+        BuildingDto savedBuilding = buildingService.addBuilding(request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
         URI location = URI.create("/api/v1/buildings/" + savedBuilding.getId());
-        return ResponseEntity.created(location).body(BuildingDto.fromEntity(savedBuilding));
+        return ResponseEntity.created(location).body(savedBuilding);
     }
 
     @Operation(summary = "건물 수정")

@@ -61,10 +61,7 @@ public class RoundService {
 
     @Transactional
     public void deleteRound(Long id) {
-        if (!roundRepository.existsById(id)) {
-            throw new EntityException(RESOURCE_NOT_FOUND);
-        }
-        roundRepository.deleteById(id);
+        roundRepository.delete(getById(id));
     }
 
     public Map<Long, Map<FridgeType, Integer>> getFridgeCountByBuilding(Long id) {
