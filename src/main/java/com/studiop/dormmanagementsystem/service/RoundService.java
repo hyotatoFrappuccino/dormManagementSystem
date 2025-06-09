@@ -42,7 +42,7 @@ public class RoundService {
     @Transactional
     public Round addRound(RoundRequest request) {
         if (isOverlapping(request.getStartDate(), request.getEndDate())) {
-            throw new EntityException(INVALID_REQUEST, "해당 기간과 겹치는 회차가 존재합니다.");
+            throw new EntityException(DUPLICATE_ROUND);
         }
         Round round = Round.builder()
                 .name(request.getName())

@@ -80,6 +80,6 @@ public class AdminService {
     }
 
     private void isGmail(String email) {
-        if (!email.endsWith("@gmail.com")) throw new EntityException(INVALID_REQUEST, "@gmail.com 이메일만 등록 가능합니다.");
+        if (!email.endsWith("@gmail.com")) throw new EntityException(INVALID_EMAIL_DOMAIN);
     }
 }

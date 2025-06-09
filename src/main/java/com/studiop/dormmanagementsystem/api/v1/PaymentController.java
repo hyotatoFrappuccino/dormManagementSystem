@@ -38,7 +38,7 @@ public class PaymentController {
 
     @Operation(summary = "납부자 추가")
     @PostMapping
-    public ResponseEntity<PaymentDto> addPayment(@RequestBody PaymentRequest request) {
+    public ResponseEntity<PaymentDto> addPayment(@Valid @RequestBody PaymentRequest request) {
         Payment savedPayment = paymentService.addPayment(request);
         URI location = URI.create("/api/v1/payments/" + savedPayment.getId());
         return ResponseEntity.created(location).body(PaymentDto.fromEntity(savedPayment));

@@ -71,7 +71,7 @@ public class FridgeService {
 
         // 납부자인지 확인
         if (paymentService.getPaymentStatus(studentId) != PaymentStatus.PAID) {
-            throw new EntityException(INVALID_REQUEST, "신청 요건이 충족되지 않았습니다. 납부 상태를 확인해주세요.");
+            throw new EntityException(APPLICATION_CONDITION_NOT_MET);
         }
 
         // 기존 신청자라면 Member 엔티티 반환, 신규 신청자라면 새 Member 엔티티 생성 후 반환
