@@ -6,6 +6,7 @@ import com.studiop.dormmanagementsystem.entity.dto.MemberFridgeApplicationRespon
 import com.studiop.dormmanagementsystem.service.FridgeService;
 import com.studiop.dormmanagementsystem.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,7 @@ public class FridgeController {
 
     @Operation(summary = "냉장고 신청")
     @PostMapping
-    public ResponseEntity<Void> apply(@RequestBody FridgeApplyRequest request) {
+    public ResponseEntity<Void> apply(final @RequestBody @Valid FridgeApplyRequest request) {
         fridgeService.apply(request);
         return ResponseEntity.ok().build();
     }

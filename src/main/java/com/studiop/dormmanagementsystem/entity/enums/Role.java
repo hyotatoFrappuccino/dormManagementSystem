@@ -3,6 +3,8 @@ package com.studiop.dormmanagementsystem.entity.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum Role {
@@ -13,4 +15,11 @@ public enum Role {
 
     private final String key;
     private final String title;
+
+    public static Role getRole(String key) {
+        return Arrays.stream(values())
+                .filter(v -> v.name().equals(key))
+                .findAny()
+                .orElse(null);
+    }
 }

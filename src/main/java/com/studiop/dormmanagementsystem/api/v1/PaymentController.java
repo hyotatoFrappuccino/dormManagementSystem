@@ -38,7 +38,7 @@ public class PaymentController {
 
     @Operation(summary = "납부자 추가")
     @PostMapping
-    public ResponseEntity<PaymentDto> addPayment(@Valid @RequestBody PaymentRequest request) {
+    public ResponseEntity<PaymentDto> addPayment(final @RequestBody @Valid PaymentRequest request) {
         Payment savedPayment = paymentService.addPayment(request);
         URI location = URI.create("/api/v1/payments/" + savedPayment.getId());
         return ResponseEntity.created(location).body(PaymentDto.fromEntity(savedPayment));
@@ -46,7 +46,7 @@ public class PaymentController {
 
     @Operation(summary = "납부자 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> editPayment(@PathVariable Long id, @RequestBody @Valid PaymentUpdateRequest request) {
+    public ResponseEntity<Void> editPayment(@PathVariable Long id, final @RequestBody @Valid PaymentUpdateRequest request) {
         paymentService.updatePayment(id, request);
         return ResponseEntity.noContent().build();
     }
@@ -88,7 +88,7 @@ public class PaymentController {
 
     @Operation(summary = "사업 추가")
     @PostMapping("/business")
-    public ResponseEntity<BusinessDto> addBusinessParticipation(@RequestBody String name) {
+    public ResponseEntity<BusinessDto> addBusinessParticipation(final @RequestBody @Valid BusinessRequest name) {
         BusinessDto savedBusiness = businessService.addBusiness(name);
         URI location = URI.create("/api/v1/payments/businesses/" + savedBusiness.getId());
         return ResponseEntity.created(location).body(savedBusiness);

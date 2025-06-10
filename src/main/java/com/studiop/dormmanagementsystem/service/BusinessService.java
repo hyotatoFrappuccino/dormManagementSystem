@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Business;
 import com.studiop.dormmanagementsystem.entity.dto.BusinessDto;
+import com.studiop.dormmanagementsystem.entity.dto.BusinessRequest;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.BusinessRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,9 @@ public class BusinessService {
     }
 
     @Transactional
-    public BusinessDto addBusiness(String name) {
+    public BusinessDto addBusiness(BusinessRequest request) {
         Business business = Business.builder()
-                .name(name)
+                .name(request.name())
                 .build();
 
         Business savedBusiness = businessRepository.save(business);

@@ -2,6 +2,7 @@ package com.studiop.dormmanagementsystem.service;
 
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingRequest;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.BuildingRepository;
@@ -26,13 +27,13 @@ public class BuildingService {
     }
 
     @Transactional
-    public BuildingDto addBuilding(String name, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
+    public BuildingDto addBuilding(BuildingRequest request) {
         Building building = Building.builder()
-                .name(name)
-                .fridgeSlots(fridgeSlots)
-                .freezerSlots(freezerSlots)
-                .integratedSlots(integratedSlots)
-                .type(type)
+                .name(request.name())
+                .fridgeSlots(request.fridgeSlots())
+                .freezerSlots(request.freezerSlots())
+                .integratedSlots(request.integratedSlots())
+                .type(FridgeType.getFridgeType(request.type()))
                 .build();
 
         Building savedBuilding = buildingRepository.save(building);
@@ -52,14 +53,14 @@ public class BuildingService {
     }
 
     @Transactional
-    public void editBuilding(Long id, String buildingName, int fridgeSlots, int freezerSlots, int integratedSlots, FridgeType type) {
+    public void editBuilding(Long id, BuildingRequest request) {
         Building building = getById(id);
 
-        building.changeName(buildingName);
-        building.changeFridgeSlots(fridgeSlots);
-        building.changeFreezerSlots(freezerSlots);
-        building.changeIntegratedSlots(integratedSlots);
-        building.changeType(type);
+        building.changeName(request.name());
+        building.changeFridgeSlots(request.fridgeSlots());
+        building.changeFreezerSlots(request.freezerSlots());
+        building.changeIntegratedSlots(request.integratedSlots());
+        building.changeType(FridgeType.getFridgeType(request.type()));
     }
 
     @Transactional
