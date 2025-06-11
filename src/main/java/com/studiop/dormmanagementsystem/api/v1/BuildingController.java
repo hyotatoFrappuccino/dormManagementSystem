@@ -30,7 +30,7 @@ public class BuildingController {
     @PostMapping
     public ResponseEntity<BuildingDto> addBuilding(final @RequestBody @Valid BuildingRequest request) {
         BuildingDto savedBuilding = buildingService.addBuilding(request);
-        URI location = URI.create("/api/v1/buildings/" + savedBuilding.getId());
+        URI location = URI.create("/api/v1/buildings/" + savedBuilding.id());
         return ResponseEntity.created(location).body(savedBuilding);
     }
 
