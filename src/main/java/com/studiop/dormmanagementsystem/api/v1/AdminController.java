@@ -53,7 +53,7 @@ public class AdminController {
     @PostMapping
     public ResponseEntity<AdminDto> addAdmin(final @RequestBody @Valid AdminRequest request) {
         AdminDto savedAdmin = adminService.addAdmin(request);
-        URI location = URI.create("/api/v1/admins/" + savedAdmin.getId());
+        URI location = URI.create("/api/v1/admins/" + savedAdmin.id());
         return ResponseEntity.created(location).body(savedAdmin);
     }
 

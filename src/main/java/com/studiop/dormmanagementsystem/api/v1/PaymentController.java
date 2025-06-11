@@ -90,7 +90,7 @@ public class PaymentController {
     @PostMapping("/business")
     public ResponseEntity<BusinessDto> addBusinessParticipation(final @RequestBody @Valid BusinessRequest name) {
         BusinessDto savedBusiness = businessService.addBusiness(name);
-        URI location = URI.create("/api/v1/payments/businesses/" + savedBusiness.getId());
+        URI location = URI.create("/api/v1/payments/businesses/" + savedBusiness.id());
         return ResponseEntity.created(location).body(savedBusiness);
     }
 
