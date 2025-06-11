@@ -3,6 +3,7 @@ package com.studiop.dormmanagementsystem.service;
 import com.studiop.dormmanagementsystem.entity.Admin;
 import com.studiop.dormmanagementsystem.entity.dto.AdminDto;
 import com.studiop.dormmanagementsystem.entity.dto.AdminRequest;
+import com.studiop.dormmanagementsystem.entity.enums.Role;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.AdminRepository;
 import com.studiop.dormmanagementsystem.security.TokenBlacklistService;
@@ -43,12 +44,10 @@ public class AdminService {
 
     @Transactional
     public AdminDto addAdmin(AdminRequest request) {
-        isGmail(request.getEmail());
-
         Admin admin = Admin.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .role(request.getRole())
+                .name(request.name())
+                .email(request.email())
+                .role(Role.getRole(request.role()))
                 .build();
 
         Admin savedAdmin = adminRepository.save(admin);
@@ -57,13 +56,11 @@ public class AdminService {
 
     @Transactional
     public void editAdmin(Long id, AdminRequest request) {
-        isGmail(request.getEmail());
-
         Admin admin = getById(id);
 
-        admin.changeName(request.getName());
-        admin.changeEmail(request.getEmail());
-        admin.changeRole(request.getRole());
+        admin.changeName(request.name());
+        admin.changeEmail(request.email());
+        admin.changeRole(Role.getRole(request.role()));
     }
 
     @Transactional
@@ -77,9 +74,5 @@ public class AdminService {
         });
 
         adminRepository.delete(admin);
-    }
-
-    private void isGmail(String email) {
-        if (!email.endsWith("@gmail.com")) throw new EntityException(INVALID_REQUEST, "@gmail.com 이메일만 등록 가능합니다.");
     }
 }

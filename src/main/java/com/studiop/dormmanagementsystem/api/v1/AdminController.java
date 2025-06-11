@@ -6,6 +6,7 @@ import com.studiop.dormmanagementsystem.entity.dto.RoleDto;
 import com.studiop.dormmanagementsystem.entity.enums.Role;
 import com.studiop.dormmanagementsystem.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +51,7 @@ public class AdminController {
     @Operation(summary = "관리자 추가")
     @PreAuthorize("hasRole('PRESIDENT')")
     @PostMapping
-    public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminRequest request) {
+    public ResponseEntity<AdminDto> addAdmin(final @RequestBody @Valid AdminRequest request) {
         AdminDto savedAdmin = adminService.addAdmin(request);
         URI location = URI.create("/api/v1/admins/" + savedAdmin.getId());
         return ResponseEntity.created(location).body(savedAdmin);
@@ -59,7 +60,7 @@ public class AdminController {
     @Operation(summary = "관리자 수정")
     @PreAuthorize("hasRole('PRESIDENT')")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateAdmin(@PathVariable Long id, @RequestBody AdminRequest request) {
+    public ResponseEntity<Void> updateAdmin(@PathVariable Long id, final @RequestBody @Valid AdminRequest request) {
         adminService.editAdmin(id, request);
         return ResponseEntity.ok().build();
     }

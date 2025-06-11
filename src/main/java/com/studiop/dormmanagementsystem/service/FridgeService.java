@@ -4,6 +4,7 @@ import com.studiop.dormmanagementsystem.entity.*;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplicationDto;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.MemberInfoDto;
+import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.FridgeApplicationRepository;
@@ -64,14 +65,14 @@ public class FridgeService {
 
     @Transactional
     public void apply(FridgeApplyRequest request) {
-        String studentId = request.getStudentId();
+        String studentId = request.studentId();
 
         // 가장 최근의 동의한 서약서 가져오기
         Survey survey = getRecentAgreedSurvey(studentId);
 
         // 납부자인지 확인
         if (paymentService.getPaymentStatus(studentId) != PaymentStatus.PAID) {
-            throw new EntityException(INVALID_REQUEST, "신청 요건이 충족되지 않았습니다. 납부 상태를 확인해주세요.");
+            throw new EntityException(APPLICATION_CONDITION_NOT_MET);
         }
 
         // 기존 신청자라면 Member 엔티티 반환, 신규 신청자라면 새 Member 엔티티 생성 후 반환
@@ -88,7 +89,7 @@ public class FridgeService {
                 ));
 
         // 신청 회차
-        Round round = roundService.getById(request.getRoundId());
+        Round round = roundService.getById(request.roundId());
 
         // 중복 신청 방지를 위해 해당 회차 기존 신청 내역 제거
         member.getFridgeApplications()
@@ -105,7 +106,7 @@ public class FridgeService {
                 .member(member)
                 .building(survey.getBuilding())
                 .round(round)
-                .type(request.getType())
+                .type(FridgeType.getFridgeType(request.type()))
                 .appliedAt(LocalDateTime.now())
                 .build();
         member.addFridgeApplication(application);
@@ -117,7 +118,7 @@ public class FridgeService {
         return surveys.stream()
                 .reduce((first, second) -> second)
                 .filter(Survey::isAgreed)
-                .orElseThrow(() -> new IllegalStateException("신청 요건이 충족되지 않았습니다. 서약서 동의 상태를 확인해주세요."));
+                .orElseThrow(() -> new EntityException(APPLICATION_CONDITION_NOT_MET));
     }
 
     @Transactional

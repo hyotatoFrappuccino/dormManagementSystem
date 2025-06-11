@@ -41,14 +41,14 @@ public class RoundService {
 
     @Transactional
     public Round addRound(RoundRequest request) {
-        if (isOverlapping(request.getStartDate(), request.getEndDate())) {
-            throw new EntityException(INVALID_REQUEST, "해당 기간과 겹치는 회차가 존재합니다.");
+        if (isOverlapping(request.startDate(), request.endDate())) {
+            throw new EntityException(DUPLICATE_ROUND);
         }
         Round round = Round.builder()
-                .name(request.getName())
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .password(request.getPassword())
+                .name(request.name())
+                .startDate(request.startDate())
+                .endDate(request.endDate())
+                .password(request.password())
                 .build();
         return roundRepository.save(round);
     }
@@ -56,7 +56,7 @@ public class RoundService {
     @Transactional
     public void updateRound(Long id, RoundRequest request) {
         Round round = getById(id);
-        round.updateRound(request.getName(), request.getStartDate(), request.getEndDate(), request.getPassword());
+        round.updateRound(request.name(), request.startDate(), request.endDate(), request.password());
     }
 
     @Transactional

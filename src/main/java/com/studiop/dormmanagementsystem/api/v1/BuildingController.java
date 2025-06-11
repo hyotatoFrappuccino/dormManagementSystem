@@ -1,8 +1,10 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
 import com.studiop.dormmanagementsystem.entity.dto.BuildingDto;
+import com.studiop.dormmanagementsystem.entity.dto.BuildingRequest;
 import com.studiop.dormmanagementsystem.service.BuildingService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,22 +28,22 @@ public class BuildingController {
 
     @Operation(summary = "건물 추가")
     @PostMapping
-    public ResponseEntity<BuildingDto> addBuilding(@RequestBody BuildingDto request) {
-        BuildingDto savedBuilding = buildingService.addBuilding(request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
+    public ResponseEntity<BuildingDto> addBuilding(final @RequestBody @Valid BuildingRequest request) {
+        BuildingDto savedBuilding = buildingService.addBuilding(request);
         URI location = URI.create("/api/v1/buildings/" + savedBuilding.getId());
         return ResponseEntity.created(location).body(savedBuilding);
     }
 
     @Operation(summary = "건물 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateBuilding(@PathVariable("id") Long id, @RequestBody BuildingDto request) {
-        buildingService.editBuilding(id, request.getName(), request.getFridgeSlots(), request.getFreezerSlots(), request.getIntegratedSlots(), request.getType());
+    public ResponseEntity<String> updateBuilding(@PathVariable Long id, final @RequestBody @Valid BuildingRequest request) {
+        buildingService.editBuilding(id, request);
         return ResponseEntity.ok("OK");
     }
 
     @Operation(summary = "건물 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBuilding(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteBuilding(@PathVariable Long id) {
         buildingService.deleteBuilding(id);
         return ResponseEntity.ok("OK");
     }

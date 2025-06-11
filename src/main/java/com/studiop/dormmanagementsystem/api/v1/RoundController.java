@@ -6,6 +6,7 @@ import com.studiop.dormmanagementsystem.entity.dto.RoundRequest;
 import com.studiop.dormmanagementsystem.entity.enums.FridgeType;
 import com.studiop.dormmanagementsystem.service.RoundService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class RoundController {
 
     @Operation(summary = "회차 추가")
     @PostMapping
-    public ResponseEntity<RoundDto> addRounds(@RequestBody RoundRequest request) {
+    public ResponseEntity<RoundDto> addRounds(final @RequestBody @Valid RoundRequest request) {
         Round addedRound = roundService.addRound(request);
         URI location = URI.create("/api/v1/rounds/" + addedRound.getId());
         return ResponseEntity.created(location).body(RoundDto.fromEntity(addedRound));
@@ -52,7 +53,7 @@ public class RoundController {
     @Operation(summary = "회차 수정")
     @PutMapping("/{id}")
     public ResponseEntity<Void> editRound(@PathVariable Long id,
-                                          @RequestBody RoundRequest request) {
+                                          final @RequestBody @Valid RoundRequest request) {
         roundService.updateRound(id, request);
         return ResponseEntity.noContent().build();
     }

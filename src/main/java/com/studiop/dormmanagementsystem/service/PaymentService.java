@@ -7,6 +7,7 @@ import com.studiop.dormmanagementsystem.entity.dto.PaymentDto;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentRequest;
 import com.studiop.dormmanagementsystem.entity.dto.PaymentUpdateRequest;
 import com.studiop.dormmanagementsystem.entity.enums.PaymentStatus;
+import com.studiop.dormmanagementsystem.entity.enums.PaymentType;
 import com.studiop.dormmanagementsystem.exception.EntityException;
 import com.studiop.dormmanagementsystem.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,11 +50,11 @@ public class PaymentService {
     @Transactional
     public Payment addPayment(PaymentRequest request) {
         Payment payment = Payment.builder()
-                .studentId(request.getName())
-                .amount(request.getAmount())
-                .date(request.getDate())
+                .studentId(request.name())
+                .amount(request.amount())
+                .date(request.date())
                 .status(PaymentStatus.PAID)
-                .type(request.getType())
+                .type(PaymentType.getPaymentType(request.type()))
                 .build();
         return paymentRepository.save(payment);
     }
@@ -61,7 +62,7 @@ public class PaymentService {
     @Transactional
     public void updatePayment(Long id, PaymentUpdateRequest request) {
         Payment payment = getById(id);
-        payment.updatePayment(request.getName(), request.getAmount(), request.getDate(), request.getStatus(), request.getType());
+        payment.updatePayment(request.name(), request.amount(), request.date(), PaymentStatus.getPaymentStatus(request.status()), PaymentType.getPaymentType(request.type()));
     }
 
     @Transactional

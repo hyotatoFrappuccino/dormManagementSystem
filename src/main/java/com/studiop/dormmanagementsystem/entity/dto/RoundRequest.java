@@ -1,15 +1,17 @@
 package com.studiop.dormmanagementsystem.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
-@Getter
-@AllArgsConstructor
-public class RoundRequest {
-    private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String password;
+public record RoundRequest(
+        @NotBlank
+        String name,
+        @NotBlank
+        LocalDate startDate,
+        @NotBlank
+        LocalDate endDate,
+        @NotBlank
+        String password
+) {
 }
