@@ -52,7 +52,7 @@ public class GoogleSheetsService {
     public List<List<Object>> getSurveyResponses() throws IOException, GeneralSecurityException {
         String SPREADSHEET_ID = appConfigService.getConfigValue(AppConfigKey.GOOGLE_SHEET_ID, "");
         if (SPREADSHEET_ID.isEmpty()) {
-            throw new GoogleSheetException(INVALID_REQUEST, "설정에서 서약서 구글 시트 ID를 설정해주세요.");
+            throw new GoogleSheetException(GOOGLE_SHEET_ID_NOT_FOUND);
         }
 
         Sheets sheetsService = getSheetsService();

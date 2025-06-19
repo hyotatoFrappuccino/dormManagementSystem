@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.studiop.dormmanagementsystem.entity.Building;
 import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
-import com.studiop.dormmanagementsystem.exception.ErrorCode;
 import com.studiop.dormmanagementsystem.exception.GoogleSheetException;
 import com.studiop.dormmanagementsystem.repository.SurveyRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.studiop.dormmanagementsystem.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -38,24 +39,24 @@ public class SurveyTransactionService {
             int statusCode = e.getStatusCode();
             switch (statusCode) {
                 case 401:
-                    throw new GoogleSheetException(ErrorCode.INVALID_REQUEST, "API 키 또는 OAuth 토큰이 유효하지 않음. 시스템 개발자에게 문의하세요.");
+                    throw new GoogleSheetException(GOOGLE_INVALID_API_KEY);
                 case 403:
-                    throw new GoogleSheetException(ErrorCode.INVALID_REQUEST, "설정 - 서약서 구글 시트 ID에 접근할 수 있는 권한이 없음. (도움말 - 서약서 구글 시트 설정 참조)");
+                    throw new GoogleSheetException(GOOGLE_NO_ACCESS);
                 case 404:
-                    throw new GoogleSheetException(ErrorCode.INVALID_REQUEST, "설정 - 서약서 구글 시트 ID에 해당하는 구글 시트를 찾을 수 없음");
+                    throw new GoogleSheetException(GOOGLE_SHEET_ID_INVALID);
                 case 429:
-                    throw new GoogleSheetException(ErrorCode.INVALID_REQUEST, "API 요청 한도 초과. 잠시 후 다시 시도해주세요.");
+                    throw new GoogleSheetException(GOOGLE_EXCEED_API_REQUEST);
                 case 500:
-                    throw new GoogleSheetException(ErrorCode.INTERNAL_ERROR, "Google 서버에서 예기치 않은 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                    throw new GoogleSheetException(GOOGLE_500);
                 case 503:
-                    throw new GoogleSheetException(ErrorCode.INTERNAL_ERROR, "구글 서버측 문제로 인하여 일시적으로 데이터를 가져올 수 없음. 잠시 후 다시 시도해주세요. 문제가 지속된다면 https://status.cloud.google.com/ 사이트를 확인해주세요.");
+                    throw new GoogleSheetException(GOOGLE_503);
                 default:
                     log.error("예상치 못한 Google API 오류 (HTTP {}): {}", statusCode, e.getDetails().getMessage(), e);
-                    throw new GoogleSheetException(ErrorCode.INTERNAL_ERROR, "Google Sheets API 호출 중 알 수 없는 오류가 발생했습니다.");
+                    throw new GoogleSheetException(GOOGLE_ERROR);
             }
         } catch (GeneralSecurityException | IOException e) {
             log.error("Google Sheets API 오류: {}", e.getMessage(), e);
-            throw new GoogleSheetException(ErrorCode.INTERNAL_ERROR, "Google Sheets API 호출 중 알 수 없는 오류가 발생했습니다.");
+            throw new GoogleSheetException(GOOGLE_ERROR);
         }
 
         if (responses.isEmpty() || responses.size() == 1) {

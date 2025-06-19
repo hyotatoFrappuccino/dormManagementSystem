@@ -100,12 +100,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return toResponse(INTERNAL_ERROR, extractPath(request));
     }
 
-    // 그 외의 예외 처리 (컨트롤러 진입 후 예외 처리0
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleUnexpectedException(Exception ex, HttpServletRequest request) {
-        logger.error("Unexpected error 발생: " + ex.getMessage(), ex);
-        return toResponse(INTERNAL_ERROR, request.getRequestURI());
-    }
+//    // 그 외의 예외 처리 (컨트롤러 진입 후 예외 처리)
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> handleUnexpectedException(Exception ex, HttpServletRequest request) {
+//        logger.error("Unexpected error 발생: " + ex.getMessage(), ex);
+//        return toResponse(INTERNAL_ERROR, request.getRequestURI());
+//    }
 
     public static ResponseEntity<Object> toResponse(ErrorCode errorCode, String path) {
         return ResponseEntity.status(errorCode.getHttpStatus())
