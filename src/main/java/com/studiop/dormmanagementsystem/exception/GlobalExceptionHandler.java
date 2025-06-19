@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Object> handleCustomException(CustomException e, HttpServletRequest request) {
         return toResponse(e.getErrorCode(), request.getRequestURI());
+    }
+
+    // 접근 권한 없음 (AccessDeniedException)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        return toResponse(NO_ACCESS, request.getRequestURI());
     }
 
     // 데이터 정합성 위반 (DataIntegrityViolationException)
@@ -83,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return toResponseWithError(INVALID_REQUEST, extractPath(request), errors);
     }
 
-    // 그 외의 예외 처리
+    // 그 외의 예외 처리 (Spring MVC 내부 예외 처리)
     @Override
     @Nullable
     protected ResponseEntity<Object> handleExceptionInternal(
@@ -93,7 +100,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return toResponse(INTERNAL_ERROR, extractPath(request));
     }
 
-    private static ResponseEntity<Object> toResponse(ErrorCode errorCode, String path) {
+//    // 그 외의 예외 처리 (컨트롤러 진입 후 예외 처리)
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Object> handleUnexpectedException(Exception ex, HttpServletRequest request) {
+//        logger.error("Unexpected error 발생: " + ex.getMessage(), ex);
+//        return toResponse(INTERNAL_ERROR, request.getRequestURI());
+//    }
+
+    public static ResponseEntity<Object> toResponse(ErrorCode errorCode, String path) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ErrorResponse.of(errorCode, path));
     }

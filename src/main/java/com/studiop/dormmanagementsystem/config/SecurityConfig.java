@@ -1,5 +1,6 @@
-package com.studiop.dormmanagementsystem;
+package com.studiop.dormmanagementsystem.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studiop.dormmanagementsystem.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,8 @@ public class SecurityConfig {
     // JWT 토큰을 검증하고 인증 객체로 변환하는 필터
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
     private final TokenExceptionFilter tokenExceptionFilter;
+
+    private final ObjectMapper objectMapper;
 
     @Value("${url.frontend}")
     private String frontendUrl;
@@ -74,8 +77,8 @@ public class SecurityConfig {
 
                 // 인증 예외 핸들링
                 .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) //401 Unauthorized
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())); //403 Forbidden
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper)) //401 Unauthorized
+                        .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))); //403 Forbidden
 
         return http.build();
     }
