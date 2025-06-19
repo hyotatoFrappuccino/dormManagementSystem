@@ -1,4 +1,4 @@
-package com.studiop.dormmanagementsystem;
+package com.studiop.dormmanagementsystem.config;
 
 import com.studiop.dormmanagementsystem.security.*;
 import lombok.RequiredArgsConstructor;
