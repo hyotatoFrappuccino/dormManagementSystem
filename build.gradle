@@ -27,7 +27,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -42,7 +41,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     // P6Spy
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+//    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
     // Google API
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20240917-2.0.0'
@@ -65,8 +64,16 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // monitoring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jar {
+    enabled = false
 }
