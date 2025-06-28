@@ -108,15 +108,25 @@ public class SurveyTransactionService {
         return lastFetchedTime;
     }
 
+    // 전화번호 포맷 통일
     public String formatPhoneNumber(String rawPhoneNumber) {
+        // 전화번호에서 숫자만 추출
         String digits = rawPhoneNumber.replaceAll("[^0-9]", "");
 
-        if (digits.length() == 10) {
+        // 8자리 전화번호일 경우 형식을 "010-XXXX-XXXX"로 변경
+        if (digits.length() == 8) {
+            return "010-" + digits.replaceFirst("(\\d{4})(\\d{4})", "$1-$2");
+        }
+        // 10자리 전화번호일 경우 형식을 "0XX-XXXX-XXXX"로 변경
+        else if (digits.length() == 10) {
             return digits.replaceFirst("(\\d{2})(\\d{4})(\\d{4})", "0$1-$2-$3");
-        } else if (digits.length() == 11) {
+        }
+        // 11자리 전화번호일 경우 형식을 "XXX-XXXX-XXXX"로 변경
+        else if (digits.length() == 11) {
             return digits.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
         }
 
+        // 위 조건에 맞지 않는 경우 원본 문자열 반환
         return rawPhoneNumber;
     }
 }

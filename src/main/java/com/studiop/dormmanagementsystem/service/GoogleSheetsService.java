@@ -11,11 +11,10 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import com.studiop.dormmanagementsystem.exception.GoogleSheetException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
@@ -30,15 +29,16 @@ public class GoogleSheetsService {
     private static final String APPLICATION_NAME = "Google Sheets API Spring Boot";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String RANGE = "A:Z"; // 가져올 데이터 범위
-    @Value("${url.resources}")
-    private String PATH;
 
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         var httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
         // 서비스 계정 JSON 키 로드
-        FileInputStream serviceAccountStream = new FileInputStream(PATH + "credentials.json");
+        InputStream serviceAccountStream = getClass().getClassLoader().getResourceAsStream("credentials.json");
 
+        if (serviceAccountStream == null) {
+            throw new GoogleSheetException(GOOGLE_INVALID_API_KEY);
+        }
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccountStream)
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets.readonly"));
 
