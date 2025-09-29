@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,19 @@ public class SurveyTransactionService {
 
         for (int i = 1; i < responses.size(); i++) {
             List<Object> row = responses.get(i);
-            LocalDateTime dateTime = LocalDateTime.parse(row.get(0).toString(), formatter);
+            String dateTimeString = row.get(0).toString();
+            if (!StringUtils.hasText(dateTimeString)) {
+                continue;
+            }
+
+            LocalDateTime dateTime;
+            try {
+                dateTime = LocalDateTime.parse(dateTimeString, formatter);
+            } catch (DateTimeParseException e) {
+                log.warn(e.getMessage());
+                continue;
+            }
+
             if (dateTime.isBefore(lastFetchedTime)) {
                 continue;
             }
@@ -109,14 +123,23 @@ public class SurveyTransactionService {
     }
 
     public String formatPhoneNumber(String rawPhoneNumber) {
+        // 전화번호에서 숫자만 추출
         String digits = rawPhoneNumber.replaceAll("[^0-9]", "");
 
-        if (digits.length() == 10) {
+        // 8자리 전화번호일 경우 형식을 "010-XXXX-XXXX"로 변경
+        if (digits.length() == 8) {
+            return digits.replaceFirst("(\\d{4})(\\d{4})", "010-$1-$2");
+        }
+        // 10자리 전화번호일 경우 형식을 "0XX-XXXX-XXXX"로 변경
+        else if (digits.length() == 10) {
             return digits.replaceFirst("(\\d{2})(\\d{4})(\\d{4})", "0$1-$2-$3");
-        } else if (digits.length() == 11) {
+        }
+        // 11자리 전화번호일 경우 형식을 "XXX-XXXX-XXXX"로 변경
+        else if (digits.length() == 11) {
             return digits.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
         }
 
+        // 위 조건에 맞지 않는 경우 원본 문자열 반환
         return rawPhoneNumber;
     }
 }
