@@ -1,0 +1,50 @@
+services:
+  spring:
+    image: hyojaelee/dorm:latest
+    container_name: spring
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      - redis
+      - prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prom_data:/prometheus
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "$UID:$GID"
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./configs/grafana.ini:/etc/grafana/grafana.ini
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - backend
+
+volumes:
+  prom_data:
+  grafana-data:
+
+networks:
+  backend:
