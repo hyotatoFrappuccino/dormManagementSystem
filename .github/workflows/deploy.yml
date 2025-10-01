@@ -28,17 +28,17 @@ jobs:
           script: |
             cd /home/ubuntu/app
 
-#           1.  설정 파일 디렉터리 생성
+            # 1.  설정 파일 디렉터리 생성
             mkdir -p ./config
             mkdir -p ./config/ssl
-    
-#           2. Github Secret 값을 서버에 복사
+
+            # 2. Github Secret 값을 서버에 복사
             echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./config/application.yml
             echo "${{ secrets.APPLICATION_SECRET_DEV }}" | base64 --decode > ./config/application-dev.yml
             echo "${{ secrets.DEV_KEYSTORE }}" | base64 --decode > ./config/ssl/keystore.p12
             echo "${{ secrets.DEV_ENV }}" | base64 --decode > ./.env
     
-#           3. 최신 이미지를 받아와서 서비스 재시작
+            # 3. 최신 이미지를 받아와서 서비스 재시작
             docker-compose pull
             docker-compose up -d --remove-orphans
             docker image prune -f
@@ -55,7 +55,7 @@ jobs:
 
       - name: Verify tag is on main branch # 푸시된 태그가 main 브랜치에 있는지 검증(dev 브랜치에서 태그를 붙여 배포되는 것을 방지)
         run: |
-#           main 브랜치 커밋 목록에 현재 태그가 없으면 grep이 실패하며 잡이 중단됨
+          # main 브랜치 커밋 목록에 현재 태그가 없으면 grep이 실패하며 잡이 중단됨
           git branch --contains ${{ github.ref_name }} | grep -w 'main'
 
       - name: Deploy to Main Server
@@ -65,21 +65,20 @@ jobs:
           port: ${{ secrets.PORT_MAIN }}
           username: ${{ secrets.USERNAME_MAIN }}
           key: ${{ secrets.PRIVATE_KEY_MAIN }}
-#         passphrase: ${{ secrets.PASSPHRASE_MAIN }} # 선택 사항
           script: |
             cd /home/ubuntu/app
 
-#           1.  설정 파일 디렉터리 생성
+            # 1. 설정 파일 디렉터리 생성
             mkdir -p ./config
             mkdir -p ./config/ssl
             
-#           2. Github Secret 값을 서버에 복사
+            # 2. Github Secret 값을 서버에 복사
             echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./config/application.yml
             echo "${{ secrets.APPLICATION_SECRET_PROD }}" | base64 --decode > ./config/application-prod.yml
             echo "${{ secrets.KEYSTORE_MAIN }}" | base64 --decode > ./config/ssl/keystore.p12
             echo "${{ secrets.ENV_MAIN }}" | base64 --decode > ./.env
             
-#           3. 최신 이미지를 받아와서 서비스 재시작
+            # 3. 최신 이미지를 받아와서 서비스 재시작
             docker-compose pull
             docker-compose up -d --remove-orphans
             docker image prune -f

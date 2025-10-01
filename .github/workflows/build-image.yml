@@ -1,8 +1,7 @@
 name: Reusable Docker Build
 
 on:
-# 이 파일이 다른 워크플로우에서 호출될 수 있도록 설정
-  workflow_call:
+  workflow_call: # 이 파일이 다른 워크플로우에서 호출될 수 있도록 설정
     inputs:
       git_ref:
         description: 'The Git ref (branch or tag) to check out'
@@ -43,15 +42,14 @@ jobs:
         with:
           images: hyojaelee/dorm
           tags: |
-#           'dev' 브랜치의 push일 때 규칙
+            # 'dev' 브랜치의 push일 때 규칙
             type=ref,event=branch,pattern=dev
             
-#           'tag' push일 때 규칙
+            # 'tag' push일 때 규칙
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
-#     멀티 플랫폼 빌드를 위한 설정
-      - name: Set up QEMU
+      - name: Set up QEMU # 멀티 플랫폼 빌드를 위한 설정
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
