@@ -11,6 +11,13 @@ services:
       - prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config/application.yml:/app/config/application.yml
+      - ./config/application-dev.yml:/app/config/application-dev.yml
+      - ./config/application-prod.yml:/app/config/application-prod.yml
+      - ./config/ssl/keystore.p12:/app/config/ssl/keystore.p12
+    environment:
+      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/app/config/application.yml, file:/app/config/application-dev.yml, file:/app/config/application-secret-prod.yml
 
   redis:
     image: redis:latest
