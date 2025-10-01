@@ -17,6 +17,19 @@ jobs:
     if: github.ref == 'refs/heads/dev' # 현재 이벤트가 'dev' 브랜치에 대한 푸시일 경우에만 실행
     runs-on: ubuntu-latest
     steps:
+      - name: Copy config files to server via scp
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          port: ${{ secrets.PORT_DEV }}
+          username: ${{ secrets.USERNAME_DEV }}
+          key: ${{ secrets.KEY_DEV }}
+          passphrase: ${{ secrets.PASSPHRASE_DEV }}
+          # 프로젝트의 configs 폴더에 있는 모든 yml, ini 파일을
+          source: "configs/*.yml,configs/*.ini"
+          # 서버의 /home/ubuntu/app/configs 폴더로 전송
+          target: "/home/ubuntu/app/configs"
+
       - name: Deploy to Dev Server
         uses: appleboy/ssh-action@v1
         with:
@@ -30,13 +43,13 @@ jobs:
             cd /home/ubuntu/app
 
             # 1.  설정 파일 디렉터리 생성
-            mkdir -p ./config
-            mkdir -p ./config/ssl
+            mkdir -p ./configs
+            mkdir -p ./configs/ssl
 
             # 2. Github Secret 값을 서버에 복사
-            echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./config/application.yml
-            echo "${{ secrets.APPLICATION_SECRET_DEV }}" | base64 --decode > ./config/application-dev.yml
-            echo "${{ secrets.DEV_KEYSTORE }}" | base64 --decode > ./config/ssl/keystore.p12
+            echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./configs/application.yml
+            echo "${{ secrets.APPLICATION_SECRET_DEV }}" | base64 --decode > ./configs/application-dev.yml
+            echo "${{ secrets.DEV_KEYSTORE }}" | base64 --decode > ./configs/ssl/keystore.p12
             echo "${{ secrets.DEV_ENV }}" | base64 --decode > ./.env
     
             # 3. 최신 이미지를 받아와서 서비스 재시작
@@ -59,6 +72,18 @@ jobs:
           # main 브랜치 커밋 목록에 현재 태그가 없으면 grep이 실패하며 잡이 중단됨
           git branch --contains ${{ github.ref_name }} | grep -w 'main'
 
+      - name: Copy config files to server via scp
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST_MAIN }}
+          port: ${{ secrets.PORT_MAIN }}
+          username: ${{ secrets.USERNAME_MAIN }}
+          key: ${{ secrets.KEY_MAIN }}
+          # 프로젝트의 configs 폴더에 있는 모든 yml, ini 파일을
+          source: "configs/*.yml,configs/*.ini"
+          # 서버의 /home/ubuntu/app/configs 폴더로 전송
+          target: "/home/ubuntu/app/configs"
+
       - name: Deploy to Main Server
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -71,13 +96,13 @@ jobs:
             cd /home/ubuntu/app
 
             # 1. 설정 파일 디렉터리 생성
-            mkdir -p ./config
-            mkdir -p ./config/ssl
+            mkdir -p ./configs
+            mkdir -p ./configs/ssl
             
             # 2. Github Secret 값을 서버에 복사
-            echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./config/application.yml
-            echo "${{ secrets.APPLICATION_SECRET_PROD }}" | base64 --decode > ./config/application-prod.yml
-            echo "${{ secrets.KEYSTORE_MAIN }}" | base64 --decode > ./config/ssl/keystore.p12
+            echo "${{ secrets.APPLICATION_SECRET }}" | base64 --decode > ./configs/application.yml
+            echo "${{ secrets.APPLICATION_SECRET_PROD }}" | base64 --decode > ./configs/application-prod.yml
+            echo "${{ secrets.KEYSTORE_MAIN }}" | base64 --decode > ./configs/ssl/keystore.p12
             echo "${{ secrets.ENV_MAIN }}" | base64 --decode > ./.env
             
             # 3. 최신 이미지를 받아와서 서비스 재시작
