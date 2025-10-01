@@ -26,6 +26,7 @@ jobs:
           key: ${{ secrets.KEY_DEV }} # ppk 파일을 puttygen으로 불러온 후 Conversions -> Export OpenSSH key로 내보내어 Begin 라인부터 End 라인까지 붙여넣음
           passphrase: ${{ secrets.PASSPHRASE_DEV }} # 선택 사항
           script: |
+            mkdir -p /home/ubuntu/app
             cd /home/ubuntu/app
 
             # 1.  설정 파일 디렉터리 생성
@@ -39,8 +40,8 @@ jobs:
             echo "${{ secrets.DEV_ENV }}" | base64 --decode > ./.env
     
             # 3. 최신 이미지를 받아와서 서비스 재시작
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -f
 
   deploy-main:
@@ -66,6 +67,7 @@ jobs:
           username: ${{ secrets.USERNAME_MAIN }}
           key: ${{ secrets.PRIVATE_KEY_MAIN }}
           script: |
+            mkdir -p /home/ubuntu/app
             cd /home/ubuntu/app
 
             # 1. 설정 파일 디렉터리 생성
@@ -79,6 +81,6 @@ jobs:
             echo "${{ secrets.ENV_MAIN }}" | base64 --decode > ./.env
             
             # 3. 최신 이미지를 받아와서 서비스 재시작
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -f
