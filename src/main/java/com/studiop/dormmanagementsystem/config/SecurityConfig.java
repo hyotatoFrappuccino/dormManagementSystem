@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request
                                 .requestMatchers("/error").permitAll()
+                                .requestMatchers("/actuator/prometheus").permitAll()
                                 .anyRequest().authenticated()
                 )
 
