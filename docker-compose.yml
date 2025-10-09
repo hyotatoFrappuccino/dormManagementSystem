@@ -1,6 +1,6 @@
 services:
   spring:
-    image: hyojaelee/dorm:latest
+    image: ghcr.io/hyotatofrappuccino/dorm:dev
     container_name: spring
     ports:
       - "8080:8080"
@@ -12,12 +12,10 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./configs/application.yml:/app/configs/application.yml
-      - ./configs/application-dev.yml:/app/configs/application-dev.yml
-      - ./configs/application-prod.yml:/app/configs/application-prod.yml
-      - ./configs/ssl/keystore.p12:/app/configs/ssl/keystore.p12
+      - ./configs:/configs
     environment:
-      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/app/configs/application.yml, file:/app/configs/application-dev.yml, file:/app/configs/application-prod.yml
+      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
+      - GOOGLE_CREDENTIALS_LOCATION=/configs/credentials.json
 
   redis:
     image: redis:latest

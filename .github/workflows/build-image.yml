@@ -1,4 +1,4 @@
-name: Reusable Docker Build
+name: Docker Build
 
 on:
   workflow_call: # 이 파일이 다른 워크플로우에서 호출될 수 있도록 설정
@@ -7,6 +7,9 @@ on:
         description: 'The Git ref (branch or tag) to check out'
         required: true
         type: string
+    secrets:
+      GH_TOKEN:
+        required: true
     outputs:
       tags:
         description: "Generated Docker image tags"
@@ -15,6 +18,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     outputs:
       tags: ${{ steps.docker_meta.outputs.tags }}
     steps:
@@ -40,7 +46,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v5
         with:
-          images: hyojaelee/dorm
+          images: ghcr.io/${{ github.repository_owner }}/dorm
           tags: |
             # 'dev' 브랜치의 push일 때 규칙
             type=ref,event=branch,pattern=dev
@@ -49,17 +55,18 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
-      - name: Set up QEMU # 멀티 플랫폼 빌드를 위한 설정
+      - name: Set up QEMU # 멀티 플랫폼 빌드
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to DockerHub
+      - name: Login to ghcr
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -69,8 +76,13 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
+          provenance: false
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha
+            type=gha,scope=gradle-cache
+          cache-to: |
+            type=gha,mode=max
+            type=gha,mode=max,scope=gradle-cache
