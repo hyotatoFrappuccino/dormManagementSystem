@@ -41,9 +41,7 @@ public class RoundService {
 
     @Transactional
     public Round addRound(RoundRequest request) {
-        if (isOverlapping(request.startDate(), request.endDate())) {
-            throw new EntityException(DUPLICATE_ROUND);
-        }
+        isOverlapping(request.startDate(), request.endDate());
         Round round = Round.builder()
                 .name(request.name())
                 .startDate(request.startDate())
@@ -55,9 +53,7 @@ public class RoundService {
 
     @Transactional
     public void updateRound(Long id, RoundRequest request) {
-        if (isOverlapping(request.startDate(), request.endDate())) {
-            throw new EntityException(DUPLICATE_ROUND);
-        }
+        isOverlapping(request.startDate(), request.endDate());
         Round round = getById(id);
         round.updateRound(request.name(), request.startDate(), request.endDate(), request.password());
     }
@@ -93,10 +89,12 @@ public class RoundService {
         return fridgeCountByBuilding;
     }
 
-    private boolean isOverlapping(LocalDate startDate, LocalDate endDate) {
-        return roundRepository.findAll().stream()
+    private void isOverlapping(LocalDate startDate, LocalDate endDate) {
+        if (roundRepository.findAll().stream()
                 .anyMatch(existing ->
                         !(endDate.isBefore(existing.getStartDate()) || startDate.isAfter(existing.getEndDate()))
-                );
+                )) {
+            throw new EntityException(DUPLICATE_ROUND);
+        }
     }
 }
