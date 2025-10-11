@@ -55,6 +55,9 @@ public class RoundService {
 
     @Transactional
     public void updateRound(Long id, RoundRequest request) {
+        if (isOverlapping(request.startDate(), request.endDate())) {
+            throw new EntityException(DUPLICATE_ROUND);
+        }
         Round round = getById(id);
         round.updateRound(request.name(), request.startDate(), request.endDate(), request.password());
     }
