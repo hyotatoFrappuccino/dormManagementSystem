@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: dorm
+  IMAGE_NAME: ${{ github.repository }}
 
 # 한번에 1개의 Actions만 실행되도록 제한
 concurrency:

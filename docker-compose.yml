@@ -1,6 +1,6 @@
 services:
   spring:
-    image: ghcr.io/hyotatofrappuccino/dorm:dev
+    image: ghcr.io/hyotatofrappuccino/dormmanagementsystem:dev
     container_name: spring
     ports:
       - "8080:8080"
