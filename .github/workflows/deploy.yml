@@ -5,6 +5,10 @@ on:
     branches: [ "dev" ]
     tags: [ "v*.*.*" ]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: dorm
+
 # 한번에 1개의 Actions만 실행되도록 제한
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,8 +19,6 @@ jobs:
     uses: ./.github/workflows/build-image.yml
     with:
       git_ref: ${{ github.ref }}
-    secrets:
-      GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
   deploy:
     needs: build
@@ -68,7 +70,7 @@ jobs:
             mkdir -p ./configs
             mkdir -p ./configs/ssl
             
-            sed -i "s|image: ghcr.io/hyotatofrappuccino/dorm:.*|image: ghcr.io/hyotatofrappuccino/dorm:${RELEASE_VERSION#v}|g" docker-compose.yml
+            sed -i "s|image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${RELEASE_VERSION#v}|g" docker-compose.yml
 
             echo "$APP_SECRET" | base64 --decode > ./configs/application.yml
             echo "$APP_SECRET_PROFILE" | base64 --decode > ./configs/application-$SPRING_PROFILE.yml

@@ -7,13 +7,14 @@ on:
         description: 'The Git ref (branch or tag) to check out'
         required: true
         type: string
-    secrets:
-      GH_TOKEN:
-        required: true
     outputs:
       tags:
         description: "Generated Docker image tags"
         value: ${{ jobs.build.outputs.tags }}
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: dorm
 
 jobs:
   build:
@@ -22,7 +23,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      tags: ${{ steps.docker_meta.outputs.tags }}
+      tags: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -42,11 +43,11 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Docker meta
-        id: docker_meta
+      - name: Extract metadata
+        id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/dorm
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           tags: |
             # 'dev' 브랜치의 push일 때 규칙
             type=ref,event=branch,pattern=dev
@@ -61,12 +62,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to ghcr
+      - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GH_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -78,8 +79,8 @@ jobs:
             linux/arm64
           provenance: false
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
             type=gha
             type=gha,scope=gradle-cache
