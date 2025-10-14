@@ -28,7 +28,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./configs/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prom_data:/prometheus
     networks:
       - backend
@@ -40,7 +40,7 @@ services:
     ports:
       - "3002:3002"
     volumes:
-      - ./configs/grafana.ini:/etc/grafana/grafana.ini
+      - ./configs/monitoring/grafana.ini:/etc/grafana/grafana.ini
       - grafana-data:/var/lib/grafana
     depends_on:
       - prometheus

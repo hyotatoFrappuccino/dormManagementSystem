@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  PROJECT_PATH: /home/ubuntu/dorm
 
 # 한번에 1개의 Actions만 실행되도록 제한
 concurrency:
@@ -44,8 +45,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          source: "configs, docker-compose.yml"
-          target: /home/ubuntu/backend
+          source: "configs/, docker-compose.yml"
+          target: ${{ env.PROJECT_PATH }}
 
       - name: Deploy Application
         uses: appleboy/ssh-action@v1
@@ -65,8 +66,7 @@ jobs:
             export KEYSTORE='${{ secrets.KEYSTORE }}'
             export GOOGLE_CREDENTIALS='${{ secrets.GOOGLE_CREDENTIALS }}'
             
-            mkdir -p /home/ubuntu/backend
-            cd /home/ubuntu/backend
+            cd ${{ env.PROJECT_PATH }}
             mkdir -p ./configs
             mkdir -p ./configs/ssl
             
