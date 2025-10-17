@@ -11,10 +11,8 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.studiop.dormmanagementsystem.entity.enums.AppConfigKey;
 import com.studiop.dormmanagementsystem.exception.GoogleSheetException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -41,6 +39,9 @@ public class GoogleSheetsService {
         // 서비스 계정 JSON 키 로드
         InputStream serviceAccountStream = new FileInputStream(credentialsPath);
 
+        if (serviceAccountStream == null) {
+            throw new GoogleSheetException(GOOGLE_INVALID_API_KEY);
+        }
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccountStream)
                 .createScoped(List.of("https://www.googleapis.com/auth/spreadsheets.readonly"));
 

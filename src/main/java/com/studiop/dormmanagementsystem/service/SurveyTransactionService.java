@@ -122,6 +122,7 @@ public class SurveyTransactionService {
         return lastFetchedTime;
     }
 
+    // 전화번호 포맷 통일
     public String formatPhoneNumber(String rawPhoneNumber) {
         // 전화번호에서 숫자만 추출
         String digits = rawPhoneNumber.replaceAll("[^0-9]", "");
