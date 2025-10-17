@@ -30,11 +30,14 @@ public class GoogleSheetsService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String RANGE = "A:Z"; // 가져올 데이터 범위
 
+    @Value("${google.credentials.location}")
+    private String credentialsPath;
+
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         var httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
         // 서비스 계정 JSON 키 로드
-        InputStream serviceAccountStream = getClass().getClassLoader().getResourceAsStream("credentials.json");
+        InputStream serviceAccountStream = new FileInputStream(credentialsPath);
 
         if (serviceAccountStream == null) {
             throw new GoogleSheetException(GOOGLE_INVALID_API_KEY);
