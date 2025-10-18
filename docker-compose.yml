@@ -17,6 +17,37 @@ services:
       - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
       - GOOGLE_CREDENTIALS_LOCATION=/configs/credentials.json
 
+  frontend:
+    image: ghcr.io/hyotatofrappuccino/dormmanagementsystem-front:dev
+    container_name: frontend
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./configs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./configs/certbot/conf:/etc/letsencrypt
+      - ./configs/certbot/www:/var/www/certbot
+    depends_on:
+      - spring
+      - frontend
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    networks:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./configs/certbot/conf:/etc/letsencrypt
+      - ./configs/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
+
   redis:
     image: redis:latest
     container_name: redis
