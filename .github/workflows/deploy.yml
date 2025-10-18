@@ -70,7 +70,9 @@ jobs:
             mkdir -p ./configs
             mkdir -p ./configs/ssl
             
-            sed -i "s|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${RELEASE_VERSION#v}|g" docker-compose.yml
+            IMAGE_PATH="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+            IMAGE_PATH="${IMAGE_PATH,,}"
+            sed -i "s|image: ${IMAGE_PATH}:.*|image: ${IMAGE_PATH}:${RELEASE_VERSION#v}|g" docker-compose.yml
 
             echo "$APP_SECRET" | base64 --decode > ./configs/application.yml
             echo "$APP_SECRET_PROFILE" | base64 --decode > ./configs/application-$SPRING_PROFILE.yml
