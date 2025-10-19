@@ -33,6 +33,10 @@ public class SurveyService {
         return surveyRepository.findByStudentId(studentId);
     }
 
+    public List<Survey> getSurveysByName(String name) {
+        return surveyRepository.findByName(name);
+    }
+
     public List<SurveyDto> getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAllWithBuilding();
         return surveys.stream()
