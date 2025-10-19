@@ -16,6 +16,7 @@ services:
     environment:
       - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
       - GOOGLE_CREDENTIALS_LOCATION=/configs/credentials.json
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE:-local}
 
   frontend:
     image: ghcr.io/hyotatofrappuccino/dormmanagementsystem-front:dev
