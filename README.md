@@ -14,9 +14,13 @@
 
 프론트엔드 <-> [AWS]-[Docker] 백엔드(Spring Boot) <-> [Local] mysql, [Docker] redis, prometheus, grafana
 
+
+<img width="250" height="250" alt="제목 없는 다이어그램 drawio" src="https://github.com/user-attachments/assets/f82e3aa0-a94c-44aa-93ce-3929568bb397" />
+
 ## 기술스택
 
 Spring [Boot, Security, JPA], Redis, MySQL, Docker, Prometheus, Grafana
+
 
 ## 주요 기능
 
