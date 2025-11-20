@@ -1,10 +1,12 @@
 package com.studiop.dormmanagementsystem.api.v1;
 
+import com.studiop.dormmanagementsystem.entity.Survey;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeApplyRequest;
 import com.studiop.dormmanagementsystem.entity.dto.FridgeMemberInfoResponse;
 import com.studiop.dormmanagementsystem.entity.dto.MemberFridgeApplicationResponse;
 import com.studiop.dormmanagementsystem.service.FridgeService;
 import com.studiop.dormmanagementsystem.service.MemberService;
+import com.studiop.dormmanagementsystem.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class FridgeController {
 
     private final FridgeService fridgeService;
     private final MemberService memberService;
+    private final SurveyService surveyService;
 
     @Operation(summary = "냉장고 신청 관련 학생 정보 조회")
     @GetMapping("/{studentId}")
@@ -30,6 +33,13 @@ public class FridgeController {
                 fridgeService.getFridgeByMemberInfo(studentId)
         );
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "냉장고 신청 관련 학생 정보 조회 - 이름으로 조회")
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<String>> getMemberByName(@PathVariable String name) {
+        List<Survey> surveysByName = surveyService.getSurveysByName(name);
+        return ResponseEntity.ok(surveysByName.stream().map(Survey::getStudentId).toList());
     }
 
     @Operation(summary = "냉장고 신청 목록 전체 조회")
