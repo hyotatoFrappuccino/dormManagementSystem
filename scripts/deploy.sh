@@ -4,6 +4,7 @@ set -e
 # 설정 변수
 DOCKER_COMPOSE_DIR="/home/ubuntu/dorm"
 NGINX_HOST_CONF_PATH="$DOCKER_COMPOSE_DIR/configs/nginx/nginx.conf"
+PROMETHEUS_CONF_PATH="$DOCKER_COMPOSE_DIR/configs/monitoring/prometheus.yml"
 MAX_RETRIES=10
 RETRY_INTERVAL=10
 
@@ -70,6 +71,10 @@ sed -i "s/server spring-.\{1,5\}:8080;/server $TARGET_SERVER:8080;/" $NGINX_HOST
 docker exec nginx nginx -s reload
 
 echo "트래픽이 $TARGET_SERVER 로 성공적으로 전환되었습니다."
+
+# prometheus 재시작
+sed -i "s/targets: \['spring-.\{1,5\}:9292'\]/targets: \['$TARGET_SERVER:9292'\]/" $PROMETHEUS_CONF_PATH
+docker exec prometheus sh -c "kill -HUP 1"
 
 # --- 5. 이전 Active 서버 중지 (선택 사항) ---
 
