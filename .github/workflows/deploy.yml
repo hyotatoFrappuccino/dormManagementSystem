@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          source: "configs/, docker-compose.yml"
+          source: "configs/, scripts/, docker-compose.yml"
           target: ${{ env.PROJECT_PATH }}
 
       - name: Deploy Application
@@ -81,6 +81,5 @@ jobs:
             echo "" >> ./.env
             echo "SPRING_PROFILE=$SPRING_PROFILE" >> ./.env
 
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+            chmod +x ./scripts/deploy.sh
+            ./scripts/deploy.sh
