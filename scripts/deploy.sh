@@ -3,15 +3,14 @@ set -e
 
 # 설정 변수
 DOCKER_COMPOSE_DIR="/home/ubuntu/dorm"
-NGINX_HOST_CONF_PATH="$DOCKER_COMPOSE_DIR/configs/nginx/nginx.conf"
+SERVICE_URL_PATH="$DOCKER_COMPOSE_DIR/configs/nginx/service-url.inc"
 PROMETHEUS_CONF_PATH="$DOCKER_COMPOSE_DIR/configs/monitoring/prometheus.yml"
 MAX_RETRIES=10
 RETRY_INTERVAL=10
 
 # --- 1. 현재 Active 서버 확인 및 Target 서버 결정 ---
-
-# nginx 호스트 설정 파일에서 현재 Active 상태인 서버를 찾습니다.
-CURRENT_SERVER=$(grep -Eo 'spring-(blue|green)' $NGINX_HOST_CONF_PATH | head -1 || echo "spring-blue")
+# nginx service-url.inc 파일에서 현재 Active 상태인 서버를 찾습니다.
+CURRENT_SERVER=$(grep -oP 'set \$service_url \K(spring-blue|spring-green)' $SERVICE_URL_PATH | head -1 || echo "spring-blue")
 echo "--- 1. 서버 상태 확인 ---"
 echo "현재 Active 서버: ${CURRENT_SERVER}"
 
@@ -28,7 +27,6 @@ fi
 echo "배포할 Target 서버: $TARGET_SERVER (호스트 포트 $TARGET_PORT)"
 
 # --- 2. Target 서버 배포 (새 이미지로 교체) ---
-
 echo "--- 2. ${TARGET_SERVER} 서버 재배포 및 이미지 pull ---"
 
 # docker-compose 실행 경로 변경
@@ -37,13 +35,15 @@ cd $DOCKER_COMPOSE_DIR
 # Target 서버만 재배포
 docker compose up -d --pull always $TARGET_SERVER
 
-# --- 3. Target 서버 헬스 체크 ---
+# 서버가 완전히 구동될 때까지 대기
+sleep 20
 
+# --- 3. Target 서버 헬스 체크 ---
 echo "--- 3. ${TARGET_SERVER} 헬스 체크 시작 (최대 ${MAX_RETRIES}회) ---"
 
-for i in {1..$MAX_RETRIES}; do
+for (( i=1; i<=$MAX_RETRIES; i++ )); do
     # 호스트 머신의 TARGET_PORT를 사용하여 새 컨테이너의 헬스 체크 엔드포인트에 접근
-    STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/health)
+    STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/api/health || echo "000")
 
     if [[ "$STATUS_CODE" == "200" || "$STATUS_CODE" == "401" ]]; then
         echo "헬스 체크 성공 (${TARGET_SERVER}): HTTP $STATUS_CODE"
@@ -60,24 +60,21 @@ for i in {1..$MAX_RETRIES}; do
 done
 
 # --- 4. Nginx 설정 파일 교체 및 리로드 ---
-
 echo "--- 4. Nginx 설정 파일 교체 및 리로드 ---"
 
 # 호스트에 있는 원본 Nginx 설정 파일을 Target 서버로 수정
 # 'spring-blue:8080;' 또는 'spring-green:8080;' 패턴을 TARGET_SERVER로 변경
-sed -i "s/server spring-.\{1,5\}:8080;/server $TARGET_SERVER:8080;/" $NGINX_HOST_CONF_PATH
-
+echo "set \$service_url $TARGET_SERVER;" > $SERVICE_URL_PATH
 # Nginx 설정 리로드 (컨테이너 내부에 명령 전달)
 docker exec nginx nginx -s reload
 
 echo "트래픽이 $TARGET_SERVER 로 성공적으로 전환되었습니다."
 
 # prometheus 재시작
-sed -i "s/targets: \['spring-.\{1,5\}:9292'\]/targets: \['$TARGET_SERVER:9292'\]/" $PROMETHEUS_CONF_PATH
-docker exec prometheus sh -c "kill -HUP 1"
+sed -i "s/- targets: \['spring-.\{1,5\}:9292'\]/- targets: \['$TARGET_SERVER:9292'\]/" $PROMETHEUS_CONF_PATH
+docker compose restart prometheus
 
 # --- 5. 이전 Active 서버 중지 (선택 사항) ---
-
 echo "--- 5. 이전 Active 서버 (${CURRENT_SERVER}) 정리 ---"
 
 if [ "$CURRENT_SERVER" != "NONE" ]; then
