@@ -10,7 +10,9 @@ RETRY_INTERVAL=10
 
 # --- 1. 현재 Active 서버 확인 및 Target 서버 결정 ---
 # nginx service-url.inc 파일에서 현재 Active 상태인 서버를 찾습니다.
-CURRENT_SERVER=$(grep -oP 'set \$service_url \K(spring-blue|spring-green)' $SERVICE_URL_PATH | head -1 || echo "spring-blue")
+cd $DOCKER_COMPOSE_DIR
+
+CURRENT_SERVER=$(grep -oP 'set \$service_url \K(spring-blue|spring-green)' $SERVICE_URL_PATH | head -1)
 echo "--- 1. 서버 상태 확인 ---"
 echo "현재 Active 서버: ${CURRENT_SERVER}"
 
@@ -18,10 +20,18 @@ if [ "$CURRENT_SERVER" == "spring-blue" ]; then
     TARGET_SERVER="spring-green"
     CURRENT_PORT="8080"
     TARGET_PORT="8081"
-else
+elif [ "$CURRENT_SERVER" == "spring-green" ]; then
     TARGET_SERVER="spring-blue"
     CURRENT_PORT="8081"
     TARGET_PORT="8080"
+else
+    echo "최초 배포 시작"
+    echo "set \$service_url spring-blue;" > ./configs/nginx/service-url.inc
+    docker compose up -d
+    sleep 10
+    docker stop spring-green
+    echo "최초 배포 종료"
+    exit 0
 fi
 
 echo "배포할 Target 서버: $TARGET_SERVER (호스트 포트 $TARGET_PORT)"
@@ -29,14 +39,11 @@ echo "배포할 Target 서버: $TARGET_SERVER (호스트 포트 $TARGET_PORT)"
 # --- 2. Target 서버 배포 (새 이미지로 교체) ---
 echo "--- 2. ${TARGET_SERVER} 서버 재배포 및 이미지 pull ---"
 
-# docker-compose 실행 경로 변경
-cd $DOCKER_COMPOSE_DIR
-
 # Target 서버만 재배포
 docker compose up -d --pull always $TARGET_SERVER
 
 # 서버가 완전히 구동될 때까지 대기
-sleep 20
+sleep 30
 
 # --- 3. Target 서버 헬스 체크 ---
 echo "--- 3. ${TARGET_SERVER} 헬스 체크 시작 (최대 ${MAX_RETRIES}회) ---"
