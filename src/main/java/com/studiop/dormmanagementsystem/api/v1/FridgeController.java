@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/fridge")
@@ -39,7 +40,11 @@ public class FridgeController {
     @GetMapping("/name/{name}")
     public ResponseEntity<List<String>> getMemberByName(@PathVariable String name) {
         List<Survey> surveysByName = surveyService.getSurveysByName(name);
-        return ResponseEntity.ok(surveysByName.stream().map(Survey::getStudentId).toList());
+
+        List<String> uniqueStudentIds = surveysByName.stream()
+                .map(Survey::getStudentId).distinct().collect(Collectors.toList());
+
+        return ResponseEntity.ok(uniqueStudentIds);
     }
 
     @Operation(summary = "냉장고 신청 목록 전체 조회")

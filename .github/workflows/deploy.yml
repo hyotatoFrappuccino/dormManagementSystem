@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          source: "configs/, docker-compose.yml"
+          source: "configs/, scripts/, docker-compose.yml"
           target: ${{ env.PROJECT_PATH }}
 
       - name: Deploy Application
@@ -72,7 +72,7 @@ jobs:
             IMAGE_PATH="${IMAGE_PATH,,}"
             sed -i "s|image: ${IMAGE_PATH}:.*|image: ${IMAGE_PATH}:${RELEASE_VERSION#v}|g" docker-compose.yml
 
-            sed -i "s|NGINX_HOST|${{ secrets.HOST }}|g" ./configs/nginx/nginx.conf
+            sed -i "s|NGINX_HOST|${{ secrets.HOST }}|g" ./configs/nginx/default.conf
 
             echo "$APP_SECRET" | base64 --decode > ./configs/application.yml
             echo "$APP_SECRET_PROFILE" | base64 --decode > ./configs/application-$SPRING_PROFILE.yml
@@ -81,6 +81,5 @@ jobs:
             echo "" >> ./.env
             echo "SPRING_PROFILE=$SPRING_PROFILE" >> ./.env
 
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+            chmod +x ./scripts/deploy.sh
+            ./scripts/deploy.sh
